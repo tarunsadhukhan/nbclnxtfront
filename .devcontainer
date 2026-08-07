@@ -1,0 +1,11 @@
+{
+  "name": "My Next.js Dev Container",
+  "dockerFile": "Dockerfile",
+  "context": "..",
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "bash"
+  },
+  "forwardPorts": [3000],
+  "postCreateCommand": "pnpm install",
+  "remoteUser": "node"
+}

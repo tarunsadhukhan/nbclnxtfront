@@ -1,0 +1,6 @@
+{
+    "entryPoints": ["./page", "./layout"],
+    "out": "docs",
+    "tsconfig": "tsconfig.json"
+  }
+  

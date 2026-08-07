@@ -1,0 +1,259 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+:root {
+  --foreground-rgb: 17, 24, 39;
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 226, 232, 240;
+    --background-start-rgb: 10, 10, 10;
+    --background-end-rgb: 10, 10, 10;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 215 28% 17%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 28% 17%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 28% 17%;
+    --primary: 76 72% 44%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 195 44% 59%;
+    --secondary-foreground: 203 86% 16%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 195 44% 59%;
+    --accent-foreground: 203 86% 16%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 215 28% 17%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.75rem;
+    --brand-primary: 76 72% 44%;
+    --brand-primary-hover: 76 72% 38%;
+    --brand-primary-foreground: 0 0% 100%;
+    --brand-secondary: 195 44% 59%;
+    --brand-secondary-foreground: 203 86% 16%;
+    --border-accent: 195 44% 59%;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 210 40% 96%;
+    --card: 0 0% 6%;
+    --card-foreground: 210 40% 96%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 210 40% 96%;
+    --primary: 76 72% 44%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 195 44% 49%;
+    --secondary-foreground: 210 40% 96%;
+    --muted: 215 16% 22%;
+    --muted-foreground: 215 16% 72%;
+    --accent: 195 44% 49%;
+    --accent-foreground: 210 40% 96%;
+    --destructive: 0 62% 40%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 16% 22%;
+    --input: 215 16% 22%;
+    --ring: 210 40% 96%;
+    --brand-primary: 76 72% 44%;
+    --brand-primary-hover: 76 72% 38%;
+    --brand-primary-foreground: 0 0% 0%;
+    --brand-secondary: 195 44% 59%;
+    --brand-secondary-foreground: 210 40% 96%;
+    --border-accent: 195 44% 59%;
+  }
+}
+
+/* Common components and layouts */
+@layer components {
+  /* Page layouts */
+  .page-container {
+    @apply p-6;
+  }
+  
+  .page-header {
+    @apply flex justify-between items-center mb-6;
+  }
+  
+  .page-title {
+    @apply text-2xl font-bold text-gray-900;
+  }
+  
+  .content-box {
+    @apply rounded-lg p-4;
+    border: 1.5px solid hsl(var(--border-accent));
+  }
+
+  .form-row {
+    @apply flex justify-between items-center mb-6;
+  }
+  
+  /* Form elements */
+  .form-group {
+    @apply w-1/3;
+  }
+  
+  .form-group-left {
+    @apply w-1/3 mr-2;
+  }
+  
+  .form-group-middle {
+    @apply w-1/3 mx-2;
+  }
+  
+  .form-group-right {
+    @apply w-1/3 ml-2;
+  }
+  
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 mb-1;
+  }
+  
+  /* Dropdown button styling */
+  .dropdown-btn {
+    @apply w-full justify-between;
+  }
+
+  /* Sidebar styles - shared across all sidebar variants */
+  .sidebar-container {
+    @apply bg-[#006699] text-white transition-all duration-300 h-screen flex flex-col;
+  }
+
+  /* Reset link styles inside sidebar */
+  .sidebar-container a {
+    @apply text-white no-underline;
+  }
+
+  .sidebar-menu-link {
+    @apply flex items-center px-4 py-2 text-sm text-white hover:bg-[#005580] transition-colors;
+  }
+
+  .sidebar-menu-icon {
+    @apply mr-3 text-white;
+  }
+
+  .sidebar-menu-title {
+    @apply flex-1 text-white;
+  }
+
+  .sidebar-menu-chevron {
+    @apply text-white;
+  }
+
+  .sidebar-submenu {
+    @apply ml-4 border-l border-[#005580];
+  }
+
+  .sidebar-section-border {
+    @apply border-t border-[#005580] mt-2;
+  }
+
+  .sidebar-user-settings {
+    @apply flex items-center px-4 py-2 text-sm text-white hover:bg-[#005580] transition-colors cursor-pointer;
+  }
+
+  .sidebar-submenu-link {
+    @apply block px-4 py-2 text-white hover:bg-[#005580];
+  }
+}
+
+/* High-specificity sidebar link color override */
+.sidebar-container a,
+.sidebar-container a:visited,
+.sidebar-container a:link,
+.sidebar-menu-link,
+.sidebar-menu-title,
+.sidebar-submenu-link {
+  color: white !important;
+}
+
+.border-blue {
+  border: 1.5px solid hsl(var(--border-accent));
+  position: relative;
+  border-radius: var(--radius);
+}
+
+.button-normal {
+  background-color: hsl(var(--brand-primary));
+  color: hsl(var(--brand-primary-foreground));
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.button-normal:hover {
+  background-color: hsl(var(--brand-primary-hover));
+}
+
+
+
+@layer base {
+/* (Removed empty * selector block) */
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.btn-primary {
+  background-color: hsl(var(--brand-primary)) !important;
+  color: hsl(var(--brand-primary-foreground)) !important;
+  border-radius: var(--radius) !important;
+  transition: background 0.2s !important;
+}
+
+.btn-primary:hover {
+  background-color: hsl(var(--brand-primary-hover)) !important;
+}
+
+/* Transaction Grid Styles - shared across line items and additional charges */
+@layer components {
+  .transaction-grid-container {
+    @apply border border-slate-300 bg-white;
+    width: fit-content;
+    min-width: 100%;
+  }
+
+  .transaction-grid-header {
+    @apply grid gap-x-1 bg-slate-100 px-1.5 py-1 text-[13px] font-semibold uppercase tracking-wide text-slate-700 border-b border-slate-300;
+  }
+
+  .transaction-grid-header > span {
+    @apply text-center;
+  }
+
+  .transaction-grid-row {
+    @apply grid gap-x-1 items-center border-b border-slate-200 px-1.5 py-0.5 text-sm hover:bg-slate-100 transition-colors;
+  }
+
+  .transaction-grid-row-even {
+    @apply bg-white;
+  }
+
+  .transaction-grid-row-odd {
+    @apply bg-slate-50;
+  }
+
+  .transaction-grid-cell {
+    @apply flex flex-col gap-0.5 justify-center;
+  }
+
+  .transaction-grid-empty {
+    @apply px-1.5 py-2 text-center text-xs text-slate-500;
+  }
+}

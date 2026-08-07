@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon-16x16.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Vow Erp Solutions"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon-16x16.png" />
+    
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <title>VOW ERP PORTAL</title>
+    <style>
+      #spinner {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        z-index: 9999;
+        background: rgba(0, 0, 0, 0.7);
+        transition: opacity 0.2s;
+      }
+
+/* (B) CENTER LOADING SPINNER */
+#spinner img {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%);
+  height: 73px;
+  width:130px;
+}
+
+/* (C) SHOW & HIDE */
+#spinner {
+  visibility: hidden;
+  opacity: 0;
+}
+#spinner.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* (X) DOES NOT QUITE MATTER */
+html, body {
+  margin: 0;
+  padding: 0;
+}
+    </style>
+    <script>
+      function show () {
+        document.getElementById("spinner").classList.add("show");
+      }
+      function hide () {
+        document.getElementById("spinner").classList.remove("show");
+      }
+    </script>
+  </head>
+  <body>
+    <div id="spinner">
+      <img src="vow-spinner.gif"/>
+    </div>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="overlays"></div>
+    <div id="root"></div>   
+  </body>
+  <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=69187739-f4a2-47f6-9e26-777551cad590"> </script>
+  
+</html>

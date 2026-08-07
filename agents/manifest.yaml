@@ -1,0 +1,19 @@
+repo: vowerp3ui
+instructions_md: "agents/instructions.md"
+archetypes:
+  - index
+  - transaction
+  - report
+  - dashboard
+entrypoints:
+  - "src/app/**/page.tsx"
+wrappers:
+  - "src/components/ui/**"
+api_helpers:
+  - "src/utils/api.ts"
+  - "src/utils/apiClient2.ts"
+validation:
+  - "zod"
+  - "npx tsc --noEmit"
+tests:
+  - "pnpm test"
