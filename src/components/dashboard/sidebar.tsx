@@ -128,15 +128,15 @@ export default function Sidebar({ isCollapsed, onToggle, onMouseEnter, onMouseLe
     const childMenus = getChildMenus(menu.menu_id);
     return (
       <div key={menu.menu_id} className="menu-item">
-        <div className={`flex items-center py-2 px-2 hover:bg-[#00557a] rounded-md transition-colors ${level > 0 ? 'ml-6' : ''}`}
+        <div className={`flex items-center py-2 px-2 hover:bg-[hsl(var(--sidebar-accent))] rounded-md transition-colors ${level > 0 ? 'ml-6' : ''}`}
           style={{ paddingLeft: `${level * 8}px` }}>
           {isParent && (
-            <div className="flex items-center cursor-pointer mr-2 sidebar-menu-chevron hover:text-gray-200 transition-colors"
+            <div className="flex items-center cursor-pointer mr-2 sidebar-menu-chevron hover:opacity-70 transition-colors"
               onClick={() => toggleMenu(menu.menu_id)}>
               {isExpanded ? <ChevronDown className="h-4 w-4 transition-transform duration-200" /> : <ChevronRight className="h-4 w-4 transition-transform duration-200" />}
             </div>
           )}
-          <a href={`/dashboardportal/${menu.menu_path}`} className="text-sm flex-1 sidebar-menu-title hover:text-gray-200" onClick={isMobile ? onClose : undefined}>{menu.menu_name}</a>
+          <a href={`/dashboardportal/${menu.menu_path}`} className="text-sm flex-1 sidebar-menu-title hover:opacity-70" onClick={isMobile ? onClose : undefined}>{menu.menu_name}</a>
         </div>
         {isParent && isExpanded && (
           <div className="overflow-hidden transition-all duration-300 ease-in-out">
@@ -167,7 +167,7 @@ export default function Sidebar({ isCollapsed, onToggle, onMouseEnter, onMouseLe
                   placeholder="Select Company"
                   disabled={!Array.isArray(companies) || companies.length === 0}
                   minWidth={180}
-                  sx={{ '& .MuiSelect-select, & .MuiInputBase-input': { color: 'white' }, '& .MuiInputLabel-root': { color: 'white' } }}
+                  sx={{ '& .MuiSelect-select, & .MuiInputBase-input': { color: 'hsl(var(--sidebar-fg))' }, '& .MuiInputLabel-root': { color: 'hsl(var(--sidebar-fg))' } }}
                 />
               </div>
               <div className="mb-2">
@@ -180,7 +180,7 @@ export default function Sidebar({ isCollapsed, onToggle, onMouseEnter, onMouseLe
                   placeholder="Select Branches"
                   disabled={!selectedCompany}
                   minWidth={180}
-                  sx={{ '& .MuiSelect-select, & .MuiInputBase-input': { color: 'white' }, '& .MuiInputLabel-root': { color: 'white' } }}
+                  sx={{ '& .MuiSelect-select, & .MuiInputBase-input': { color: 'hsl(var(--sidebar-fg))' }, '& .MuiInputLabel-root': { color: 'hsl(var(--sidebar-fg))' } }}
                 />
               </div>
             </>

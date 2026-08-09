@@ -48,6 +48,11 @@
     --brand-secondary: 195 44% 59%;
     --brand-secondary-foreground: 203 86% 16%;
     --border-accent: 195 44% 59%;
+    --sidebar-bg: 76 45% 91%;
+    --sidebar-accent: 76 40% 80%;
+    --sidebar-fg: 90 30% 16%;
+    /* Table/grid header band — same hue as the sidebar, dark enough for white bold text (4.85:1). */
+    --table-header: 76 72% 28%;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -130,44 +135,44 @@
 
   /* Sidebar styles - shared across all sidebar variants */
   .sidebar-container {
-    @apply bg-[#006699] text-white transition-all duration-300 h-screen flex flex-col;
+    @apply bg-[hsl(var(--sidebar-bg))] text-[hsl(var(--sidebar-fg))] transition-all duration-300 h-screen flex flex-col;
   }
 
   /* Reset link styles inside sidebar */
   .sidebar-container a {
-    @apply text-white no-underline;
+    @apply text-[hsl(var(--sidebar-fg))] no-underline;
   }
 
   .sidebar-menu-link {
-    @apply flex items-center px-4 py-2 text-sm text-white hover:bg-[#005580] transition-colors;
+    @apply flex items-center px-4 py-2 text-sm text-[hsl(var(--sidebar-fg))] hover:bg-[hsl(var(--sidebar-accent))] transition-colors;
   }
 
   .sidebar-menu-icon {
-    @apply mr-3 text-white;
+    @apply mr-3 text-[hsl(var(--sidebar-fg))];
   }
 
   .sidebar-menu-title {
-    @apply flex-1 text-white;
+    @apply flex-1 text-[hsl(var(--sidebar-fg))];
   }
 
   .sidebar-menu-chevron {
-    @apply text-white;
+    @apply text-[hsl(var(--sidebar-fg))];
   }
 
   .sidebar-submenu {
-    @apply ml-4 border-l border-[#005580];
+    @apply ml-4 border-l border-[hsl(var(--sidebar-accent))];
   }
 
   .sidebar-section-border {
-    @apply border-t border-[#005580] mt-2;
+    @apply border-t border-[hsl(var(--sidebar-accent))] mt-2;
   }
 
   .sidebar-user-settings {
-    @apply flex items-center px-4 py-2 text-sm text-white hover:bg-[#005580] transition-colors cursor-pointer;
+    @apply flex items-center px-4 py-2 text-sm text-[hsl(var(--sidebar-fg))] hover:bg-[hsl(var(--sidebar-accent))] transition-colors cursor-pointer;
   }
 
   .sidebar-submenu-link {
-    @apply block px-4 py-2 text-white hover:bg-[#005580];
+    @apply block px-4 py-2 text-[hsl(var(--sidebar-fg))] hover:bg-[hsl(var(--sidebar-accent))];
   }
 }
 
@@ -178,7 +183,7 @@
 .sidebar-menu-link,
 .sidebar-menu-title,
 .sidebar-submenu-link {
-  color: white !important;
+  color: hsl(var(--sidebar-fg)) !important;
 }
 
 .border-blue {
@@ -219,6 +224,25 @@
 
 .btn-primary:hover {
   background-color: hsl(var(--brand-primary-hover)) !important;
+}
+
+/* Login page glow animations */
+@keyframes login-glow {
+  0%, 100% { box-shadow: 0 0 8px 2px hsl(var(--brand-primary) / 0.4); }
+  50% { box-shadow: 0 0 24px 8px hsl(var(--brand-primary) / 0.8); }
+}
+
+@keyframes logo-glow {
+  0%, 100% { filter: drop-shadow(0 0 4px hsl(var(--brand-primary) / 0.5)); }
+  50% { filter: drop-shadow(0 0 16px hsl(var(--brand-primary) / 0.9)); }
+}
+
+.login-glow {
+  animation: login-glow 2.5s ease-in-out infinite;
+}
+
+.logo-glow {
+  animation: logo-glow 2.5s ease-in-out infinite;
 }
 
 /* Transaction Grid Styles - shared across line items and additional charges */

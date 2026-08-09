@@ -374,7 +374,7 @@ const BulkItemGrid: React.FC<Props> = ({ rows, onRowsChange, groups, uoms, disab
               {COLUMNS.map(c => (
                 <TableCell
                   key={String(c.key)}
-                  sx={{ width: c.width, fontWeight: 600, bgcolor: "#3ea6da", color: "white" }}
+                  sx={{ width: c.width, fontWeight: 600, bgcolor: "hsl(var(--table-header))", color: "white" }}
                 >
                   {c.label}
                 </TableCell>

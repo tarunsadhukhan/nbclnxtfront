@@ -7,12 +7,12 @@ const nextConfig: NextConfig = {
       {
         protocol: 'http',
         hostname: '*.localhost',
-        port: '3000',
+        port: '3001',
       },
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '3000',
+        port: '3001',
       },
     ],
     // Use unoptimized images for local development to avoid subdomain issues
@@ -51,7 +51,7 @@ const nextConfig: NextConfig = {
   // }
   async rewrites() {
     const useProxy = process.env.USE_NEXT_PROXY === 'true';
-    const backendHost = process.env.NEXT_PUBLIC_BACKENDHOST || 'localhost:8000';
+    const backendHost = process.env.NEXT_PUBLIC_BACKENDHOST || 'localhost:8001';
     const backendUrl = backendHost.includes('http')
       ? `${backendHost}/api`
       : `http://${backendHost}/api`;

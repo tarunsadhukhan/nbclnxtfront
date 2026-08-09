@@ -232,28 +232,28 @@ export default function SubDeptManagement() {
       headerName: 'Deaprtment Code',
       flex: 1,
       minWidth: 200,
-      headerClassName: 'bg-[#3ea6da] text-white',
+      headerClassName: 'bg-[hsl(var(--table-header))] text-white',
     },
     {
       field: 'dept_desc',
       headerName: 'Deaprtment Name',
       flex: 1,
       minWidth: 200,
-      headerClassName: 'bg-[#3ea6da] text-white',
+      headerClassName: 'bg-[hsl(var(--table-header))] text-white',
     },
     {
       field: 'sub_dept_code',
       headerName: 'Sub Deaprtment Code',
       flex: 1,
       minWidth: 200,
-      headerClassName: 'bg-[#3ea6da] text-white',
+      headerClassName: 'bg-[hsl(var(--table-header))] text-white',
     },
     {
       field: 'sub_dept_desc',
       headerName: 'Sub Deaprtment Name',
       flex: 1,
       minWidth: 200,
-      headerClassName: 'bg-[#3ea6da] text-white',
+      headerClassName: 'bg-[hsl(var(--table-header))] text-white',
     },
 
     {
@@ -261,13 +261,13 @@ export default function SubDeptManagement() {
       headerName: 'Order By',
       flex: 1,
       minWidth: 200,
-      headerClassName: 'bg-[#3ea6da] text-white',
+      headerClassName: 'bg-[hsl(var(--table-header))] text-white',
     },
     {
       field: 'actions',
       headerName: 'Actions',
       width: 100,
-      headerClassName: 'bg-[#3ea6da] text-white',
+      headerClassName: 'bg-[hsl(var(--table-header))] text-white',
       sortable: false,
       filterable: false,
       renderCell: (params) => (
@@ -423,7 +423,7 @@ export default function SubDeptManagement() {
             }}
             sx={{
               '& .MuiDataGrid-columnHeader': {
-                backgroundColor: '#3ea6da',
+                backgroundColor: 'hsl(var(--table-header))',
                 color: 'white',
                 fontWeight: 'bold',
               },

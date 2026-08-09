@@ -172,7 +172,7 @@ export default function ReportGrid<T extends GridValidRowModel>({
                 }
               : {}),
             "& .MuiDataGrid-columnHeader": {
-              backgroundColor: "#3ea6da",
+              backgroundColor: "hsl(var(--table-header))",
               color: "white",
               fontWeight: "bold",
             },
@@ -196,7 +196,7 @@ export default function ReportGrid<T extends GridValidRowModel>({
             "& .MuiDataGrid-cell--textRight": { justifyContent: "flex-end" },
             "& .report-total-row, & .report-total-row:hover, & .report-total-row.Mui-hovered":
               {
-                backgroundColor: "#3ea6da",
+                backgroundColor: "hsl(var(--table-header))",
                 color: "white",
               },
             "& .report-total-row .MuiDataGrid-cell": {
@@ -207,18 +207,18 @@ export default function ReportGrid<T extends GridValidRowModel>({
             // Total so the two read as different levels.
             "& .report-group-total-row, & .report-group-total-row:hover, & .report-group-total-row.Mui-hovered":
               {
-                backgroundColor: "#6fbde3",
+                backgroundColor: "#aac464",
                 color: "white",
               },
             // Inner subtotal (e.g. IS01 cost centre) — lightest of the three.
             "& .report-subtotal-row, & .report-subtotal-row:hover, & .report-subtotal-row.Mui-hovered":
               {
-                backgroundColor: "#d7ecf8",
-                color: "#0C3C60",
+                backgroundColor: "#e7eed3",
+                color: "#29351d",
               },
             "& .report-subtotal-row .MuiDataGrid-cell": {
               fontWeight: 700,
-              borderRightColor: "rgba(12,60,96,0.2)",
+              borderRightColor: "rgba(41,53,29,0.2)",
             },
           }}
         />

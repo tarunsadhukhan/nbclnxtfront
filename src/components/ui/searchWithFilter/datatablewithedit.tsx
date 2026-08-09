@@ -182,7 +182,7 @@ export function DataTable<T>({
             {columns.filter(col => col.visible !== false).map(col => (
               <TableHead
                 key={col.key as string}
-                className={col.className ?? (col.sortable ? "bg-[#3ea6da] text-white cursor-pointer" : "bg-[#3ea6da] text-white")}
+                className={col.className ?? (col.sortable ? "bg-[hsl(var(--table-header))] text-white cursor-pointer" : "bg-[hsl(var(--table-header))] text-white")}
                 onClick={() => {
                   if (col.sortable && setSortKey && setSortOrder) {
                     if (sortKey === col.key) {

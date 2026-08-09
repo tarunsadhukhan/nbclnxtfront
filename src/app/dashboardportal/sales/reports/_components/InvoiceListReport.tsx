@@ -332,7 +332,7 @@ export default function InvoiceListReport({ coId, branches }: Props) {
             disableRowSelectionOnClick
             sx={{
               "& .MuiDataGrid-columnHeader": {
-                backgroundColor: "#3ea6da",
+                backgroundColor: "hsl(var(--table-header))",
                 color: "white",
                 fontWeight: "bold",
               },

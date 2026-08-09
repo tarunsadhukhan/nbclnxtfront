@@ -74,25 +74,25 @@ const columns: Column<Company>[] = [
   {
     key: "co_name",
     label: "Name",
-    className: "bg-[#3ea6da] text-white font-medium",
+    className: "bg-[hsl(var(--table-header))] text-white font-medium",
     sortable: true,
   },
   {
     key: "co_email_id",
     label: "Email",
-    className: "bg-[#3ea6da] text-white font-medium",
+    className: "bg-[hsl(var(--table-header))] text-white font-medium",
     sortable: true,
   },
   {
     key: "co_prefix",
     label: "Short Name",
-    className: "bg-[#3ea6da] text-white font-medium",
+    className: "bg-[hsl(var(--table-header))] text-white font-medium",
     sortable: true,
   },
   {
     key: "actions",
     label: "Actions",
-    className: "bg-[#3ea6da] text-white",
+    className: "bg-[hsl(var(--table-header))] text-white",
     render: (_val, row) => (
       <Button
         variant="ghost"

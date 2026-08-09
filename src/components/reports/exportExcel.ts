@@ -11,16 +11,16 @@ export interface ReportExportHeader {
   reportFor?: string | null;
 }
 
-export const BLUE = "FF3EA6DA";
+export const HEADER_FILL = "FF5F7B14";
 export const WHITE = "FFFFFFFF";
 export const GRID_LINE = { style: "thin", color: { argb: "FF9E9E9E" } } as const;
 export const HEADER_LINE = { style: "thin", color: { argb: WHITE } } as const;
 
 /** Summary-row shading per level — same three shades the grid renders. */
 const TOTAL_ROW_FILL = {
-  grand: { bg: BLUE, text: WHITE },
-  group: { bg: "FF6FBDE3", text: WHITE },
-  sub: { bg: "FFD7ECF8", text: "FF0C3C60" },
+  grand: { bg: HEADER_FILL, text: WHITE },
+  group: { bg: "FFAAC464", text: WHITE },
+  sub: { bg: "FFE7EED3", text: "FF29351D" },
 } as const;
 
 /** Minimal structural view of an exceljs worksheet — lets callers that build
@@ -74,12 +74,12 @@ export function writeReportHeaderBlock(
   return wrote;
 }
 
-/** Applies the blue header-band styling to an already-added row. */
+/** Applies the green header-band styling to an already-added row. */
 export function styleHeaderRow(row: {
   eachCell: (cb: (cell: Record<string, unknown>) => void) => void;
 }): void {
   row.eachCell((cell) => {
-    cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: BLUE } };
+    cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: HEADER_FILL } };
     cell.font = { bold: true, color: { argb: WHITE } };
     cell.alignment = { vertical: "middle", wrapText: true };
     cell.border = {

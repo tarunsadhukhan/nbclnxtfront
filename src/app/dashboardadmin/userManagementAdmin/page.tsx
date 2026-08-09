@@ -65,28 +65,28 @@ const columns: Column<User>[] = [
   {
     key: "con_user_name",
     label: "Name",
-    className: "bg-[#3ea6da] text-white font-medium",
+    className: "bg-[hsl(var(--table-header))] text-white font-medium",
   },
   {
     key: "con_user_login_email_id",
     label: "Username",
-    className: "bg-[#3ea6da] text-white font-medium",
+    className: "bg-[hsl(var(--table-header))] text-white font-medium",
   },
   {
     key: "con_role_name",
     label: "Role",
-    className: "bg-[#3ea6da] text-white font-medium",
+    className: "bg-[hsl(var(--table-header))] text-white font-medium",
   },
   {
     key: "active",
     label: "Active",
-    className: "bg-[#3ea6da] text-white",
+    className: "bg-[hsl(var(--table-header))] text-white",
     render: (val) => (val === 1 ? "Yes" : "No"),
   },
   {
     key: "actions",
     label: "Actions",
-    className: "bg-[#3ea6da] text-white",
+    className: "bg-[hsl(var(--table-header))] text-white",
     render: (_val, row) => (
       <Button
         variant="ghost"

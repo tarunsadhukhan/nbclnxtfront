@@ -73,19 +73,19 @@ export default function PaySchemeParametersPage() {
   };
 
   const columns: GridColDef[] = [
-    { field: "code", headerName: "Code", width: 120, headerClassName: "bg-[#3ea6da] text-white" },
-    { field: "name", headerName: "Name", flex: 1, minWidth: 180, headerClassName: "bg-[#3ea6da] text-white" },
-    { field: "type_label", headerName: "Type", width: 120, headerClassName: "bg-[#3ea6da] text-white" },
+    { field: "code", headerName: "Code", width: 120, headerClassName: "bg-[hsl(var(--table-header))] text-white" },
+    { field: "name", headerName: "Name", flex: 1, minWidth: 180, headerClassName: "bg-[hsl(var(--table-header))] text-white" },
+    { field: "type_label", headerName: "Type", width: 120, headerClassName: "bg-[hsl(var(--table-header))] text-white" },
     {
-      field: "effective_from", headerName: "Effective From", width: 130, headerClassName: "bg-[#3ea6da] text-white",
+      field: "effective_from", headerName: "Effective From", width: 130, headerClassName: "bg-[hsl(var(--table-header))] text-white",
       renderCell: (p: GridRenderCellParams) => p.value ? String(p.value).slice(0, 10) : "-",
     },
     {
-      field: "ends_on", headerName: "Effective Till", width: 130, headerClassName: "bg-[#3ea6da] text-white",
+      field: "ends_on", headerName: "Effective Till", width: 130, headerClassName: "bg-[hsl(var(--table-header))] text-white",
       renderCell: (p: GridRenderCellParams) => p.value ? String(p.value).slice(0, 10) : "-",
     },
-    { field: "parent_name", headerName: "Parent", width: 160, headerClassName: "bg-[#3ea6da] text-white", renderCell: (p: GridRenderCellParams) => p.value || "-" },
-    { field: "default_value", headerName: "Default Value", width: 120, headerClassName: "bg-[#3ea6da] text-white", renderCell: (p: GridRenderCellParams) => p.value ?? "-" },
+    { field: "parent_name", headerName: "Parent", width: 160, headerClassName: "bg-[hsl(var(--table-header))] text-white", renderCell: (p: GridRenderCellParams) => p.value || "-" },
+    { field: "default_value", headerName: "Default Value", width: 120, headerClassName: "bg-[hsl(var(--table-header))] text-white", renderCell: (p: GridRenderCellParams) => p.value ?? "-" },
   ];
 
   const isRowEditable = useCallback(

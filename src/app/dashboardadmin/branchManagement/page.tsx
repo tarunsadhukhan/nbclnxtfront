@@ -141,14 +141,14 @@ export default function BranchManagement() {
       headerName: 'Branch Name', 
       flex: 1,
       minWidth: 200,
-      headerClassName: 'bg-[#3ea6da] text-white',
+      headerClassName: 'bg-[hsl(var(--table-header))] text-white',
     },
     { 
       field: 'active', 
       headerName: 'Active', 
       flex: 0.7,
       minWidth: 120,
-      headerClassName: 'bg-[#3ea6da] text-white',
+      headerClassName: 'bg-[hsl(var(--table-header))] text-white',
       renderCell: (params) => (
         <span className={`font-medium ${params.row.active ? 'text-green-500' : 'text-red-500'}`}>
           {params.row.active ? 'Yes' : 'No'}
@@ -159,7 +159,7 @@ export default function BranchManagement() {
       field: 'actions',
       headerName: 'Actions',
       width: 100,
-      headerClassName: 'bg-[#3ea6da] text-white',
+      headerClassName: 'bg-[hsl(var(--table-header))] text-white',
       sortable: false,
       filterable: false,
       renderCell: (params) => (
@@ -275,7 +275,7 @@ export default function BranchManagement() {
             }}
             sx={{
               '& .MuiDataGrid-columnHeader': {
-                backgroundColor: '#3ea6da',
+                backgroundColor: 'hsl(var(--table-header))',
                 color: 'white',
                 fontWeight: 'bold',
               },

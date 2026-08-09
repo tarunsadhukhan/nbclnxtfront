@@ -504,7 +504,7 @@ export default function PayRegisterDispSetPage() {
               sx={{
                 // Match the Pay Register index page header (IndexWrapper / muiDataGrid).
                 "& .MuiDataGrid-columnHeader": {
-                  backgroundColor: "#3ea6da",
+                  backgroundColor: "hsl(var(--table-header))",
                   color: "white",
                   fontWeight: "bold",
                   borderRight: "1px solid rgba(224, 224, 224, 1)",

@@ -23,7 +23,7 @@ export function DynamicMenu({ isCollapsed }: { isCollapsed: boolean }) {
       <div key={item.menu_id}>
         <Link
           href={item.menu_path || "#"}
-          className="flex items-center px-4 py-2 text-sm text-white hover:bg-[#005580] transition-colors"
+          className="flex items-center px-4 py-2 text-sm text-[hsl(var(--sidebar-fg))] hover:bg-[hsl(var(--sidebar-accent))] transition-colors"
           onClick={e => {
             if (hasSubmenu) {
               e.preventDefault();
@@ -40,7 +40,7 @@ export function DynamicMenu({ isCollapsed }: { isCollapsed: boolean }) {
           )}
         </Link>
         {hasSubmenu && isOpen && !isCollapsed && (
-          <div className="ml-4 border-l border-[#005580]">
+          <div className="ml-4 border-l border-[hsl(var(--sidebar-accent))]">
             {item.submenu?.map((subItem: any) => renderMenuItem(subItem))}
           </div>
         )}

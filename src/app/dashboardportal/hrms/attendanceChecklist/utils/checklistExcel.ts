@@ -13,7 +13,7 @@
  */
 import { GridColDef, GridValidRowModel } from "@mui/x-data-grid";
 import {
-  BLUE,
+  HEADER_FILL,
   GRID_LINE,
   HEADER_LINE,
   WHITE,
@@ -53,7 +53,7 @@ function addBodyRow(ws: Worksheet, values: unknown[], emphasis: boolean): void {
     };
     cell.alignment = { vertical: "middle", wrapText: true };
     if (emphasis) {
-      cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: BLUE } };
+      cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: HEADER_FILL } };
       cell.font = { bold: true, color: { argb: WHITE } };
     }
   });

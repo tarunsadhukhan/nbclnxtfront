@@ -53,10 +53,10 @@ export default function DashboardLayout({
       <PortalPermissionBoundary>
         <div className="flex flex-col md:flex-row h-screen bg-gray-100">
           {/* Mobile top bar — visible only on small screens */}
-          <div className="md:hidden flex items-center justify-end bg-[#006699] px-4 py-3 shrink-0">
+          <div className="md:hidden flex items-center justify-end bg-[hsl(var(--sidebar-bg))] px-4 py-3 shrink-0">
             <button
               onClick={() => setIsMobileMenuOpen(prev => !prev)}
-              className="text-white p-1"
+              className="text-[hsl(var(--sidebar-fg))] p-1"
               aria-label="Toggle menu"
             >
               <Menu size={24} />

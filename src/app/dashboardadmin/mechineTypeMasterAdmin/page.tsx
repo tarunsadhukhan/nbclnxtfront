@@ -131,9 +131,9 @@ export default function MechineTypeMasterPage() {
   const handleSaveEdit = async () => { /* implement when API known */ };
 
   const columns: GridColDef[] = [
-    { field: 'mechine_type', headerName: 'Machine Type', flex: 1, minWidth: 180, headerClassName: 'bg-[#3ea6da] text-white' },
-    { field: 'active', headerName: 'Active', width: 120, headerClassName: 'bg-[#3ea6da] text-white', renderCell: (params: GridRenderCellParams) => <span>{params.value ? 'Yes' : 'No'}</span> },
-    { field: 'actions', headerName: 'Actions', width: 140, sortable: false, filterable: false, headerClassName: 'bg-[#3ea6da] text-white', renderCell: (params: GridRenderCellParams) => (
+    { field: 'mechine_type', headerName: 'Machine Type', flex: 1, minWidth: 180, headerClassName: 'bg-[hsl(var(--table-header))] text-white' },
+    { field: 'active', headerName: 'Active', width: 120, headerClassName: 'bg-[hsl(var(--table-header))] text-white', renderCell: (params: GridRenderCellParams) => <span>{params.value ? 'Yes' : 'No'}</span> },
+    { field: 'actions', headerName: 'Actions', width: 140, sortable: false, filterable: false, headerClassName: 'bg-[hsl(var(--table-header))] text-white', renderCell: (params: GridRenderCellParams) => (
       <div className="flex items-center gap-2"><button className="text-blue-600 underline" onClick={() => handleOpenView(params.row.id)}>View</button><button className="text-green-600 underline" onClick={() => handleOpenEdit(params.row.id)}>Edit</button></div>
     ) }
   ];

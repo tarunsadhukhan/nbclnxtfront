@@ -152,7 +152,7 @@ export default function PaySchemeCreationPage() {
       filterable: false,
       align: "center",
       headerAlign: "center",
-      headerClassName: "bg-[#3ea6da] text-white",
+      headerClassName: "bg-[hsl(var(--table-header))] text-white",
       renderCell: (p) => {
         const row = p.row as PaySchemeGridRow;
         const isExporting = exportingId === row.payscheme_id;
@@ -180,34 +180,34 @@ export default function PaySchemeCreationPage() {
       field: "payscheme_code",
       headerName: "Pay Scheme Code",
       width: 160,
-      headerClassName: "bg-[#3ea6da] text-white",
+      headerClassName: "bg-[hsl(var(--table-header))] text-white",
     },
     {
       field: "payscheme_name",
       headerName: "Pay Scheme Name",
       flex: 1,
       minWidth: 200,
-      headerClassName: "bg-[#3ea6da] text-white",
+      headerClassName: "bg-[hsl(var(--table-header))] text-white",
     },
     {
       field: "wage_type_name",
       headerName: "Wage Type",
       width: 140,
-      headerClassName: "bg-[#3ea6da] text-white",
+      headerClassName: "bg-[hsl(var(--table-header))] text-white",
       renderCell: (p) => p.value || "-",
     },
     {
       field: "status_desc",
       headerName: "Status",
       width: 120,
-      headerClassName: "bg-[#3ea6da] text-white",
+      headerClassName: "bg-[hsl(var(--table-header))] text-white",
       renderCell: (p) => p.value || "-",
     },
     {
       field: "effective_from",
       headerName: "Effective From",
       width: 140,
-      headerClassName: "bg-[#3ea6da] text-white",
+      headerClassName: "bg-[hsl(var(--table-header))] text-white",
       renderCell: (p) => (p.value ? String(p.value).slice(0, 10) : "-"),
     },
   ];

@@ -23,18 +23,18 @@ export function CompanySelection({ isCollapsed }: CompanySelectionProps) {
     option: (provided, state) => ({
       ...provided,
       color: state.isSelected ? "white" : "black",
-      backgroundColor: state.isSelected ? "#005580" : "white",
+      backgroundColor: state.isSelected ? "hsl(var(--brand-primary))" : "white",
       "&:hover": { backgroundColor: "#f0f0f0" },
     }),
     control: (provided) => ({
       ...provided,
       backgroundColor: "transparent",
-      borderColor: "#005580",
-      color: "white",
+      borderColor: "hsl(var(--sidebar-accent))",
+      color: "hsl(var(--sidebar-fg))",
     }),
     singleValue: (provided) => ({
       ...provided,
-      color: "white",
+      color: "hsl(var(--sidebar-fg))",
     }),
     menu: (provided) => ({
       ...provided,
@@ -42,18 +42,18 @@ export function CompanySelection({ isCollapsed }: CompanySelectionProps) {
     }),
     input: (provided) => ({
       ...provided,
-      color: "white",
+      color: "hsl(var(--sidebar-fg))",
     }),
     placeholder: (provided) => ({
       ...provided,
-      color: "white",
+      color: "hsl(var(--sidebar-fg))",
     }),
   };
 
   return (
-    <div className="px-4 py-3 border-b border-[#005580]">
+    <div className="px-4 py-3 border-b border-[hsl(var(--sidebar-accent))]">
       {loading ? (
-        <Skeleton className="h-10 w-full bg-[#005580]" />
+        <Skeleton className="h-10 w-full bg-[hsl(var(--sidebar-accent))]" />
       ) : isCollapsed ? (
         <></>
       ) : (

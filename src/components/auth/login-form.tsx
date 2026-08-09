@@ -129,7 +129,7 @@ export function LoginForm({ subdomain }: LoginFormsProps) {
   }, [subdomain]);
 
   return (
-    <div className="login-container" >
+    <div className="login-container login-glow rounded-3xl border-4 border-[#9BC837] bg-white p-8">
       <div className="text-center">
         <h2 className="login-h2">Login</h2>
       </div>

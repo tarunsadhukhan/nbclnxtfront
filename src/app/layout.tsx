@@ -19,10 +19,15 @@ const geistMono = Geist_Mono({
 }); */
 
 export const metadata: Metadata = {
-  title: "VowErp",
+  title: "Global Erp Solutions",
   description: "ERP",
   icons: {
-    icon: "/favicon-16x16.png",
+    icon: [
+      { url: "/app-icons/icon-29.png", sizes: "29x29", type: "image/png" },
+      { url: "/app-icons/icon-58.png", sizes: "58x58", type: "image/png" },
+      { url: "/app-icons/android-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: "/app-icons/icon-180.png",
   },
 };
 

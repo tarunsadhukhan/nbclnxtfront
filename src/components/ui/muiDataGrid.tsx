@@ -154,7 +154,7 @@ const MuiDataGrid: React.FC<MuiDataGridProps> = ({
         sx={{
           ...wrappingGridSx,
           '& .MuiDataGrid-columnHeader': {
-            backgroundColor: '#3ea6da',
+            backgroundColor: 'hsl(var(--table-header))',
             color: 'white',
             fontWeight: 'bold',
           },
@@ -168,11 +168,11 @@ const MuiDataGrid: React.FC<MuiDataGridProps> = ({
           },
           // Pinned grand-total row (opt-in via getRowClassName).
           '& .row-grand-total': {
-            backgroundColor: '#eef6fb',
+            backgroundColor: '#f1f5e5',
             fontWeight: 'bold',
           },
           '& .row-grand-total:hover': {
-            backgroundColor: '#e0eff7',
+            backgroundColor: '#e5edcf',
           },
         }}
       />

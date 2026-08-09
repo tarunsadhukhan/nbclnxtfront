@@ -120,18 +120,18 @@ const columns: Column<Role>[] = [
   {
     key: "con_role_name",
     label: "Role Name",
-    className: "bg-[#3ea6da] text-white font-medium",
+    className: "bg-[hsl(var(--table-header))] text-white font-medium",
   },
   {
     key: "is_enable",
     label: "Active",
-    className: "bg-[#3ea6da] text-white",
+    className: "bg-[hsl(var(--table-header))] text-white",
     render: (val) => (val === 1 ? "Yes" : "No"),
   },
   {
     key: "actions",
     label: "Actions",
-    className: "bg-[#3ea6da] text-white",
+    className: "bg-[hsl(var(--table-header))] text-white",
     render: (_val, row) => (
       <Button
         variant="ghost"
