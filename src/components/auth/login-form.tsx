@@ -23,7 +23,6 @@ import { Loader2, Eye, EyeOff } from "lucide-react"
 //import axios from "axios"
 import Swal from "sweetalert2";
 import { login,loginConsole } from "@/components/auth/login_auth"
-import { Autocomplete, TextField } from "@mui/material"
 import { fetchWithCookie } from "@/utils/apiClient2"
 import { apiRoutes } from "@/utils/api"
 import type { Company } from "@/components/dashboard/sidebarContext"
@@ -44,17 +43,6 @@ export function LoginForm({ subdomain }: LoginFormsProps) {
   const [showPassword, setShowPassword] = useState(false)
   const [autoLoginType, setAutoLoginType] = useState<string | null>(null);
   const router = useRouter()
-
-  // ─── Step 2: company / branch, chosen AFTER signing in ───────────
-  // The list is the authenticated menu tree, so it already contains only what
-  // this user is mapped to — nothing to re-verify, and it carries the menus the
-  // portal renders.
-  const [step, setStep] = useState<"credentials" | "scope">("credentials")
-  const [companies, setCompanies] = useState<Company[]>([])
-  const [coId, setCoId] = useState<number | "">("")
-  const [branchIds, setBranchIds] = useState<number[]>([])
-
-  const selectedCo = companies.find((c) => c.co_id === coId) ?? null
 
   const goTo = (path: string) => {
     const { host, protocol } = window.location
@@ -107,8 +95,9 @@ export function LoginForm({ subdomain }: LoginFormsProps) {
           return;
         }
 
-        // Portal: load the companies this user is actually mapped to, then let
-        // them pick one in step 2.
+        // Portal: load the companies this user is actually mapped to and enter
+        // under the first one. Switching happens in-app via User Settings >
+        // Company Selection.
         const result = await fetchWithCookie(apiRoutes.PORTAL_MENU_ITEMS, "GET");
         const entitled = Array.isArray(result.data) ? (result.data as Company[]) : [];
 
@@ -123,9 +112,15 @@ export function LoginForm({ subdomain }: LoginFormsProps) {
           return;
         }
 
-        setCompanies(entitled);
-        setStep("scope");
-        setIsLoading(false);
+        const firstCo = entitled[0];
+        localStorage.setItem("sidebar_companies", JSON.stringify(entitled));
+        localStorage.setItem("sidebar_selectedCompany", JSON.stringify(firstCo));
+        localStorage.setItem(
+          "sidebar_selectedBranches",
+          JSON.stringify(firstCo.branches.slice(0, 1).map((b) => b.branch_id))
+        );
+        goTo('/dashboardportal');
+        return;
       } else {
         // Handle login failure
         Swal.fire({
@@ -152,16 +147,6 @@ export function LoginForm({ subdomain }: LoginFormsProps) {
     }
   }
 
-  // Step 2 — the picked scope came from the authenticated list, so it just gets
-  // persisted for the sidebar to read.
-  function handleSelectScope() {
-    if (!selectedCo || branchIds.length === 0) return;
-    localStorage.setItem("sidebar_companies", JSON.stringify(companies));
-    localStorage.setItem("sidebar_selectedCompany", JSON.stringify(selectedCo));
-    localStorage.setItem("sidebar_selectedBranches", JSON.stringify(branchIds));
-    goTo('/dashboardportal');
-  }
-
   useEffect(() => {
     if (subdomain === "admin") {
       setAutoLoginType("admin"); // Set AutoLoginType explicitly to admin
@@ -174,19 +159,16 @@ export function LoginForm({ subdomain }: LoginFormsProps) {
     <div className="login-glow rounded-2xl border-2 border-[hsl(var(--brand-primary))] bg-white px-6 py-5">
       <div className="mb-4 text-center">
         <h2 className="text-lg font-semibold tracking-tight text-[hsl(var(--brand-secondary))]">
-          {step === "scope" ? "Select company" : "Sign in"}
+          Sign in
         </h2>
         <p className="mt-0.5 text-xs text-gray-500">
-          {step === "scope"
-            ? "Choose the company and branch to work in"
-            : autoLoginType === "admin"
-              ? "Administrator sign in"
-              : "Enter your credentials to continue"}
+          {autoLoginType === "admin"
+            ? "Administrator sign in"
+            : "Enter your credentials to continue"}
         </p>
       </div>
 
-      {step === "credentials" ? (
-        <Form {...form}>
+      <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 text-sm">
             {/* 1. User name */}
             <FormField
@@ -319,82 +301,6 @@ export function LoginForm({ subdomain }: LoginFormsProps) {
             </Button>
           </form>
         </Form>
-      ) : (
-        <div className="space-y-3 text-sm">
-          {/* 4. Company — the signed-in user's own list */}
-          <div>
-            <label className="mb-1 block text-xs font-medium" htmlFor="login-company">Company</label>
-            <Autocomplete
-              id="login-company"
-              options={companies}
-              value={selectedCo}
-              onChange={(_, picked) => {
-                setCoId(picked ? picked.co_id : "");
-                // Default to the company's first branch.
-                setBranchIds(picked?.branches.length ? [picked.branches[0].branch_id] : []);
-              }}
-              getOptionLabel={(c) => c.co_name}
-              isOptionEqualToValue={(o, v) => o.co_id === v.co_id}
-              size="small"
-              autoHighlight
-              openOnFocus
-              noOptionsText="No matching company"
-              slotProps={{ listbox: { sx: { fontSize: 13 } } }}
-              sx={{ "& .MuiInputBase-input": { fontSize: 13 } }}
-              renderInput={(params) => (
-                <TextField {...params} placeholder="Type to search company..." />
-              )}
-            />
-          </div>
-
-          {/* 5. Branch — driven by the company above */}
-          <div>
-            <label className="mb-1 block text-xs font-medium" htmlFor="login-branch">Branch</label>
-            {selectedCo?.branches.length === 1 ? (
-              // Nothing to choose — show the branch plainly. (Autocomplete's
-              // own readOnly leaves the clear/dropdown/delete controls live.)
-              <TextField
-                id="login-branch"
-                size="small"
-                fullWidth
-                value={selectedCo.branches[0].branch_name}
-                slotProps={{ input: { readOnly: true } }}
-                sx={{ "& .MuiInputBase-input": { fontSize: 13 } }}
-              />
-            ) : (
-              <Autocomplete
-                id="login-branch"
-                multiple
-                disabled={!selectedCo}
-                options={selectedCo?.branches ?? []}
-                value={(selectedCo?.branches ?? []).filter((b) => branchIds.includes(b.branch_id))}
-                onChange={(_, picked) => setBranchIds(picked.map((b) => b.branch_id))}
-                getOptionLabel={(b) => b.branch_name}
-                isOptionEqualToValue={(o, v) => o.branch_id === v.branch_id}
-                size="small"
-                autoHighlight
-                openOnFocus
-                noOptionsText="No matching branch"
-                slotProps={{ listbox: { sx: { fontSize: 13 } } }}
-                sx={{ "& .MuiInputBase-input": { fontSize: 13 } }}
-                renderInput={(params) => (
-                  <TextField {...params} placeholder={selectedCo ? "Select branch(es)..." : "Select a company first"} />
-                )}
-              />
-            )}
-          </div>
-
-          {/* 6. Select — enters the portal with the chosen scope */}
-          <Button
-            type="button"
-            onClick={handleSelectScope}
-            className="w-full bg-[hsl(var(--brand-primary))] hover:bg-[hsl(var(--brand-primary-hover))] text-white"
-            disabled={!selectedCo || branchIds.length === 0}
-          >
-            Select
-          </Button>
-        </div>
-      )}
     </div>
   )
 }

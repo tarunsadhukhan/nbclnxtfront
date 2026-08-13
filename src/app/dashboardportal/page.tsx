@@ -1,39 +1,73 @@
 "use client"
 
-// import { useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { Card } from "@/components/ui/card"
-// import { isAuthenticated } from "@/utils/auth"
+import InfoSkyMark from "@/components/ui/InfoSkyMark"
+import { brand } from "@/styles/brand"
 
+// ponytail: static splash — the old cards showed hardcoded fake figures.
+// Wire real KPI widgets here when the dashboard endpoints exist.
 export default function DashboardPage() {
-  const router = useRouter()
-
-  // useEffect(() => {
-  //   if (!isAuthenticated()) {
-  //     router.replace("/")
-  //   }
-  // }, [router])
-
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-        <div className="text-sm text-gray-500">2024-2025</div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="p-6">
-          <h3 className="font-semibold mb-2">Total Sales</h3>
-          <p className="text-2xl font-bold">₹45,231</p>
-        </Card>
-        <Card className="p-6">
-          <h3 className="font-semibold mb-2">Total Orders</h3>
-          <p className="text-2xl font-bold">124</p>
-        </Card>
-        <Card className="p-6">
-          <h3 className="font-semibold mb-2">Active Projects</h3>
-          <p className="text-2xl font-bold">8</p>
-        </Card>
+    <div className="relative flex min-h-[calc(100vh-6rem)] flex-col items-center justify-center overflow-hidden p-6">
+      {/* Soft brand wash behind the lockup */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: `radial-gradient(60% 55% at 50% 42%, ${brand.green}14, transparent 70%),
+                       radial-gradient(70% 60% at 50% 100%, ${brand.navyInk}0f, transparent 70%)`,
+        }}
+      />
+
+      <div className="relative flex flex-col items-center text-center">
+        {/* Mark with a rotating orbit ring */}
+        <div className="is-rise relative mb-7 flex h-40 w-40 items-center justify-center">
+          <div
+            aria-hidden
+            className="is-orbit absolute inset-0 rounded-full border-2 border-dashed"
+            style={{ borderColor: brand.green }}
+          />
+          <div
+            aria-hidden
+            className="is-breathe absolute inset-5 rounded-full"
+            style={{ background: `${brand.green}12` }}
+          />
+          <InfoSkyMark size={96} className="logo-glow relative" />
+        </div>
+
+        <h1
+          className="is-rise text-4xl font-bold tracking-[0.18em] sm:text-5xl"
+          style={{ color: brand.navyInk, animationDelay: "120ms" }}
+        >
+          IS ERP SOFTWARE
+        </h1>
+
+        <div
+          className="is-rise mt-5 h-px w-64 sm:w-80"
+          style={{
+            animationDelay: "220ms",
+            background: `linear-gradient(90deg, transparent, ${brand.navyInk}40 20%, ${brand.green} 50%, ${brand.navyInk}40 80%, transparent)`,
+          }}
+        />
+
+        <p
+          className="is-rise mt-5 text-base font-semibold tracking-[0.3em]"
+          style={{ color: brand.navyInk, animationDelay: "300ms" }}
+        >
+          INFOSKY GLOBAL
+        </p>
+        <p
+          className="is-rise mt-2 text-[11px] font-semibold tracking-[0.45em]"
+          style={{ color: brand.green, animationDelay: "380ms" }}
+        >
+          IT SOLUTIONS
+        </p>
+
+        <p
+          className="is-rise mt-12 text-[11px] tracking-wide"
+          style={{ color: `${brand.navyInk}99`, animationDelay: "520ms" }}
+        >
+          © {new Date().getFullYear()} InfoSky Global IT Solutions. All rights reserved.
+        </p>
       </div>
     </div>
   )

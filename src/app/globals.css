@@ -252,6 +252,33 @@
   animation: logo-glow 2.5s ease-in-out infinite;
 }
 
+/* Portal landing splash — staggered entrance + slow orbit */
+@keyframes is-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes is-orbit {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes is-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.04); }
+}
+
+.is-rise {
+  opacity: 0;
+  animation: is-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.is-orbit { animation: is-orbit 24s linear infinite; }
+.is-breathe { animation: is-breathe 6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .is-rise, .is-orbit, .is-breathe, .logo-glow { animation: none; opacity: 1; }
+}
+
 /* Transaction Grid Styles - shared across line items and additional charges */
 @layer components {
   .transaction-grid-container {

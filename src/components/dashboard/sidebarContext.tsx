@@ -114,17 +114,24 @@ export const SidebarProvider = ({ children }: { children: ReactNode }) => {
   }, [menuItems]);
 
   // After companies are set (e.g. after API fetch), re-point selectedCompany at
-  // the fresh object.
-  //
-  // It must NEVER fall back to companies[0]: company/branch is chosen at login
-  // and there is no in-app switcher, so a silent default would show one
-  // company's data under another company's name with no way for the user to
-  // notice or correct it. No valid selection => stay null and let the portal
-  // send the user back to sign in.
+  // the fresh object, defaulting to the first entitled company. Users switch
+  // scope in-app via User Settings > Company Selection, so a default is safe —
+  // the top bar always shows which company/branch is active.
   useEffect(() => {
     if (companies.length === 0) return;
-    setSelectedCompany(prev => (prev ? companies.find(c => c.co_id === prev.co_id) ?? null : null));
+    setSelectedCompany(prev => (prev && companies.find(c => c.co_id === prev.co_id)) || companies[0]);
   }, [companies]);
+
+  // Keep only branches that belong to the selected company, defaulting to its
+  // first branch when nothing valid is selected.
+  useEffect(() => {
+    if (!selectedCompany) return;
+    setSelectedBranches(prev => {
+      const valid = prev.filter(id => selectedCompany.branches.some(b => b.branch_id === id));
+      if (valid.length > 0) return valid.length === prev.length ? prev : valid;
+      return selectedCompany.branches.slice(0, 1).map(b => b.branch_id);
+    });
+  }, [selectedCompany]);
 
   // Update availableMenus and parentMenus when company/branches change
   useEffect(() => {

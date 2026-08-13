@@ -3,11 +3,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Box, Menu, MenuItem, Divider } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { LogOut, Key, User, ChevronDown } from "lucide-react";
+import { LogOut, Key, User, ChevronDown, Building2 } from "lucide-react";
 import { fetchWithCookie } from "@/utils/apiClient2";
 import { apiRoutes } from "@/utils/api";
 import { normalisePortalPath } from "@/utils/portalPermissions";
 import { useSidebarContext, type MenuItem as PortalMenu } from "@/components/dashboard/sidebarContext";
+import CompanyScopeDialog from "@/components/dashboard/CompanyScopeDialog";
 import { classic } from "@/components/ui/classic/ClassicWindow";
 import { brand } from "@/styles/brand";
 
@@ -19,8 +20,8 @@ const ERROR_ON_NAVY = "#ff9a9a";
  * also inherits the sidebar's job of loading the menu tree and the action
  * permissions (nothing else fetches them).
  *
- * Company/branch are chosen at login and shown here read-only; switching means
- * signing out and back in.
+ * Company/branch default to the first entitled pair and are switched in-app via
+ * User Settings › Company Selection.
  */
 export default function ClassicTopBar() {
   const router = useRouter();
@@ -34,6 +35,7 @@ export default function ClassicTopBar() {
   const [error, setError] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<{ el: HTMLElement; menuId: number } | null>(null);
   const [openUser, setOpenUser] = useState<HTMLElement | null>(null);
+  const [scopeOpen, setScopeOpen] = useState(false);
   // Company/branch reach us from localStorage (via the context's lazy
   // initialiser), so they don't exist during SSR — hold the scope back until
   // after mount or the first client render won't match the server's.
@@ -155,16 +157,6 @@ export default function ClassicTopBar() {
       <Box sx={{ ml: "auto", display: "flex", alignItems: "center", gap: "8px", pr: "2px" }}>
         {!mounted ? (
           <Box sx={{ px: "6px", color: brand.onNavyMuted }}>&nbsp;</Box>
-        ) : companies.length > 0 && !selectedCompany ? (
-          // Scope is picked at login and never defaulted, so say so loudly
-          // rather than showing data under the wrong company name.
-          <Box
-            component="a"
-            href="/"
-            sx={{ px: "6px", color: ERROR_ON_NAVY, fontWeight: 600, textDecoration: "underline" }}
-          >
-            No company selected — sign in again
-          </Box>
         ) : (
           <Box sx={{ px: "6px", color: brand.onNavyMuted }}>
             {selectedCompany?.co_name ?? "—"} · {branchLabel}
@@ -216,8 +208,12 @@ export default function ClassicTopBar() {
         slotProps={{ paper: { sx: { borderRadius: 0, border: `1px solid ${classic.border}`, background: classic.face } } }}
         MenuListProps={{ dense: true, sx: { py: "2px" } }}
       >
-        <MenuItem disabled sx={{ fontSize: 11, opacity: 0.8 }}>
-          {companies.length > 0 ? "Sign out to change company/branch" : "Not signed in"}
+        <MenuItem
+          sx={{ fontSize: 12, minHeight: 24 }}
+          disabled={companies.length === 0}
+          onClick={() => { setOpenUser(null); setScopeOpen(true); }}
+        >
+          <Building2 size={13} style={{ marginRight: 6 }} /> Company Selection
         </MenuItem>
         <Divider sx={{ my: "2px" }} />
         <MenuItem sx={{ fontSize: 12, minHeight: 24 }} onClick={() => { setOpenUser(null); router.push("/reset-password"); }}>
@@ -227,6 +223,8 @@ export default function ClassicTopBar() {
           <LogOut size={13} style={{ marginRight: 6 }} /> Logout
         </MenuItem>
       </Menu>
+
+      <CompanyScopeDialog open={scopeOpen} onClose={() => setScopeOpen(false)} />
     </Box>
   );
 }
