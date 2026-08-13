@@ -1,5 +1,23 @@
-node_modules
-dist
-.next
+# node_modules and .next are rebuilt inside the image; copying the host's
+# copies in would both bloat the layer and risk platform-specific binaries.
 .git
+.github
+.gitignore
+
+node_modules
+.next
+dist
+out
+coverage
+storybook-static
+playwright-report
+test-results
+
+.claude/
+.cursor/
+.vscode/
+docs/
+*.md
+
 .env
+.env.*

@@ -37,6 +37,12 @@ jobs:
             NEXT_PUBLIC_BACKENDHOST=http://nbclerp-backend:8000
             NEXT_PUBLIC_API_BASE_URL=/api
             USE_NEXT_PROXY=true
+          # This label is what links the GHCR package to this repository.
+          # Without it the package is standalone, and the repo-scoped
+          # GITHUB_TOKEN can push but NOT pull it — the VPS then gets
+          # "error from registry: denied" on docker compose pull.
+          labels: |
+            org.opencontainers.image.source=https://github.com/tarunsadhukhan/nbclnxtfront
           tags: |
             ghcr.io/tarunsadhukhan/nbclerp3ui:latest
             ghcr.io/tarunsadhukhan/nbclerp3ui:${{ github.sha }}

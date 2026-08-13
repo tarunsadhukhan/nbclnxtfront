@@ -1,12 +1,10 @@
 services:
   nbclerp-frontend:
+    # No build: stanza on purpose. Only docker-compose.yml is scp'd to the VPS,
+    # so a build fallback there can only fail with a confusing "no such file:
+    # Dockerfile". CI builds (with the NEXT_PUBLIC_* build-args, which must be
+    # set at build time) and pushes; the VPS pulls.
     image: ghcr.io/tarunsadhukhan/nbclerp3ui:latest
-    build:
-      context: .
-      args:
-        NEXT_PUBLIC_BACKENDHOST: http://nbclerp-backend:8000
-        NEXT_PUBLIC_API_BASE_URL: /api
-        USE_NEXT_PROXY: "true"
     container_name: nbclerp-frontend
     restart: unless-stopped
     # 3001 inside the container: package.json start is "next start -p 3001".
