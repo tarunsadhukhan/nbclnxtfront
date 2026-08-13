@@ -1,0 +1,23 @@
+services:
+  nbclerp-frontend:
+    image: ghcr.io/tarunsadhukhan/nbclerp3ui:latest
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_BACKENDHOST: http://nbclerp-backend:8000
+        NEXT_PUBLIC_API_BASE_URL: /api
+        USE_NEXT_PROXY: "true"
+    container_name: nbclerp-frontend
+    restart: unless-stopped
+    # 3001 inside the container: package.json start is "next start -p 3001".
+    # sjm maps 3000:3000 because its start script has no -p flag.
+    ports:
+      - "3000:3001"
+    environment:
+      - TZ=Asia/Kolkata
+    networks:
+      - nbclerp
+
+networks:
+  nbclerp:
+    external: true
