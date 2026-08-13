@@ -388,7 +388,7 @@ const UserAdmin = ({
                         </Button>
                         <Button 
                             type="submit" 
-                            className="bg-[#9BC837] hover:bg-[#8BB72E] text-white"
+                            className="bg-[#22a05a] hover:bg-[#1b8049] text-white"
                             disabled={loading || !selectedRoleId}
                         >
                             {loading ? "Processing..." : userId ? "Update User" : "Create User"}

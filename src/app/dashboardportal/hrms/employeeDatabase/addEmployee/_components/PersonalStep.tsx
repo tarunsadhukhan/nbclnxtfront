@@ -85,6 +85,7 @@ export default function PersonalStep({
       driving_licence_no: (d.driving_licence_no as string | null) ?? null,
       pan_no: (d.pan_no as string | null) ?? null,
       aadhar_no: (d.aadhar_no as string | null) ?? null,
+      voter_card_no: (d.voter_card_no as string | null) ?? null,
     });
     setConfirmOpen(false);
     setPendingLookup(null);
@@ -110,9 +111,10 @@ export default function PersonalStep({
         { name: "relegion_name", label: "Nationality", type: "text", grid: { xs: 12, sm: 4 } },
         { name: "father_spouse_name", label: "Father / Spouse Name", type: "text", grid: { xs: 12, sm: 6 } },
         { name: "passport_no", label: "Passport Number", type: "text", grid: { xs: 12, sm: 6 } },
-        { name: "driving_licence_no", label: "Driving Licence No", type: "text", grid: { xs: 12, sm: 4 } },
-        { name: "pan_no", label: "PAN No", type: "text", grid: { xs: 12, sm: 4 } },
-        { name: "aadhar_no", label: "Aadhaar No", type: "text", grid: { xs: 12, sm: 4 } },
+        { name: "driving_licence_no", label: "Driving Licence No", type: "text", grid: { xs: 12, sm: 3 } },
+        { name: "pan_no", label: "PAN No", type: "text", grid: { xs: 12, sm: 3 } },
+        { name: "aadhar_no", label: "Aadhaar No", type: "text", grid: { xs: 12, sm: 3 } },
+        { name: "voter_card_no", label: "Voter Card No", type: "text", grid: { xs: 12, sm: 3 } },
       ] satisfies Field[],
     }),
     [setup.bloodGroupOptions],
@@ -134,6 +136,7 @@ export default function PersonalStep({
       driving_licence_no: data?.driving_licence_no ?? "",
       pan_no: data?.pan_no ?? "",
       aadhar_no: data?.aadhar_no ?? "",
+      voter_card_no: data?.voter_card_no ?? "",
     }),
     [data],
   );

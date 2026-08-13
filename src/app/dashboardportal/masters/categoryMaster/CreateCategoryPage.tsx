@@ -45,6 +45,7 @@ export default function CreateCategoryPage({
 
 	// Setup dropdown options from API
 	const [branchOptions, setBranchOptions] = useState<Option[]>([]);
+	const [gradeOptions, setGradeOptions] = useState<Option[]>([]);
 
 	// Form state
 	const [initialValues, setInitialValues] = useState<Record<string, unknown>>({});
@@ -81,6 +82,13 @@ export default function CreateCategoryPage({
 				: branches;
 			setBranchOptions(filteredBranches);
 
+			setGradeOptions(
+				(setupData.grades || []).map((g: Record<string, unknown>) => ({
+					label: String(g.grade_name ?? ""),
+					value: String(g.grade_id ?? ""),
+				}))
+			);
+
 			if (editId !== undefined) {
 				const detailUrl = `${apiRoutesPortalMasters.CATEGORY_BY_ID}/${editId}`;
 				const { data: detailData, error: detailErr } = await fetchWithCookie(detailUrl, "GET");
@@ -90,12 +98,14 @@ export default function CreateCategoryPage({
 				setInitialValues({
 					cata_code: rec.cata_code ?? "",
 					cata_desc: rec.cata_desc ?? "",
+					grade_id: rec.grade_id != null ? String(rec.grade_id) : "",
 					branch_id: rec.branch_id != null ? String(rec.branch_id) : "",
 				});
 			} else {
 				setInitialValues({
 					cata_code: "",
 					cata_desc: "",
+					grade_id: "",
 					branch_id: filteredBranches.length > 0 ? filteredBranches[0].value : "",
 				});
 			}
@@ -145,6 +155,13 @@ export default function CreateCategoryPage({
 					grid: { xs: 12, sm: 6 },
 				},
 				{
+					name: "grade_id",
+					label: "Grade",
+					type: "select",
+					options: gradeOptions,
+					grid: { xs: 12, sm: 6 },
+				},
+				{
 					name: "branch_id",
 					label: "Branch",
 					type: "select",
@@ -153,7 +170,7 @@ export default function CreateCategoryPage({
 				},
 			],
 		}),
-		[editId, branchOptions]
+		[editId, branchOptions, gradeOptions]
 	);
 
 	const handleSubmit = async (values: Record<string, unknown>) => {
@@ -162,6 +179,7 @@ export default function CreateCategoryPage({
 			const payload = {
 				cata_code: values.cata_code,
 				cata_desc: values.cata_desc,
+				grade_id: values.grade_id || null,
 				branch_id: values.branch_id || null,
 			};
 

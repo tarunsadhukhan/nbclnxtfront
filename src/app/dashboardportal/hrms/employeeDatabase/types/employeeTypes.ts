@@ -54,8 +54,29 @@ export interface EmployeeListRow {
   sub_dept_name: string | null;
   designation_name: string | null;
   branch_name: string | null;
+  category_name: string | null;
+  esi_no: string | null;
+  pf_uan_no: string | null;
   mobile_no: string | null;
 }
+
+/** Filters set from the Filter popup on the employee list. */
+export interface EmployeeFilters {
+  emp_code: string;
+  full_name: string;
+  cata_id: string;
+  sub_dept_id: string;
+  designation: string;
+  esi_no: string;
+  uan_no: string;
+  /** "all" | "active" | "inactive" */
+  status: string;
+}
+
+export const EMPTY_EMPLOYEE_FILTERS: EmployeeFilters = Object.freeze({
+  emp_code: "", full_name: "", cata_id: "", sub_dept_id: "",
+  designation: "", esi_no: "", uan_no: "", status: "active",
+});
 
 // ─── Employee Detail (all sections) ────────────────────────────────
 
@@ -78,6 +99,7 @@ export interface PersonalDetails {
   driving_licence_no: string | null;
   pan_no: string | null;
   aadhar_no: string | null;
+  voter_card_no: string | null;
   co_id: number;
   status_id: number;
   active: number;
@@ -132,6 +154,8 @@ export interface BankDetails {
   bank_acc_no: string;
   bank_name: string;
   bank_branch_name: string;
+  payment_mode: number | null;
+  beneficiary_name: string | null;
   is_verified: number;
 }
 
@@ -145,6 +169,8 @@ export interface PfDetails {
   nominee_name: string | null;
   relationship_name: string | null;
   pf_date_of_join: string | null;
+  pension_no: string | null;
+  pension_date: string | null;
 }
 
 export interface EsiDetails {
@@ -152,6 +178,7 @@ export interface EsiDetails {
   eb_id: number;
   esi_no: string | null;
   medical_policy_no: string | null;
+  esi_date: string | null;
 }
 
 export interface ExperienceDetails {

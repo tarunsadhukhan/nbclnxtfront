@@ -1,11 +1,9 @@
 "use client";
 
 import React from "react";
-import { Box, Typography, LinearProgress, IconButton, Chip } from "@mui/material";
-import { ChevronRight, Check } from "lucide-react";
+import { Box, Typography, LinearProgress, Chip } from "@mui/material";
 import { Button } from "@/components/ui/button";
 import { tokens } from "@/styles/tokens";
-import type { WizardStep } from "../../types/employeeTypes";
 import { EMPLOYEE_LIFECYCLE_STATUS } from "../../types/employeeTypes";
 
 // ─── Status-aware action button definitions ────────────────────────
@@ -70,102 +68,25 @@ export { DIALOG_STATUSES };
 
 // ─── Props ─────────────────────────────────────────────────────────
 
-interface StepOverviewProps {
-  steps: readonly WizardStep[];
-  completedSteps: Set<number>;
+interface EmployeeHeaderProps {
   progress: number;
   mode: "create" | "edit" | "view";
   ebId: number | null;
   statusId: number | undefined;
-  onStepClick: (stepIndex: number) => void;
   onActionClick?: (statusId: number, label: string) => void;
   onBack: () => void;
 }
 
-// ─── Step Card ─────────────────────────────────────────────────────
-
-function StepCard({
-  step,
-  index,
-  isCompleted,
-  onClick,
-}: {
-  step: WizardStep;
-  index: number;
-  isCompleted: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <Box
-      className="flex items-center justify-between px-6 py-5 border-b border-neutral-200 last:border-b-0 hover:bg-neutral-50 transition-colors"
-    >
-      <Box className="flex items-center gap-4">
-        {/* Step indicator circle */}
-        {isCompleted ? (
-          <Box
-            className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-            sx={{ backgroundColor: tokens.brand.primary }}
-          >
-            <Check className="w-5 h-5 text-white" />
-          </Box>
-        ) : (
-          <Box
-            className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 border-2"
-            sx={{ borderColor: tokens.neutral[200], color: tokens.neutral[500] }}
-          >
-            <Typography variant="body2" fontWeight={600}>
-              {index + 1}
-            </Typography>
-          </Box>
-        )}
-
-        {/* Step text */}
-        <Box>
-          <Typography variant="subtitle1" fontWeight={600} color="text.primary">
-            {step.step_name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {step.description}
-          </Typography>
-        </Box>
-      </Box>
-
-      {/* Right side: optional button + arrow */}
-      <Box className="flex items-center gap-3 shrink-0">
-        {step.rightButton && (
-          <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); }}>
-            {step.rightButton}
-          </Button>
-        )}
-        <IconButton
-          onClick={onClick}
-          aria-label={`Navigate to ${step.step_name}`}
-          sx={{
-            border: `1px solid ${tokens.neutral[200]}`,
-            width: 36,
-            height: 36,
-          }}
-        >
-          <ChevronRight className="w-5 h-5" style={{ color: tokens.neutral[500] }} />
-        </IconButton>
-      </Box>
-    </Box>
-  );
-}
-
 // ─── Main component ────────────────────────────────────────────────
 
-export default function StepOverview({
-  steps,
-  completedSteps,
+export default function EmployeeHeader({
   progress,
   mode,
   ebId,
   statusId,
-  onStepClick,
   onActionClick,
   onBack,
-}: StepOverviewProps) {
+}: EmployeeHeaderProps) {
   const title = mode === "create" ? "Add Employee" : mode === "edit" ? "Edit Employee" : "View Employee";
   const actions = ebId ? getActionsForStatus(statusId) : [];
   const statusLabel = statusId ? STATUS_LABEL[statusId] : undefined;
@@ -248,18 +169,6 @@ export default function StepOverview({
         )}
       </Box>
 
-      {/* ── Step cards ─────────────────────────────────────────── */}
-      <Box className="rounded-lg border bg-white shadow-sm mx-6 mb-6 overflow-hidden">
-        {steps.map((step, idx) => (
-          <StepCard
-            key={step.step_id}
-            step={step}
-            index={idx}
-            isCompleted={completedSteps.has(idx)}
-            onClick={() => onStepClick(idx)}
-          />
-        ))}
-      </Box>
     </Box>
   );
 }

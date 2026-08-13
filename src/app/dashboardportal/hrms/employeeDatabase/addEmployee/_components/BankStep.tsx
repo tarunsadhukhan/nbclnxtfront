@@ -1,8 +1,15 @@
 "use client";
 
 import React, { useMemo, useRef, useCallback } from "react";
-import MuiForm, { type Schema, type Field, type MuiFormHandle } from "@/components/ui/muiform";
+import MuiForm, { type Schema, type Field, type MuiFormHandle, type Option } from "@/components/ui/muiform";
 import type { BankDetails } from "../../types/employeeTypes";
+
+const PAYMENT_MODE_OPTIONS: Option[] = [
+  { label: "Cash", value: "0" },
+  { label: "Cheque", value: "1" },
+  { label: "NEFT", value: "2" },
+  { label: "UPI", value: "3" },
+];
 
 interface BankStepProps {
   data: BankDetails | null;
@@ -19,6 +26,8 @@ export default function BankStep({ data, onChange, disabled }: BankStepProps) {
       { name: "bank_branch_name", label: "Bank Branch", type: "text", grid: { xs: 12, sm: 6 } },
       { name: "bank_acc_no", label: "Account Number", type: "text", required: true, grid: { xs: 12, sm: 6 } },
       { name: "ifsc_code", label: "IFSC Code", type: "text", required: true, grid: { xs: 12, sm: 6 } },
+      { name: "payment_mode", label: "Payment Mode", type: "select", options: PAYMENT_MODE_OPTIONS, grid: { xs: 12, sm: 6 } },
+      { name: "beneficiary_name", label: "Beneficiary Name", type: "text", grid: { xs: 12, sm: 6 } },
       { name: "is_verified", label: "Verified", type: "checkbox", grid: { xs: 12, sm: 4 } },
     ] satisfies Field[],
   }), []);
@@ -28,6 +37,8 @@ export default function BankStep({ data, onChange, disabled }: BankStepProps) {
     bank_branch_name: data?.bank_branch_name ?? "",
     bank_acc_no: data?.bank_acc_no ?? "",
     ifsc_code: data?.ifsc_code ?? "",
+    payment_mode: data?.payment_mode != null ? String(data.payment_mode) : "",
+    beneficiary_name: data?.beneficiary_name ?? "",
     is_verified: data?.is_verified ?? 0,
   }), [data]);
 

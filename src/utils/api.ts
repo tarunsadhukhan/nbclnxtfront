@@ -836,6 +836,12 @@ const apiRoutesPortalMasters = {
     LEAVE_TYPE_CREATE: `${API_URL}/hrmsMasters/leave_type_create`,
     LEAVE_TYPE_EDIT: `${API_URL}/hrmsMasters/leave_type_edit`,
 
+    // HRMS Grade Master endpoints
+    GRADE_TABLE: `${API_URL}/hrmsMasters/get_grade_table`,
+    GRADE_BY_ID: `${API_URL}/hrmsMasters/get_grade_by_id`,
+    GRADE_CREATE: `${API_URL}/hrmsMasters/grade_create`,
+    GRADE_EDIT: `${API_URL}/hrmsMasters/grade_edit`,
+
     // HRMS Bio Attendance (employee↔device mapping + bio data process)
     BIO_EMP_LINK_SETUP: `${API_URL}/hrmsMasters/bio_emp_link_setup`,
     BIO_EMP_LINK_TABLE: `${API_URL}/hrmsMasters/get_bio_emp_link_table`,

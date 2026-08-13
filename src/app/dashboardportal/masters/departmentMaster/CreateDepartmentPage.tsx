@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Box, Button, Dialog, DialogContent, DialogTitle, MenuItem, TextField, FormControlLabel, Switch, CircularProgress, FormHelperText } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, DialogTitle, MenuItem, TextField, CircularProgress, FormHelperText } from "@mui/material";
 import { apiRoutesPortalMasters } from "@/utils/api";
 import { fetchWithCookie } from "@/utils/apiClient2";
+import { DEPT_FOR } from "./constants";
 
 interface CreateDepartmentProps {
   open?: boolean;
@@ -16,7 +17,7 @@ export default function CreateDepartmentPage({ open = true, onClose, existingRow
   const [loading, setLoading] = useState(true);
   const [setupData, setSetupData] = useState<any>(null);
   const [branchOptions, setBranchOptions] = useState<any[]>([]);
-  const [form, setForm] = useState({ dept_name: "", dept_code: "", active: true, branch_id: "" });
+  const [form, setForm] = useState({ dept_name: "", dept_code: "", branch_id: "", order_id: "", worker_staff: "1" });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
@@ -131,8 +132,9 @@ export default function CreateDepartmentPage({ open = true, onClose, existingRow
         co_id,
         dept_name: form.dept_name,
         dept_code: form.dept_code,
-        active: form.active ? 1 : 0,
         branch_id: form.branch_id,
+        order_id: form.order_id,
+        worker_staff: form.worker_staff,
       };
       const { data, error } = await fetchWithCookie(apiRoutesPortalMasters.DEPT_MASTER_CREATE, "POST", payload) as any;
       if (error || !data) throw new Error(error || "Create failed");
@@ -154,7 +156,12 @@ export default function CreateDepartmentPage({ open = true, onClose, existingRow
           <MenuItem key={b.id} value={b.id}>{b.label}</MenuItem>
         ))}
       </TextField>
-      <FormControlLabel control={<Switch checked={!!form.active} onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))} />} label="Active" />
+      <TextField name="order_id" label="Order" type="number" value={form.order_id} onChange={handleChange} fullWidth margin="normal" required />
+      <TextField select name="worker_staff" label="Department For" value={form.worker_staff} onChange={handleChange} fullWidth margin="normal">
+        {DEPT_FOR.map((o) => (
+          <MenuItem key={o.value} value={o.value}>{o.label}</MenuItem>
+        ))}
+      </TextField>
   {nameError && <FormHelperText error>{nameError}</FormHelperText>}
   {codeError && <FormHelperText error>{codeError}</FormHelperText>}
       {error && <FormHelperText error>{error}</FormHelperText>}

@@ -591,9 +591,9 @@ const validateDeptField = (field: 'dept_desc' | 'dept_code' | 'order_id', value:
                 color="primary"
                 disabled={!methods.formState.isValid}
                 sx={{
-                  backgroundColor: methods.formState.isValid ? '#9BC837' : '#d3d3d3',
+                  backgroundColor: methods.formState.isValid ? '#22a05a' : '#d3d3d3',
                   '&:hover': {
-                    backgroundColor: methods.formState.isValid ? '#8BB72E' : '#d3d3d3',
+                    backgroundColor: methods.formState.isValid ? '#1b8049' : '#d3d3d3',
                   }
                 }}
               >
@@ -603,9 +603,9 @@ const validateDeptField = (field: 'dept_desc' | 'dept_code' | 'order_id', value:
               <Button
                 color="primary"
                 sx={{
-                  backgroundColor: '#9BC837',
+                  backgroundColor: '#22a05a',
                   '&:hover': {
-                    backgroundColor: '#8BB72E',
+                    backgroundColor: '#1b8049',
                   }
                 }}
                 className="button-normal button-normal:hover"

@@ -29,10 +29,11 @@ type Props = {
 	editId?: number | string;
 };
 
-/** Static dropdown options matching the legacy CreateDesignation.js */
+/** Static dropdown options. Values MUST match what designation_mst stores,
+ *  otherwise the select renders blank when editing an existing row. */
 const TIME_PIECE_OPTIONS: Option[] = [
-	{ label: "Time", value: "Time" },
-	{ label: "Piece", value: "Piece" },
+	{ label: "Time", value: "T" },
+	{ label: "Piece", value: "P" },
 ];
 
 const DIRECT_INDIRECT_OPTIONS: Option[] = [
@@ -41,14 +42,12 @@ const DIRECT_INDIRECT_OPTIONS: Option[] = [
 ];
 
 const ON_MACHINE_OPTIONS: Option[] = [
-	{ label: "Yes", value: "Yes" },
-	{ label: "No", value: "No" },
+	{ label: "Yes", value: "Y" },
+	{ label: "No", value: "N" },
 ];
 
-const PIECE_RATE_TYPE_OPTIONS: Option[] = [
-	{ label: "Time", value: "1" },
-	{ label: "Piece", value: "2" },
-];
+// designation_mst.piece_rate_type stores the same T/P domain as time_piece.
+const PIECE_RATE_TYPE_OPTIONS: Option[] = TIME_PIECE_OPTIONS;
 
 export default function CreateDesignationPage({
 	open,

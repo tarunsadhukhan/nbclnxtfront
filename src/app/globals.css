@@ -23,14 +23,14 @@
     --card-foreground: 215 28% 17%;
     --popover: 0 0% 100%;
     --popover-foreground: 215 28% 17%;
-    --primary: 76 72% 44%;
+    --primary: 147 65% 38%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 195 44% 59%;
-    --secondary-foreground: 203 86% 16%;
+    --secondary: 222 49% 23%;
+    --secondary-foreground: 0 0% 100%;
     --muted: 210 40% 96%;
     --muted-foreground: 215 16% 47%;
-    --accent: 195 44% 59%;
-    --accent-foreground: 203 86% 16%;
+    --accent: 222 49% 23%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     --border: 214 32% 91%;
@@ -42,17 +42,24 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.75rem;
-    --brand-primary: 76 72% 44%;
-    --brand-primary-hover: 76 72% 38%;
+    /* InfoSky brand: logo green #22a05a, logo navy #1b2a4e. Keep in step with
+       src/styles/brand.ts, which carries the same palette for the MUI/sx side. */
+    --brand-primary: 147 65% 38%;
+    --brand-primary-hover: 147 65% 31%;
     --brand-primary-foreground: 0 0% 100%;
-    --brand-secondary: 195 44% 59%;
-    --brand-secondary-foreground: 203 86% 16%;
-    --border-accent: 195 44% 59%;
-    --sidebar-bg: 76 45% 91%;
-    --sidebar-accent: 76 40% 80%;
-    --sidebar-fg: 90 30% 16%;
+    --brand-secondary: 222 49% 23%;
+    --brand-secondary-foreground: 0 0% 100%;
+    --border-accent: 222 49% 23%;
+    /* Console sidebars (ctrldesk / tenant admin) — navy rail, matching the
+       portal's ClassicSidebar. fg is light because bg is now dark. */
+    --sidebar-bg: 222 52% 18%;
+    --sidebar-accent: 220 45% 28%;
+    --sidebar-fg: 213 40% 94%;
     /* Table/grid header band — same hue as the sidebar, dark enough for white bold text (4.85:1). */
-    --table-header: 76 72% 28%;
+    /* Every table/grid header in the app resolves to this one variable
+       (table.tsx, datatablewithedit, muiDataGrid, ReportGrid and the
+       page-level grids), all paired with white text. Brand navy #1b2a4e. */
+    --table-header: 222 49% 21%;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -61,25 +68,25 @@
     --card-foreground: 210 40% 96%;
     --popover: 0 0% 6%;
     --popover-foreground: 210 40% 96%;
-    --primary: 76 72% 44%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 195 44% 49%;
+    --primary: 147 60% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 222 40% 40%;
     --secondary-foreground: 210 40% 96%;
     --muted: 215 16% 22%;
     --muted-foreground: 215 16% 72%;
-    --accent: 195 44% 49%;
+    --accent: 222 40% 40%;
     --accent-foreground: 210 40% 96%;
     --destructive: 0 62% 40%;
     --destructive-foreground: 0 0% 100%;
     --border: 215 16% 22%;
     --input: 215 16% 22%;
     --ring: 210 40% 96%;
-    --brand-primary: 76 72% 44%;
-    --brand-primary-hover: 76 72% 38%;
-    --brand-primary-foreground: 0 0% 0%;
-    --brand-secondary: 195 44% 59%;
+    --brand-primary: 147 60% 45%;
+    --brand-primary-hover: 147 60% 38%;
+    --brand-primary-foreground: 0 0% 100%;
+    --brand-secondary: 222 40% 40%;
     --brand-secondary-foreground: 210 40% 96%;
-    --border-accent: 195 44% 59%;
+    --border-accent: 222 40% 40%;
   }
 }
 
@@ -280,4 +287,23 @@
   .transaction-grid-empty {
     @apply px-1.5 py-2 text-center text-xs text-slate-500;
   }
+}
+
+/* Material Symbols — menu_mst.menu_icon stores ligature names for this font
+   (loaded from Google Fonts in the root layout). Without these settings the
+   glyph renders at the wrong weight or falls back to the literal word. */
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 20;
 }

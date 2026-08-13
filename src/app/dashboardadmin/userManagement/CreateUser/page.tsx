@@ -230,7 +230,7 @@ function CreateUserContent() {
           <Button
             onClick={onSubmit}
             disabled={submitting}
-            className="bg-[#95C11F] hover:bg-[#85ad1b] text-white"
+            className="bg-[#22a05a] hover:bg-[#1b8049] text-white"
           >
             {submitting
               ? isEditMode

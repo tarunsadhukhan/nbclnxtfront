@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Box, Button, Dialog, DialogContent, DialogTitle, MenuItem, TextField, FormControlLabel, Switch, CircularProgress, FormHelperText } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, DialogTitle, MenuItem, TextField, CircularProgress, FormHelperText } from "@mui/material";
 import { fetchWithCookie } from "@/utils/apiClient2";
 import { apiRoutesPortalMasters } from "@/utils/api";
  
@@ -9,15 +9,18 @@ interface CreateSubDepartmentProps {
   open?: boolean;
   onClose?: () => void;
   existingRows?: any[];
+  /** Grid row to edit. Absent = create mode. Parent must re-key on change so setup re-seeds. */
+  editRow?: any;
 }
 
-export default function CreateSubDepartmentPage({ open = true, onClose, existingRows = [] }: CreateSubDepartmentProps) {
+export default function CreateSubDepartmentPage({ open = true, onClose, existingRows = [], editRow }: CreateSubDepartmentProps) {
+  const isEdit = !!editRow;
   const [loading, setLoading] = useState(true);
   const [setupData, setSetupData] = useState<any>(null);
   const [branchOptions, setBranchOptions] = useState<any[]>([]);
   const [departmentOptions, setDepartmentOptions] = useState<any[]>([]);
   const [allDepartmentOptions, setAllDepartmentOptions] = useState<any[]>([]);
-  const [form, setForm] = useState({ subdept_name: "", subdept_code: "", active: true, branch_id: "", dept_id: "", order_by: "" });
+  const [form, setForm] = useState({ subdept_name: "", subdept_code: "", branch_id: "", dept_id: "", order_by: "" });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
@@ -48,6 +51,21 @@ export default function CreateSubDepartmentPage({ open = true, onClose, existing
         const rawDepts = Array.isArray(depts) ? depts : depts ? [depts] : [];
         const normalizedDepts = rawDepts.map((d: any) => ({ id: String(d?.dept_id ?? d?.id ?? d?.value ?? ""), label: d?.dept_name ?? d?.dept_name_display ?? d?.name ?? String(d?.dept_id ?? d?.id ?? ""), raw: d }));
         setAllDepartmentOptions(normalizedDepts);
+        if (editRow) {
+          // Edit: seed from the grid row — it already carries branch/dept/order.
+          const branchId = String(editRow.branch_id ?? "");
+          const scoped = normalizedDepts.filter((d: any) => String(d.raw?.branch_id ?? "") === branchId);
+          setDepartmentOptions(scoped.length > 0 ? scoped : normalizedDepts);
+          setForm({
+            subdept_name: String(editRow.subdept_name ?? ""),
+            subdept_code: String(editRow.subdept_code ?? ""),
+            branch_id: branchId,
+            dept_id: String(editRow.dept_id ?? ""),
+            order_by: editRow.order_by != null ? String(editRow.order_by) : "",
+          });
+          setSetupData(candidate);
+          return;
+        }
         // If departments include branch linkage, prefilter to the first branch; otherwise expose all
         if (normalizedBranches.length > 0) {
           const firstBranchId = normalizedBranches[0].id;
@@ -78,16 +96,31 @@ export default function CreateSubDepartmentPage({ open = true, onClose, existing
   }, [setupData, form.branch_id, form.dept_id]);
 
   const getCandidates = (propsExistingRows?: any[]) => {
-    if (propsExistingRows && propsExistingRows.length) return propsExistingRows;
-    const candidates = (setupData?.subdepartments || setupData?.data || []) as any[];
-    return Array.isArray(candidates) ? candidates : [];
+    const source = propsExistingRows && propsExistingRows.length
+      ? propsExistingRows
+      : ((setupData?.subdepartments || setupData?.data || []) as any[]);
+    const list = Array.isArray(source) ? source : [];
+    // Don't let the row being edited collide with itself.
+    return isEdit ? list.filter((d: any) => String(d.id) !== String(editRow.id)) : list;
   };
+
+  // ponytail: existing data already contains colliding codes/names and the backend enforces
+  // nothing, so on edit only validate a (value + branch + dept) the user actually changed.
+  const unchanged = (field: "subdept_name" | "subdept_code") =>
+    isEdit &&
+    String(form[field] ?? "").trim().toLowerCase() === String(editRow[field] ?? "").trim().toLowerCase() &&
+    String(form.branch_id ?? "") === String(editRow.branch_id ?? "") &&
+    String(form.dept_id ?? "") === String(editRow.dept_id ?? "");
 
   const validateName = (propsExistingRows?: any[]) => {
     const name = form.subdept_name?.trim();
     if (!name) {
       setNameError("Subdepartment name is required");
       return false;
+    }
+    if (unchanged("subdept_name")) {
+      setNameError(null);
+      return true;
     }
     const branchId = String(form.branch_id ?? "");
     const deptId = String(form.dept_id ?? "");
@@ -106,6 +139,10 @@ export default function CreateSubDepartmentPage({ open = true, onClose, existing
     if (!code) {
       setCodeError("Subdepartment code is required");
       return false;
+    }
+    if (unchanged("subdept_code")) {
+      setCodeError(null);
+      return true;
     }
     const branchId = String(form.branch_id ?? "");
     const deptId = String(form.dept_id ?? "");
@@ -179,11 +216,11 @@ export default function CreateSubDepartmentPage({ open = true, onClose, existing
         co_id,
         subdept_name: form.subdept_name,
         subdept_code: form.subdept_code,
-        active: form.active ? 1 : 0,
         branch_id: form.branch_id,
         dept_id: form.dept_id,
         order_by: form.order_by,
       };
+      if (isEdit) payload.subdept_master_id = editRow.id;
   const { data, error: apiError } = await fetchWithCookie(apiRoutesPortalMasters.SUBDEPT_MASTER_CREATE, "POST", payload) as any;
       if (apiError || !data) {
         // Extract meaningful error from API response
@@ -210,13 +247,10 @@ export default function CreateSubDepartmentPage({ open = true, onClose, existing
       <TextField name="subdept_name" label="Subdepartment" value={form.subdept_name} onChange={handleChange} onBlur={() => validateName(existingRows)} error={!!nameError} helperText={nameError ?? undefined} fullWidth margin="normal" required />
       <TextField name="subdept_code" label="Subdepartment Code" value={form.subdept_code} onChange={handleChange} onBlur={() => validateCode(existingRows)} error={!!codeError} helperText={codeError ?? undefined} fullWidth margin="normal" required />
       <TextField name="order_by" label="Order By" type="number" value={form.order_by} onChange={handleChange} onBlur={() => validateOrderBy()} error={!!orderByError} helperText={orderByError ?? undefined} fullWidth margin="normal" required />
-      <FormControlLabel control={<Switch checked={!!form.active} onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))} />} label="Active" />
-      {nameError && <FormHelperText error>{nameError}</FormHelperText>}
-      {codeError && <FormHelperText error>{codeError}</FormHelperText>}
       {error && <FormHelperText error>{error}</FormHelperText>}
       <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
         {typeof open === 'boolean' && <Button onClick={() => onClose && onClose()} color="secondary" sx={{ mr: 2 }} disabled={submitting}>Cancel</Button>}
-        <Button type="submit" variant="contained" color="primary" disabled={submitting || loading || !!nameError || !!codeError || !!orderByError}>{submitting ? <CircularProgress size={20} /> : 'Create'}</Button>
+        <Button type="submit" variant="contained" color="primary" disabled={submitting || loading || !!nameError || !!codeError || !!orderByError}>{submitting ? <CircularProgress size={20} /> : (isEdit ? 'Update' : 'Create')}</Button>
       </Box>
     </Box>
   );
@@ -225,12 +259,12 @@ export default function CreateSubDepartmentPage({ open = true, onClose, existing
     <>
       {typeof open === 'boolean' ? (
         <Dialog open={open} onClose={() => onClose && onClose()} maxWidth="sm" fullWidth>
-          <DialogTitle>Create Subdepartment</DialogTitle>
+          <DialogTitle>{isEdit ? "Edit Subdepartment" : "Create Subdepartment"}</DialogTitle>
           <DialogContent>{loading ? <CircularProgress /> : FormContent}</DialogContent>
         </Dialog>
       ) : (
         <Box sx={{ maxWidth: 500, mx: 'auto', mt: 4 }}>
-          <DialogTitle>Create Subdepartment</DialogTitle>
+          <DialogTitle>{isEdit ? "Edit Subdepartment" : "Create Subdepartment"}</DialogTitle>
           <DialogContent>{loading ? <CircularProgress /> : FormContent}</DialogContent>
         </Box>
       )}

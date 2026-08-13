@@ -3,6 +3,7 @@
 import React, { useEffect, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Box, Snackbar, Alert, CircularProgress } from "@mui/material";
+import { Save, ArrowLeft, Printer, X } from "lucide-react";
 import { useSelectedCompanyCoId } from "@/hooks/use-selected-company-coid";
 import { useSidebarContext } from "@/components/dashboard/sidebarContext";
 import { useEmployeeFormState } from "../hooks/useEmployeeFormState";
@@ -18,12 +19,15 @@ import {
   updateEmployeeStatus,
 } from "@/utils/hrmsService";
 import { WIZARD_STEPS, type FormMode, type SectionName } from "../types/employeeTypes";
-import StepOverview, { DIALOG_STATUSES } from "./_components/StepOverview";
+import EmployeeHeader, { DIALOG_STATUSES } from "./_components/EmployeeHeader";
 import PersonalInformationStep from "./_components/PersonalInformationStep";
 import OfficialInformationStep from "./_components/OfficialInformationStep";
 import MedicalEnrollmentStep from "./_components/MedicalEnrollmentStep";
 import PlaceholderStep from "./_components/PlaceholderStep";
 import StatusActionDialog from "./_components/StatusActionDialog";
+import ClassicWindow, { classic } from "@/components/ui/classic/ClassicWindow";
+
+const ICON = 16;
 
 function AddEmployeeContent() {
   const router = useRouter();
@@ -67,8 +71,8 @@ function AddEmployeeContent() {
     open: false, message: "", severity: "success",
   });
 
-  // ─── selectedStep: null = overview, number = which step is open ──
-  const [selectedStep, setSelectedStep] = React.useState<number | null>(null);
+  // ─── selectedStep: index of the open tab ─────────────────────────
+  const [selectedStep, setSelectedStep] = React.useState<number>(0);
 
   // Photo state
   const [photoVersion, setPhotoVersion] = React.useState(0);
@@ -185,6 +189,7 @@ function AddEmployeeContent() {
           driving_licence_no: formData.personal?.driving_licence_no,
           pan_no: formData.personal?.pan_no,
           aadhar_no: formData.personal?.aadhar_no,
+          voter_card_no: formData.personal?.voter_card_no,
         });
         if (error) throw new Error(error);
         const newEbId = data?.data?.eb_id;
@@ -233,10 +238,8 @@ function AddEmployeeContent() {
         }
       }
 
+      // Stay on the tab that was just saved — there is no overview to return to.
       setSnackbar({ open: true, message: `${currentWizardStep.step_name} saved`, severity: "success" });
-
-      // Return to overview after save
-      setSelectedStep(null);
     } catch (err: unknown) {
       setSnackbar({ open: true, message: err instanceof Error ? err.message : "Save failed", severity: "error" });
     } finally {
@@ -299,12 +302,35 @@ function AddEmployeeContent() {
     setSnackbar({ open: true, message: `Employee marked as ${statusDialog.label}`, severity: "success" });
   }, [ebId, statusDialog, setFormData]);
 
+  // ─── Classic window toolbar ──────────────────────────────────────
+  const windowTitle =
+    mode === "create" ? "Employee Master - New" : mode === "edit" ? "Employee Master - Edit" : "Employee Master - View";
+
+  const goToList = useCallback(() => router.push("/dashboardportal/hrms/employeeDatabase"), [router]);
+
+  const toolbarActions = React.useMemo(
+    () => [
+      {
+        label: saving ? "Saving..." : "Save",
+        icon: <Save size={ICON} color={classic.ok} />,
+        onClick: handleSaveStep,
+        disabled: isDisabled || saving,
+      },
+      {
+        label: "Back",
+        icon: <ArrowLeft size={ICON} color={classic.accent} />,
+        onClick: goToList,
+      },
+      { label: "Print", icon: <Printer size={ICON} color={classic.text} />, onClick: () => window.print(), separatorBefore: true },
+      { label: "Close", icon: <X size={ICON} color={classic.danger} />, onClick: goToList, separatorBefore: true },
+    ],
+    [saving, handleSaveStep, isDisabled, selectedStep, goToList],
+  );
+
   // ─── Render selected step content ────────────────────────────────
   const renderStepContent = () => {
-    if (selectedStep === null) return null;
-
-    const goBack = () => setSelectedStep(null);
-    const commonSaveProps = { saving, onBack: goBack, onSave: handleSaveStep };
+    // Tabs replace the old overview screen, so "back" leaves the record.
+    const commonSaveProps = { saving, onBack: goToList, onSave: handleSaveStep };
 
     switch (selectedStep) {
       case 0:
@@ -360,7 +386,7 @@ function AddEmployeeContent() {
           <PlaceholderStep
             title="Upload Documents"
             description="Upload all relevant documents based on checklist"
-            onBack={goBack}
+            onBack={goToList}
           />
         );
       case 3:
@@ -368,7 +394,7 @@ function AddEmployeeContent() {
           <PlaceholderStep
             title="Generate Letters"
             description="Download Offer / Appointment Letter"
-            onBack={goBack}
+            onBack={goToList}
           />
         );
       case 4:
@@ -376,7 +402,7 @@ function AddEmployeeContent() {
           <PlaceholderStep
             title="Onboarding"
             description="Generate Welcome letter, email id, assets handover form, etc."
-            onBack={goBack}
+            onBack={goToList}
           />
         );
       case 5:
@@ -384,7 +410,7 @@ function AddEmployeeContent() {
           <PlaceholderStep
             title="Shift and Leave Policy"
             description="Select Employee Leave Policy and Shift Timings"
-            onBack={goBack}
+            onBack={goToList}
           />
         );
       case 6:
@@ -412,23 +438,68 @@ function AddEmployeeContent() {
     );
   }
 
+  const empCode = formData.official?.emp_code;
+  const empName = [formData.personal?.first_name, formData.personal?.last_name].filter(Boolean).join(" ");
+
   return (
-    <Box className="flex flex-col min-h-0">
-      {selectedStep === null ? (
-        <StepOverview
-          steps={WIZARD_STEPS}
-          completedSteps={completedSteps}
+    <ClassicWindow
+      title={windowTitle}
+      actions={toolbarActions}
+      statusRight={ebId ? `Emp Code: ${empCode || "(unassigned)"} — ${empName}` : "New employee (unsaved)"}
+    >
+      <Box className="flex flex-col min-h-0 bg-white" sx={{ border: `1px solid ${classic.border}`, flex: 1 }}>
+        <EmployeeHeader
           progress={progress}
           mode={mode}
           ebId={ebId}
           statusId={formData.personal?.status_id}
-          onStepClick={setSelectedStep}
           onActionClick={handleActionClick}
-          onBack={() => router.push("/dashboardportal/hrms/employeeDatabase")}
+          onBack={goToList}
         />
-      ) : (
-        renderStepContent()
-      )}
+
+        {/* One tab per wizard section; the active tab renders its own page */}
+        <Box
+          sx={{
+            display: "flex", alignItems: "flex-end", gap: "2px", flexWrap: "wrap",
+            px: "6px", pt: "4px",
+            background: classic.faceEdge,
+            borderTop: `1px solid ${classic.border}`,
+            borderBottom: `1px solid ${classic.border}`,
+          }}
+        >
+          {WIZARD_STEPS.map((step, index) => {
+            const isActive = index === selectedStep;
+            return (
+              <Box
+                key={step.step_id}
+                component="button"
+                type="button"
+                onClick={() => setSelectedStep(index)}
+                title={step.description}
+                sx={{
+                  px: "10px", py: "4px",
+                  fontSize: 12,
+                  fontWeight: isActive ? 600 : 400,
+                  cursor: "pointer",
+                  color: classic.text,
+                  background: isActive ? classic.surface : classic.face,
+                  border: `1px solid ${classic.border}`,
+                  borderBottom: isActive ? `1px solid ${classic.surface}` : `1px solid ${classic.border}`,
+                  position: "relative",
+                  top: isActive ? "1px" : 0,
+                  "&:hover": { background: isActive ? classic.surface : classic.titleFrom },
+                }}
+              >
+                {completedSteps.has(index) ? "✓ " : ""}{step.step_name}
+              </Box>
+            );
+          })}
+        </Box>
+
+        <Box sx={{ flex: 1, minHeight: 0, overflow: "auto" }}>
+          {renderStepContent()}
+        </Box>
+      </Box>
 
       <StatusActionDialog
         open={statusDialog.open}
@@ -448,7 +519,7 @@ function AddEmployeeContent() {
           {snackbar.message}
         </Alert>
       </Snackbar>
-    </Box>
+    </ClassicWindow>
   );
 }
 

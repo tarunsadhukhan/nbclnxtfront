@@ -12,20 +12,41 @@ import {
 	DialogTitle,
 	DialogContent,
 	DialogActions,
-	Switch,
-	FormControlLabel,
 	MenuItem,
 } from "@mui/material";
 import { GridColDef, GridPaginationModel, GridRenderCellParams } from "@mui/x-data-grid";
 import { fetchWithCookie } from "@/utils/apiClient2";
 import { apiRoutesPortalMasters } from "@/utils/api";
 import CreateDepartmentPage from "./CreateDepartmentPage";
+import { DEPT_FOR, deptForLabel } from "./constants";
+
+// Reads the sidebar company/branch selection cached in localStorage.
+const readScope = (): { co_id: string; branchIds: string } => {
+	const selectedCompany = localStorage.getItem("sidebar_selectedCompany");
+	const co_id = selectedCompany ? JSON.parse(selectedCompany).co_id : "";
+	let branchIds = "";
+	try {
+		const parsed = JSON.parse(localStorage.getItem("sidebar_selectedBranches") ?? "null");
+		if (Array.isArray(parsed)) {
+			branchIds = parsed
+				.map((b: any) => (b && typeof b === "object" ? b.branch_id ?? b.id ?? b.value ?? "" : b ?? ""))
+				.map((value: any) => String(value))
+				.filter((value: string) => value.length > 0)
+				.join(",");
+		}
+	} catch {
+		/* ignore branch cache parse errors */
+	}
+	return { co_id, branchIds };
+};
 
 type DeptRow = {
 	id?: number | string;
 	dept_master_id?: number;
 	dept_code?: string;
 	dept_name?: string;
+	order_id?: number | string;
+	worker_staff?: number | string;
 	active?: number | boolean | string;
 	branch_display?: string;
 	branch_id?: string | number;
@@ -51,44 +72,23 @@ export default function DepartmentMasterPage() {
 
 	// View/Edit states
 	const [viewDialogOpen, setViewDialogOpen] = useState<boolean>(false);
-	const [viewLoading, setViewLoading] = useState<boolean>(false);
-	const [viewData, setViewData] = useState<any>(null);
+	const [viewData, setViewData] = useState<DeptRow | null>(null);
 
 	const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
 	const [editLoading, setEditLoading] = useState<boolean>(false);
 	const [editDeptId, setEditDeptId] = useState<number | string | null>(null);
 	const [editDeptName, setEditDeptName] = useState<string>("");
 	const [editDeptCode, setEditDeptCode] = useState<string>("");
-	const [editDeptActive, setEditDeptActive] = useState<boolean>(true);
-	const [editBranchId, setEditBranchId] = useState<string | number | "">("");
+	const [editBranchId, setEditBranchId] = useState<string>("");
+	const [editOrderId, setEditOrderId] = useState<string>("");
+	const [editWorkerStaff, setEditWorkerStaff] = useState<string>("1");
 	const [editNameError, setEditNameError] = useState<string | null>(null);
 	const [editCodeError, setEditCodeError] = useState<string | null>(null);
 
 	const fetchDepartments = async (): Promise<void> => {
 		setLoading(true);
 		try {
-			const selectedCompany = localStorage.getItem("sidebar_selectedCompany");
-			const co_id = selectedCompany ? JSON.parse(selectedCompany).co_id : "";
-			const selectedBranches = localStorage.getItem("sidebar_selectedBranches");
-			let branchIds = "";
-			if (selectedBranches) {
-				try {
-					const parsed = JSON.parse(selectedBranches);
-					if (Array.isArray(parsed)) {
-						const ids = parsed
-							.map((b: any) => {
-								if (b && typeof b === "object") return b.branch_id ?? b.id ?? b.value ?? "";
-								if (b === 0) return "0";
-								return b ?? "";
-							})
-							.map((value: any) => String(value))
-							.filter((value: string) => value.length > 0);
-						if (ids.length > 0) branchIds = ids.join(",");
-					}
-				} catch {
-					/* ignore branch cache parse errors */
-				}
-			}
+			const { co_id, branchIds } = readScope();
 			const queryParams = new URLSearchParams({
 				page: String((paginationModel.page ?? 0) + 1),
 				limit: String(paginationModel.pageSize ?? 10),
@@ -103,7 +103,6 @@ export default function DepartmentMasterPage() {
 			const mapped = (data.data || []).map((r: any) => ({
 				...r,
 				id: r.dept_master_id ?? r.dept_id ?? r.id,
-				active: typeof r.active === "string" ? Number(r.active) : r.active,
 				branch_display: r.branch_name ?? r.branch_desc ?? r.branch_display ?? r.branch ?? "",
 				branch_id: r.branch_id ?? r.branch ?? r.b_id ?? r.branchId ?? null,
 			}));
@@ -152,55 +151,34 @@ export default function DepartmentMasterPage() {
 
 
 
-	const handleOpenView = async (id: number | string): Promise<void> => {
+	// ponytail: no dept_master_view endpoint exists on the backend — the grid row
+	// already carries every field view/edit render, so read from it instead.
+	const handleOpenView = (row: DeptRow): void => {
+		setViewData(row);
 		setViewDialogOpen(true);
-		setViewLoading(true);
-		setViewData(null);
-		try {
-			const selectedCompany = localStorage.getItem("sidebar_selectedCompany");
-			const co_id = selectedCompany ? JSON.parse(selectedCompany).co_id : "";
-			const params = new URLSearchParams({ dept_master_id: String(id), co_id });
-			const { data, error } = await fetchWithCookie(`${apiRoutesPortalMasters.DEPT_MASTER_VIEW}?${params}`, "GET") as any;
-			if (error || !data) throw new Error(error || "Failed to fetch view payload");
-			setViewData(data);
-		} catch (err: any) {
-			setSnackbar({ open: true, message: err?.message || "Failed to load department for view", severity: "error" });
-			setViewDialogOpen(false);
-		} finally {
-			setViewLoading(false);
-		}
 	};
 
-	const handleOpenEdit = async (id: number | string): Promise<void> => {
+	const handleOpenEdit = async (row: DeptRow): Promise<void> => {
 		setEditDialogOpen(true);
 		setEditLoading(true);
-		setEditDeptId(id);
-		setEditDeptName("");
-		setEditDeptCode("");
-		setEditDeptActive(true);
-		setEditBranchId("");
+		setEditDeptId(row.id ?? row.dept_master_id ?? null);
+		setEditDeptName(String(row.dept_name ?? ""));
+		setEditDeptCode(String(row.dept_code ?? ""));
+		setEditBranchId(row.branch_id != null ? String(row.branch_id) : "");
+		setEditOrderId(row.order_id != null ? String(row.order_id) : "");
+		setEditWorkerStaff(String(row.worker_staff ?? "1"));
 		setEditNameError(null);
 		setEditCodeError(null);
 		try {
-			const selectedCompany = localStorage.getItem("sidebar_selectedCompany");
-			const co_id = selectedCompany ? JSON.parse(selectedCompany).co_id : "";
-			const params = new URLSearchParams({ dept_master_id: String(id), co_id });
-			const [{ data: viewDataRes }, { data: setupData }] = await Promise.all([
-				fetchWithCookie(`${apiRoutesPortalMasters.DEPT_MASTER_VIEW}?${params}`, "GET"),
-				fetchWithCookie(`${apiRoutesPortalMasters.DEPT_MASTER_CREATE_SETUP}?${new URLSearchParams({ co_id })}`, "GET"),
-			]) as any;
-			if (!viewDataRes) throw new Error("Failed to load department data");
-			const d = viewDataRes;
-			const dept = d?.dept_details ?? d?.dept_master ?? d?.department ?? d?.data ?? d;
-			setEditDeptName(dept?.dept_name ?? dept?.dept_name_display ?? "");
-			setEditDeptCode(dept?.dept_code ?? "");
-			setEditDeptActive(typeof dept?.active === "string" ? Number(dept.active) === 1 : !!dept?.active);
-			setEditBranchId(dept?.branch_id ?? dept?.branch ?? "");
-			const branches = setupData?.branchs || setupData?.branches || setupData?.branch_list || [];
-			setBranchOptions(Array.isArray(branches) ? branches : []);
+			const { co_id, branchIds } = readScope();
+			const params = new URLSearchParams({ co_id });
+			if (branchIds) params.append("branch_id", branchIds);
+			const { data, error } = await fetchWithCookie(`${apiRoutesPortalMasters.DEPT_MASTER_CREATE_SETUP}?${params}`, "GET");
+			if (error || !data) throw new Error(error || "Failed to load branches");
+			const branches = Array.isArray(data.data) ? data.data : [];
+			setBranchOptions(branches.map((b: any) => ({ id: String(b.branch_id), label: b.branch_name ?? String(b.branch_id) })));
 		} catch (err: any) {
-			setSnackbar({ open: true, message: err?.message || "Failed to load edit data", severity: "error" });
-			setEditDialogOpen(false);
+			setSnackbar({ open: true, message: err?.message || "Failed to load branches", severity: "error" });
 		} finally {
 			setEditLoading(false);
 		}
@@ -217,8 +195,9 @@ export default function DepartmentMasterPage() {
 				dept_master_id: editDeptId,
 				dept_name: editDeptName,
 				dept_code: editDeptCode,
-				active: editDeptActive ? 1 : 0,
 				branch_id: editBranchId,
+				order_id: editOrderId,
+				worker_staff: editWorkerStaff,
 			};
 			const { data, error } = await fetchWithCookie(apiRoutesPortalMasters.DEPT_MASTER_CREATE, "POST", payload) as any;
 			if (error || !data) throw new Error(error || "Failed to save department");
@@ -236,28 +215,17 @@ export default function DepartmentMasterPage() {
 		{ field: "dept_code", headerName: "Dept Code", flex: 1, minWidth: 140 },
 		{ field: "dept_name", headerName: "Department", flex: 1, minWidth: 220 },
 		{ field: "branch_display", headerName: "Branch", flex: 1, minWidth: 180 },
+		{ field: "order_id", headerName: "Order", width: 100, type: "number" },
 		{
-			field: "active",
-			headerName: "Active",
-			width: 120,
-			renderCell: (params: GridRenderCellParams<DeptRow>) => (
-				<span>{params.value ? "Yes" : "No"}</span>
-			),
+			field: "worker_staff",
+			headerName: "Department For",
+			width: 150,
+			renderCell: (params: GridRenderCellParams<DeptRow>) => <span>{deptForLabel(params.value)}</span>,
 		},
 	], []);
 
-	const viewRowHandler = (row: DeptRow) => {
-		const id = row.id ?? row.dept_master_id ?? row.dept_id;
-		if (id !== null && typeof id !== "undefined") {
-			void handleOpenView(id);
-		}
-	};
-
 	const editRowHandler = (row: DeptRow) => {
-		const id = row.id ?? row.dept_master_id ?? row.dept_id;
-		if (id !== null && typeof id !== "undefined") {
-			void handleOpenEdit(id);
-		}
+		void handleOpenEdit(row);
 	};
 
 	return (
@@ -272,7 +240,7 @@ export default function DepartmentMasterPage() {
 			showLoadingUntilLoaded
 			search={{ value: searchQuery, onChange: handleSearchChange, placeholder: "Search departments", debounceDelayMs: 1000 }}
 			createAction={{ onClick: openCreate }}
-			onView={viewRowHandler}
+			onView={handleOpenView}
 			onEdit={editRowHandler}
 		>
 			<Snackbar
@@ -298,7 +266,15 @@ export default function DepartmentMasterPage() {
 			<Dialog open={viewDialogOpen} onClose={() => setViewDialogOpen(false)} maxWidth="sm" fullWidth>
 				<DialogTitle>Department Details</DialogTitle>
 				<DialogContent>
-					{viewLoading ? <div>Loading...</div> : viewData ? <pre>{JSON.stringify(viewData, null, 2)}</pre> : <div>No details</div>}
+					{viewData ? (
+						<Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
+							<div><b>Dept Code:</b> {viewData.dept_code ?? "-"}</div>
+							<div><b>Department:</b> {viewData.dept_name ?? "-"}</div>
+							<div><b>Branch:</b> {viewData.branch_display || "-"}</div>
+							<div><b>Order:</b> {viewData.order_id ?? "-"}</div>
+							<div><b>Department For:</b> {deptForLabel(viewData.worker_staff)}</div>
+						</Box>
+					) : <div>No details</div>}
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={() => setViewDialogOpen(false)}>Close</Button>
@@ -332,18 +308,27 @@ export default function DepartmentMasterPage() {
 							fullWidth
 						/>
 						<TextField select label="Branch" value={editBranchId} onChange={(e) => setEditBranchId(e.target.value)} fullWidth>
-							{branchOptions.map((b: any) => (
-								<MenuItem key={b.id ?? b.value ?? b.branch_id} value={b.id ?? b.value ?? b.branch_id}>
-									{b.label ?? b.branch_name ?? b.name ?? ""}
-								</MenuItem>
+							{branchOptions.map((b: { id: string; label: string }) => (
+								<MenuItem key={b.id} value={b.id}>{b.label}</MenuItem>
 							))}
 						</TextField>
-						<FormControlLabel control={<Switch checked={editDeptActive} onChange={(e) => setEditDeptActive(e.target.checked)} />} label="Active" />
+						<TextField
+							label="Order"
+							type="number"
+							value={editOrderId}
+							onChange={(e) => setEditOrderId(e.target.value)}
+							fullWidth
+						/>
+						<TextField select label="Department For" value={editWorkerStaff} onChange={(e) => setEditWorkerStaff(e.target.value)} fullWidth>
+							{DEPT_FOR.map((o) => (
+								<MenuItem key={o.value} value={o.value}>{o.label}</MenuItem>
+							))}
+						</TextField>
 					</Box>
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={closeEdit} disabled={editLoading}>Cancel</Button>
-					<Button className="btn-primary" onClick={handleSaveEdit} disabled={editLoading || !editDeptName || !editDeptCode || !!editNameError || !!editCodeError}>
+					<Button className="btn-primary" onClick={handleSaveEdit} disabled={editLoading || !editDeptName || !editDeptCode || !editOrderId || !!editNameError || !!editCodeError}>
 						Save
 					</Button>
 				</DialogActions>

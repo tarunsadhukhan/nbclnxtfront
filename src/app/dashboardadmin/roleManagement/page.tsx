@@ -72,7 +72,7 @@ export default function PortalRoleTablePage() {
           </Typography>
           <Button
             variant="contained"
-            sx={{ bgcolor: "#95C11F", "&:hover": { bgcolor: "#85ad1b" } }}
+            sx={{ bgcolor: "#22a05a", "&:hover": { bgcolor: "#1b8049" } }}
             onClick={() =>
               (window.location.href = "/dashboardadmin/roleManagement/createRole")
             }

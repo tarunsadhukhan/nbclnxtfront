@@ -318,7 +318,7 @@ export default function SubDeptManagement() {
         <div className="mb-8 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-[#0C3C60]">Department Setup</h1>
           <Button
-            className="bg-[#95C11F] hover:bg-[#85ad1b] text-white"
+            className="bg-[#22a05a] hover:bg-[#1b8049] text-white"
             onClick={() => {
               window.location.href = "/dashboardadmin/subDeptManagement/createSubDept";
             }}

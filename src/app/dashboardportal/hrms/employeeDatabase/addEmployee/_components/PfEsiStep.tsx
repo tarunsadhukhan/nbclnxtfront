@@ -22,13 +22,16 @@ const pfSchema: Schema = {
     { name: "nominee_name", label: "Nominee Name", type: "text", grid: { xs: 12, sm: 4 } },
     { name: "relationship_name", label: "Relationship", type: "text", grid: { xs: 12, sm: 4 } },
     { name: "pf_date_of_join", label: "PF Date of Joining", type: "date", grid: { xs: 12, sm: 4 } },
+    { name: "pension_no", label: "Pension Number", type: "text", grid: { xs: 12, sm: 4 } },
+    { name: "pension_date", label: "Pension Date", type: "date", grid: { xs: 12, sm: 4 } },
   ] satisfies Field[],
 };
 
 const esiSchema: Schema = {
   fields: [
-    { name: "esi_no", label: "ESI Number", type: "text", grid: { xs: 12, sm: 6 } },
-    { name: "medical_policy_no", label: "Medical Policy Number", type: "text", grid: { xs: 12, sm: 6 } },
+    { name: "esi_no", label: "ESI Number", type: "text", grid: { xs: 12, sm: 4 } },
+    { name: "esi_date", label: "ESI Joining Date", type: "date", grid: { xs: 12, sm: 4 } },
+    { name: "medical_policy_no", label: "Medical Policy Number", type: "text", grid: { xs: 12, sm: 4 } },
   ] satisfies Field[],
 };
 
@@ -44,10 +47,13 @@ export default function PfEsiStep({ pfData, esiData, onPfChange, onEsiChange, di
     nominee_name: pfData?.nominee_name ?? "",
     relationship_name: pfData?.relationship_name ?? "",
     pf_date_of_join: pfData?.pf_date_of_join ?? "",
+    pension_no: pfData?.pension_no ?? "",
+    pension_date: pfData?.pension_date ?? "",
   }), [pfData]);
 
   const esiValues = useMemo(() => ({
     esi_no: esiData?.esi_no ?? "",
+    esi_date: esiData?.esi_date ?? "",
     medical_policy_no: esiData?.medical_policy_no ?? "",
   }), [esiData]);
 

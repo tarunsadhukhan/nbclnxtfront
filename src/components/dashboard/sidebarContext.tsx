@@ -6,6 +6,8 @@ export interface MenuItem {
   menu_name: string;
   menu_path: string;
   menu_parent_id: number | null;
+  /** Material Symbols ligature name, e.g. "assessment" */
+  menu_icon?: string | null;
   access_type_id?: number | null;
 }
 
@@ -111,18 +113,17 @@ export const SidebarProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem('sidebar_menuItems', JSON.stringify(menuItems));
   }, [menuItems]);
 
-  // After companies are set (e.g., after API fetch), ensure selectedCompany is preserved if possible
+  // After companies are set (e.g. after API fetch), re-point selectedCompany at
+  // the fresh object.
+  //
+  // It must NEVER fall back to companies[0]: company/branch is chosen at login
+  // and there is no in-app switcher, so a silent default would show one
+  // company's data under another company's name with no way for the user to
+  // notice or correct it. No valid selection => stay null and let the portal
+  // send the user back to sign in.
   useEffect(() => {
-    if (companies.length > 0) {
-      setSelectedCompany(prev => {
-        if (prev && companies.some(c => c.co_id === prev.co_id)) {
-          return companies.find(c => c.co_id === prev.co_id) || companies[0];
-        } else {
-          setSelectedBranches(companies[0].branches.length > 0 ? [companies[0].branches[0].branch_id] : []);
-          return companies[0];
-        }
-      });
-    }
+    if (companies.length === 0) return;
+    setSelectedCompany(prev => (prev ? companies.find(c => c.co_id === prev.co_id) ?? null : null));
   }, [companies]);
 
   // Update availableMenus and parentMenus when company/branches change
@@ -143,7 +144,10 @@ export const SidebarProvider = ({ children }: { children: ReactNode }) => {
         });
       });
     setAvailableMenus(allMenus);
-    setParentMenus(allMenus.filter(menu => menu.menu_parent_id === null));
+    // A menu whose parent wasn't granted to this user has no visible ancestor to
+    // hang off, so surface it as a root rather than dropping it from the tree.
+    const ids = new Set(allMenus.map(m => m.menu_id));
+    setParentMenus(allMenus.filter(menu => menu.menu_parent_id === null || !ids.has(menu.menu_parent_id)));
   }, [selectedCompany, selectedBranches]);
 
   // Handlers

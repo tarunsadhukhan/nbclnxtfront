@@ -1,8 +1,10 @@
 import type { PaletteOptions, ThemeOptions } from "@mui/material/styles";
 
-const brandPrimary = "#95C11F"; // matches btn-primary in globals.css
-const brandPrimaryHover = "#85AD1B";
-const brandSecondary = "#69ACC3";
+// InfoSky brand — keep in step with src/styles/brand.ts and the
+// --brand-primary / --brand-secondary custom properties in globals.css.
+const brandPrimary = "#22a05a"; // matches btn-primary in globals.css
+const brandPrimaryHover = "#1b8049";
+const brandSecondary = "#1b2a4e";
 const neutral900 = "#111827";
 const neutral700 = "#374151";
 const neutral500 = "#6B7280";
@@ -115,7 +117,7 @@ export const shape = {
 };
 
 export const shadows = {
-  brandButton: `0 8px 16px rgba(149, 193, 31, 0.24)`,
+  brandButton: `0 8px 16px rgba(34, 160, 90, 0.24)`, // brandPrimary at 24%
 };
 
 export const tokens = {

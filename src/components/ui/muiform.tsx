@@ -308,13 +308,18 @@ export const MuiForm = React.forwardRef(function MuiForm(
 
 		// compute required as boolean for MUI props; field.required may be a function
 		const requiredBool = typeof field.required === 'function' ? Boolean((field.required as any)(values)) : Boolean(field.required);
+		// View mode keeps the entry layout — same inputs, same grid — but locks them
+		// with readOnly rather than `disabled`, so the values stay legible and
+		// selectable instead of greying out to ~38% opacity.
+		const viewOnly = mode === "view";
+		const inputDisabled = viewOnly ? false : disabled;
 		const commonTextProps = {
 			label: field.label,
 			fullWidth: true,
 			required: requiredBool,
 			helperText: errors[field.name] || field.helperText,
 			error: Boolean(errors[field.name]),
-			disabled,
+			disabled: inputDisabled,
 			placeholder: field.placeholder,
 			size: "small" as const,
 		};
@@ -345,20 +350,13 @@ export const MuiForm = React.forwardRef(function MuiForm(
 						},
 						minWidth: 0,
 					}}>
-				{mode === "view" && field.type !== "checkbox" && field.type !== "custom" ? (
-					<Box>
-						<Typography variant="caption" color="text.secondary">
-							{field.label}
-						</Typography>
-						<Typography variant="body2" sx={{ fontWeight: 500 }}>{displayValue(field, value)}</Typography>
-					</Box>
-				) : field.type === "text" || field.type === "number" || field.type === "date" || field.type === "time" ? (
+				{field.type === "text" || field.type === "number" || field.type === "date" || field.type === "time" ? (
 					<TextField
 						type={field.type === "text" ? "text" : field.type === "number" ? "number" : field.type === "time" ? "time" : "date"}
 						value={value ?? ""}
 						onChange={(e) => handleChange(field.name, e.target.value)}
 						InputLabelProps={field.type === "date" || field.type === "time" ? { shrink: true } : undefined}
-						inputProps={mode === "view" ? { readOnly: true } : undefined}
+						inputProps={viewOnly || field.readOnly ? { readOnly: true } : undefined}
 						{...commonTextProps}
 					/>
 				) : field.type === "textarea" ? (
@@ -368,10 +366,11 @@ export const MuiForm = React.forwardRef(function MuiForm(
 						maxRows={field.maxRows}
 						value={value ?? ""}
 						onChange={(e) => handleChange(field.name, e.target.value)}
-						inputProps={mode === "view" ? { readOnly: true } : undefined}
+						inputProps={viewOnly || field.readOnly ? { readOnly: true } : undefined}
 						{...commonTextProps}
 					/>
 				) : field.type === "checkbox" ? (
+					// Checkbox has no readOnly — `disabled` is the only way to lock it.
 					<FormControl disabled={disabled}>
 						<FormControlLabel
 							control={
@@ -396,8 +395,9 @@ export const MuiForm = React.forwardRef(function MuiForm(
 						isOptionEqualToValue={(o: Option, v: Option) => String(o.value) === String(v.value)}
 						value={((field.options ?? []) as Option[]).find((o) => String(o.value) === String(value)) ?? null}
 						onChange={(_, newOpt) => handleChange(field.name, (newOpt as Option | null)?.value ?? "")}
-						disableClearable={requiredBool}
-						disabled={disabled}
+						disableClearable={requiredBool || viewOnly}
+						disabled={inputDisabled}
+						readOnly={viewOnly}
 						noOptionsText={"No options"}
 						renderInput={(params) => (
 							<TextField
@@ -422,7 +422,8 @@ export const MuiForm = React.forwardRef(function MuiForm(
 						isOptionEqualToValue={(o: Option, v: Option) => String(o.value) === String(v.value)}
 						value={((field.options ?? []) as Option[]).filter((o) => Array.isArray(value) && (value as Array<unknown>).some((v) => String(v) === String(o.value)))}
 						onChange={(_, newOpts) => handleChange(field.name, (newOpts as Option[]).map((o) => o.value))}
-						disabled={disabled}
+						disabled={inputDisabled}
+						readOnly={viewOnly}
 						noOptionsText={"No options"}
 						renderTags={(selected: Option[], getTagProps) => (
 							<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -444,39 +445,32 @@ export const MuiForm = React.forwardRef(function MuiForm(
 						)}
 					/>
 				) : field.type === "custom" && typeof field.render === "function" ? (
-					mode === "view" ? (
-						<Box>
-							<Typography variant="caption" color="text.secondary">
+					// Custom controls keep their own layout in view mode; every renderer
+					// honours the `disabled` flag, which stays true here.
+					<Box>
+						{field.label && !field.hideLabel && (
+							<Typography variant="subtitle2" sx={{ mb: 1 }} color="text.secondary">
 								{field.label}
 							</Typography>
-							<Typography variant="body2" sx={{ fontWeight: 500 }}>{displayValue(field, value)}</Typography>
-						</Box>
-					) : (
-						<Box>
-							{field.label && !field.hideLabel && (
-								<Typography variant="subtitle2" sx={{ mb: 1 }} color="text.secondary">
-									{field.label}
-								</Typography>
-							)}
-							{field.render({
-								value,
-								values,
-								onChange: (val) => handleChange(field.name, val),
-								setValue,
-								disabled,
-								mode,
-							})}
-							{(errors[field.name] || field.helperText) && (
-								<Typography
-									variant="caption"
-									sx={{ display: "block", mt: 0.5 }}
-									color={errors[field.name] ? "error" : "text.secondary"}
-								>
-									{errors[field.name] || field.helperText}
-								</Typography>
-							)}
-						</Box>
-					)
+						)}
+						{field.render({
+							value,
+							values,
+							onChange: (val) => handleChange(field.name, val),
+							setValue,
+							disabled,
+							mode,
+						})}
+						{(errors[field.name] || field.helperText) && (
+							<Typography
+								variant="caption"
+								sx={{ display: "block", mt: 0.5 }}
+								color={errors[field.name] ? "error" : "text.secondary"}
+							>
+								{errors[field.name] || field.helperText}
+							</Typography>
+						)}
+					</Box>
 				) : (
 					// Fallback render as text
 					<Box>

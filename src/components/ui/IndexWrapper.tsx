@@ -2,12 +2,27 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Box, TextField, Tooltip, IconButton, Typography, Stack } from "@mui/material";
-import { GridColDef, GridFilterModel, GridPaginationModel, GridRenderCellParams, GridValidRowModel } from "@mui/x-data-grid";
-import { usePathname } from "next/navigation";
-import { Eye, Edit } from "lucide-react";
+import { DataGrid, GridColDef, GridFilterModel, GridPaginationModel, GridRenderCellParams, GridValidRowModel } from "@mui/x-data-grid";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  Eye, Edit, Plus, Pencil, RefreshCw, FileSpreadsheet, Printer, Columns3, Filter, X, Search, Eraser,
+} from "lucide-react";
 import MuiDataGrid from "./muiDataGrid";
 import { Button } from "./button";
+import ClassicWindow, { ClassicButton, ClassicPager, classic, classicGridSx } from "./classic/ClassicWindow";
 import { useSidebarContextSafe } from "@/components/dashboard/sidebarContext";
+
+/**
+ * Route prefixes that render the classic desktop-ERP chrome instead of the
+ * modern web layout. Widening the classic look = adding a prefix here.
+ */
+const CLASSIC_ROUTES = [
+  "/dashboardportal/hrms",
+  "/dashboardportal/hrmsmasters",
+  "/dashboardportal/masters",
+];
+
+const ICON = 16;
 
 export type IndexWrapperSearchConfig = {
   value: string;
@@ -88,6 +103,14 @@ function IndexWrapper<RowType extends GridValidRowModel & { id?: string | number
   const sidebarContext = useSidebarContextSafe();
   const hasMenuAccess = sidebarContext?.hasMenuAccess ?? (() => true);
   const pathname = usePathname();
+  const router = useRouter();
+
+  const isClassic = useMemo(() => CLASSIC_ROUTES.some((p) => pathname.startsWith(p)), [pathname]);
+
+  // Classic-only view state (declared unconditionally — hooks can't be branched).
+  const [selectedId, setSelectedId] = useState<string | number | null>(null);
+  const [showFilterBar, setShowFilterBar] = useState(true);
+  const [showGridToolbar, setShowGridToolbar] = useState(false);
 
   const [searchInput, setSearchInput] = useState<string>(search?.value ?? "");
   const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -224,6 +247,132 @@ function IndexWrapper<RowType extends GridValidRowModel & { id?: string | number
   }, [actionColumn, columns]);
 
   const createAllowed = createAction ? (createAction.allowed ?? canCreate) : false;
+
+  // ─── Classic desktop-ERP mode ────────────────────────────────────
+  const selectedRow = useMemo(
+    () => rows.find((r) => r.id !== undefined && r.id === selectedId) ?? null,
+    [rows, selectedId],
+  );
+
+  const openRow = useCallback((row: RowType) => {
+    const editable = isRowEditable ? isRowEditable(row) : true;
+    if (onEdit && canEdit && editable) onEdit(row);
+    else if (onView && canView) onView(row);
+  }, [canEdit, canView, isRowEditable, onEdit, onView]);
+
+  /** Exports the rows currently on screen, using the grid's own column set.
+   *  ponytail: page-scoped — needs a backend export endpoint for full data. */
+  const exportCsv = useCallback(() => {
+    const esc = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const exportable = columns.filter((c) => !c.field.startsWith("__"));
+    const csv = [
+      exportable.map((c) => esc(c.headerName ?? c.field)).join(","),
+      ...rows.map((row) =>
+        exportable.map((c) => esc((row as Record<string, unknown>)[c.field])).join(","),
+      ),
+    ].join("\r\n");
+    const url = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${(title ?? "export").replace(/\s+/g, "-").toLowerCase()}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }, [columns, rows, title]);
+
+  const classicActions = useMemo(() => {
+    const rowEditable = selectedRow ? (isRowEditable ? isRowEditable(selectedRow) : true) : false;
+    return [
+      ...(createAction
+        ? [{ label: "New", icon: <Plus size={ICON} color={classic.ok} />, onClick: createAction.onClick, disabled: !createAllowed }]
+        : []),
+      {
+        label: "Edit",
+        icon: <Pencil size={ICON} color={classic.accent} />,
+        onClick: () => selectedRow && onEdit?.(selectedRow),
+        disabled: !onEdit || !canEdit || !selectedRow || !rowEditable,
+      },
+      {
+        label: "View",
+        icon: <Eye size={ICON} color={classic.textMuted} />,
+        onClick: () => selectedRow && onView?.(selectedRow),
+        disabled: !onView || !canView || !selectedRow,
+      },
+      // Pages own their fetch, so a full reload is the only refresh available here.
+      { label: "Refresh", icon: <RefreshCw size={ICON} color={classic.ok} />, onClick: () => window.location.reload(), separatorBefore: true },
+      { label: "Export Excel", icon: <FileSpreadsheet size={ICON} color={classic.ok} />, onClick: exportCsv, disabled: rows.length === 0 },
+      { label: "Print", icon: <Printer size={ICON} color={classic.text} />, onClick: () => window.print() },
+      { label: "Columns", icon: <Columns3 size={ICON} color={classic.accent} />, onClick: () => setShowGridToolbar((v) => !v), active: showGridToolbar, separatorBefore: true },
+      { label: "Filter", icon: <Filter size={ICON} color={classic.accent} />, onClick: () => setShowFilterBar((v) => !v), active: showFilterBar },
+      { label: "Close", icon: <X size={ICON} color={classic.danger} />, onClick: () => router.push("/dashboardportal"), separatorBefore: true },
+    ];
+  }, [createAction, createAllowed, selectedRow, isRowEditable, onEdit, onView, canEdit, canView, exportCsv, rows.length, showGridToolbar, showFilterBar, router]);
+
+  if (isClassic) {
+    const classicFilterBar = showFilterBar ? (
+      <>
+        {toolbarContent}
+        {search ? (
+          <Box sx={{ ml: "auto", display: "flex", alignItems: "center", gap: "6px" }}>
+            <span>Search</span>
+            <TextField
+              size="small"
+              sx={{ width: 240 }}
+              value={searchInput}
+              onChange={handleSearchInputChange}
+              placeholder={search.placeholder ?? "Search"}
+            />
+            <ClassicButton onClick={() => triggerSearchChange(searchInput)}><Search size={13} /> Search</ClassicButton>
+            <ClassicButton onClick={() => { setSearchInput(""); triggerSearchChange(""); }}><Eraser size={13} /> Clear</ClassicButton>
+          </Box>
+        ) : null}
+      </>
+    ) : null;
+
+    return (
+      <ClassicWindow
+        title={title ?? "Records"}
+        actions={classicActions}
+        filterBar={classicFilterBar}
+        statusRight={subtitle}
+      >
+        <Box sx={{ flex: 1, minHeight: 320, display: "flex", flexDirection: "column" }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            rowCount={rowCount}
+            loading={showLoadingUntilLoaded ? loading : false}
+            paginationMode="server"
+            paginationModel={paginationModel}
+            onPaginationModelChange={onPaginationModelChange}
+            filterMode={filterMode}
+            filterModel={filterModel}
+            onFilterModelChange={onFilterModelChange}
+            showToolbar={showGridToolbar}
+            hideFooter
+            rowHeight={26}
+            columnHeaderHeight={28}
+            disableRowSelectionOnClick
+            // Mirrors MuiDataGrid's id fallback — a few master tables key on co_id.
+            getRowId={(row) => {
+              const r = row as unknown as { id?: string | number; co_id?: string | number };
+              return r.id ?? r.co_id ?? "";
+            }}
+            onRowClick={(params) => setSelectedId(params.id)}
+            onRowDoubleClick={(params) => openRow(params.row as RowType)}
+            getRowClassName={(params) => (params.id === selectedId ? "classic-current" : "")}
+            sx={{ ...classicGridSx, flex: 1, minHeight: 0 }}
+          />
+          <ClassicPager
+            page={paginationModel.page}
+            pageSize={paginationModel.pageSize}
+            rowCount={rowCount}
+            onChange={onPaginationModelChange}
+          />
+        </Box>
+        {children}
+      </ClassicWindow>
+    );
+  }
 
   return (
     <div className={`min-h-screen bg-gray-50 p-8 ${className ?? ""}`}>

@@ -1,6 +1,7 @@
 import { PaletteMode, ThemeOptions, createTheme } from "@mui/material/styles";
 import "@mui/x-data-grid/themeAugmentation";
 import { palette, typography, shape, tokens, shadows } from "./tokens";
+import { classic } from "./brand";
 
 const buildComponents = (mode: PaletteMode): ThemeOptions["components"] => ({
   MuiButton: {
@@ -49,6 +50,35 @@ const buildComponents = (mode: PaletteMode): ThemeOptions["components"] => ({
       size: "small",
     },
   },
+  // Classic desktop-ERP fields — square, compact, light surface. Set on the
+  // theme (not per screen) so every dashboard matches the employee database,
+  // including dialogs/menus that render in a portal and can't inherit a
+  // wrapper's sx. Covers Select, Autocomplete and the date pickers too, since
+  // they all render an OutlinedInput.
+  MuiOutlinedInput: {
+    styleOverrides: {
+      root: {
+        borderRadius: 0,
+        fontSize: 12.5,
+        ...(mode === "light" ? { backgroundColor: classic.surface } : null),
+      },
+      notchedOutline: mode === "light" ? { borderColor: classic.border } : {},
+    },
+  },
+  MuiInputLabel: {
+    styleOverrides: {
+      root: {
+        fontSize: 12.5,
+      },
+    },
+  },
+  MuiFormHelperText: {
+    styleOverrides: {
+      root: {
+        fontSize: 11,
+      },
+    },
+  },
   MuiFormLabel: {
     styleOverrides: {
       root: {
@@ -71,6 +101,36 @@ const buildComponents = (mode: PaletteMode): ThemeOptions["components"] => ({
     styleOverrides: {
       root: {
         "--DataGrid-rowBorderColor": palette[mode].divider ?? "#E5E7EB",
+        // Column headers carry the brand navy across every grid in the app.
+        // Set here rather than per-page so a grid can't miss the treatment;
+        // the pinned/filler areas read --DataGrid-containerBackground, so it
+        // has to be set too or the header row ends in a pale gap.
+        "--DataGrid-containerBackground": tokens.brand.secondary,
+        "& .MuiDataGrid-columnHeader": {
+          backgroundColor: tokens.brand.secondary,
+        },
+        // The title sits in nested wrappers that don't reliably inherit the
+        // header's colour, so every layer is named explicitly — otherwise dark
+        // ink lands on the navy and the labels disappear.
+        [`& .MuiDataGrid-columnHeader,
+          & .MuiDataGrid-columnHeaderTitleContainer,
+          & .MuiDataGrid-columnHeaderTitleContainerContent,
+          & .MuiDataGrid-columnHeaderTitle,
+          & .MuiDataGrid-columnHeaderCheckbox .MuiCheckbox-root`]: {
+          color: "#FFFFFF",
+        },
+        "& .MuiDataGrid-columnHeaderTitle": {
+          fontWeight: 600,
+        },
+        // Sort/menu affordances default to dark ink and vanish on navy.
+        "& .MuiDataGrid-columnHeader .MuiDataGrid-sortIcon, \
+         & .MuiDataGrid-columnHeader .MuiDataGrid-menuIconButton, \
+         & .MuiDataGrid-columnHeader .MuiDataGrid-filterIcon": {
+          color: "#FFFFFF",
+        },
+        "& .MuiDataGrid-columnSeparator": {
+          color: "rgba(255, 255, 255, 0.28)",
+        },
       },
     },
   },

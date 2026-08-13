@@ -28,7 +28,6 @@ import MuiForm, {
   type Schema,
 } from "@/components/ui/muiform";
 import { useSidebarContext } from "@/components/dashboard/sidebarContext";
-import BackToReports from "@/components/reports/BackToReports";
 import { useSelectedCompanyCoId } from "@/hooks/use-selected-company-coid";
 import {
   fetchAttendanceCreateSetup,
@@ -397,10 +396,6 @@ function AttendanceChecklistContent() {
 
   return (
     <>
-      {/* This page sits outside hrmsreports/, so it has no hub layout to
-          supply the back link — render it here. */}
-      <BackToReports hub="/dashboardportal/hrms/hrmsreports" />
-
       <Box className="flex min-h-screen flex-col gap-6 bg-gray-50 p-8 print:hidden">
         <Box className="flex flex-col gap-1">
           <Typography variant="h5" component="h1" sx={{ fontWeight: 600 }}>

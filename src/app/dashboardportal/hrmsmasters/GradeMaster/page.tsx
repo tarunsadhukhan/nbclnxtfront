@@ -1,27 +1,23 @@
 "use client";
-
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { Snackbar, Alert } from "@mui/material";
 import { GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { fetchWithCookie } from "@/utils/apiClient2";
 import { apiRoutesPortalMasters } from "@/utils/api";
 import IndexWrapper from "@/components/ui/IndexWrapper";
-import CreateCategoryPage from "./CreateCategoryPage";
-import { useSidebarContext } from "@/components/dashboard/sidebarContext";
+import CreateGradePage from "./CreateGradePage";
 
-type CategoryRow = {
+type GradeRow = {
 	id: number | string;
-	cata_id: number;
-	cata_code: string;
-	cata_desc: string;
+	grade_id: number;
+	grade_code: string;
 	grade_name: string;
-	branch_name: string;
+	grade_type_name: string;
 	[key: string]: unknown;
 };
 
-export default function CategoryMasterPage() {
-	const { selectedBranches } = useSidebarContext();
-	const [rows, setRows] = useState<CategoryRow[]>([]);
+export default function GradeMasterPage() {
+	const [rows, setRows] = useState<GradeRow[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [totalRows, setTotalRows] = useState(0);
 	const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -38,7 +34,7 @@ export default function CategoryMasterPage() {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
 
-	const fetchCategories = useCallback(async () => {
+	const fetchGrades = useCallback(async () => {
 		setLoading(true);
 		try {
 			const queryParams = new URLSearchParams({
@@ -50,28 +46,23 @@ export default function CategoryMasterPage() {
 				queryParams.append("search", searchQuery);
 			}
 
-			if (selectedBranches.length > 0) {
-				queryParams.append("branch_id", selectedBranches.join(","));
-			}
-
 			const { data, error } = await fetchWithCookie(
-				`${apiRoutesPortalMasters.CATEGORY_TABLE}?${queryParams}`,
+				`${apiRoutesPortalMasters.GRADE_TABLE}?${queryParams}`,
 				"GET"
 			);
 
 			if (error || !data) {
-				throw new Error(error || "Failed to fetch categories");
+				throw new Error(error || "Failed to fetch grades");
 			}
 
-			const mapped: CategoryRow[] = (data.data || []).map(
+			const mapped: GradeRow[] = (data.data || []).map(
 				(r: Record<string, unknown>) => ({
 					...r,
-					id: r.cata_id as number,
-					cata_id: r.cata_id as number,
-					cata_code: (r.cata_code as string) ?? "",
-					cata_desc: (r.cata_desc as string) ?? "",
+					id: r.grade_id as number,
+					grade_id: r.grade_id as number,
+					grade_code: (r.grade_code as string) ?? "",
 					grade_name: (r.grade_name as string) ?? "",
-					branch_name: (r.branch_name as string) ?? "",
+					grade_type_name: (r.grade_type_name as string) ?? "",
 				})
 			);
 
@@ -79,16 +70,16 @@ export default function CategoryMasterPage() {
 			setTotalRows(data.total || 0);
 		} catch (err: unknown) {
 			const message =
-				err instanceof Error ? err.message : "Error fetching categories";
+				err instanceof Error ? err.message : "Error fetching grades";
 			setSnackbar({ open: true, message, severity: "error" });
 		} finally {
 			setLoading(false);
 		}
-	}, [paginationModel.page, paginationModel.pageSize, searchQuery, selectedBranches]);
+	}, [paginationModel.page, paginationModel.pageSize, searchQuery]);
 
 	useEffect(() => {
-		fetchCategories();
-	}, [fetchCategories]);
+		fetchGrades();
+	}, [fetchGrades]);
 
 	const handlePaginationModelChange = (newModel: GridPaginationModel) => {
 		setPaginationModel(newModel);
@@ -108,8 +99,8 @@ export default function CategoryMasterPage() {
 		setDialogOpen(true);
 	}, []);
 
-	const handleEdit = useCallback((row: CategoryRow) => {
-		setSelectedId(row.cata_id);
+	const handleEdit = useCallback((row: GradeRow) => {
+		setSelectedId(row.grade_id);
 		setDialogOpen(true);
 	}, []);
 
@@ -119,32 +110,26 @@ export default function CategoryMasterPage() {
 	}, []);
 
 	const handleSaved = useCallback(() => {
-		fetchCategories();
-	}, [fetchCategories]);
+		fetchGrades();
+	}, [fetchGrades]);
 
-	const columns = useMemo<GridColDef<CategoryRow>[]>(
+	const columns = useMemo<GridColDef<GradeRow>[]>(
 		() => [
 			{
-				field: "cata_code",
-				headerName: "Category Code",
-				flex: 1.5,
-				minWidth: 150,
-			},
-			{
-				field: "cata_desc",
-				headerName: "Category Name",
-				flex: 2,
-				minWidth: 200,
-			},
-			{
-				field: "grade_name",
-				headerName: "Grade",
+				field: "grade_code",
+				headerName: "Grade Code",
 				flex: 1,
 				minWidth: 120,
 			},
 			{
-				field: "branch_name",
-				headerName: "Branch",
+				field: "grade_name",
+				headerName: "Grade Name",
+				flex: 2,
+				minWidth: 200,
+			},
+			{
+				field: "grade_type_name",
+				headerName: "Grade Type",
 				flex: 1,
 				minWidth: 120,
 			},
@@ -154,7 +139,7 @@ export default function CategoryMasterPage() {
 
 	return (
 		<IndexWrapper
-			title="Worker Category Master"
+			title="Grade Master"
 			rows={rows}
 			columns={columns}
 			rowCount={totalRows}
@@ -165,17 +150,16 @@ export default function CategoryMasterPage() {
 			search={{
 				value: searchQuery,
 				onChange: handleSearchChange,
-				placeholder: "Search by category code or name",
+				placeholder: "Search by grade code or name",
 				debounceDelayMs: 500,
 			}}
 			createAction={{
-				label: "Create Category",
+				label: "Create Grade",
 				onClick: handleCreate,
 			}}
-			onView={handleEdit}
 			onEdit={handleEdit}
 		>
-			<CreateCategoryPage
+			<CreateGradePage
 				open={dialogOpen}
 				onClose={handleDialogClose}
 				onSaved={handleSaved}
@@ -185,12 +169,12 @@ export default function CategoryMasterPage() {
 				open={snackbar.open}
 				autoHideDuration={4000}
 				onClose={handleSnackbarClose}
-				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+				anchorOrigin={{ vertical: "top", horizontal: "center" }}
 			>
 				<Alert
-					onClose={handleSnackbarClose}
 					severity={snackbar.severity}
-					variant="filled"
+					onClose={handleSnackbarClose}
+					sx={{ width: "100%" }}
 				>
 					{snackbar.message}
 				</Alert>

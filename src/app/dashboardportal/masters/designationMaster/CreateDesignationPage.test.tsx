@@ -17,7 +17,13 @@ vi.mock("@/components/ui/muiform", () => ({
 		mode,
 		initialValues,
 	}: {
-		schema: { fields: Array<{ name: string; label: string }> };
+		schema: {
+			fields: Array<{
+				name: string;
+				label: string;
+				options?: Array<{ value: string }>;
+			}>;
+		};
 		mode: string;
 		initialValues: Record<string, unknown>;
 	}) => (
@@ -29,6 +35,13 @@ vi.mock("@/components/ui/muiform", () => ({
 					{String(v)}
 				</span>
 			))}
+			{schema.fields
+				.filter((f) => f.options)
+				.map((f) => (
+					<span key={f.name} data-testid={`opts-${f.name}`}>
+						{f.options!.map((o) => o.value).join(",")}
+					</span>
+				))}
 		</div>
 	),
 }));
@@ -74,14 +87,15 @@ const mockRecord = {
 		dept_id: 1,
 		branch_id: 10,
 		norms: "8h",
-		time_piece: "Time",
+		// Values below are exactly what designation_mst stores.
+		time_piece: "T",
 		direct_indirect: "D",
-		on_machine: "No",
+		on_machine: "N",
 		machine_type: "",
 		no_of_machines: "",
 		cost_code: "CC01",
 		cost_description: "Cost Center 01",
-		piece_rate_type: "",
+		piece_rate_type: "P",
 	},
 };
 
@@ -135,6 +149,26 @@ describe("CreateDesignationPage", () => {
 		expect(screen.getByTestId("field-desig")).toHaveTextContent("Manager");
 		expect(screen.getByTestId("field-dept_id")).toHaveTextContent("1");
 		expect(screen.getByTestId("field-branch_id")).toHaveTextContent("10");
+	});
+
+	// Regression: option values used to be "Time"/"Piece" and "1"/"2" while the DB
+	// stores "T"/"P", so every select rendered blank in edit mode.
+	it("should offer an option matching each stored select value in edit mode", async () => {
+		mockFetchWithCookie
+			.mockResolvedValueOnce(createMockResponse(mockSetup))
+			.mockResolvedValueOnce(createMockResponse(mockRecord));
+
+		render(<CreateDesignationPage {...defaultProps} editId={1} />);
+
+		await waitFor(() => {
+			expect(screen.getByTestId("mui-form")).toBeInTheDocument();
+		});
+
+		for (const name of ["time_piece", "piece_rate_type", "direct_indirect", "on_machine"]) {
+			const stored = String(mockRecord.data[name as keyof typeof mockRecord.data]);
+			const options = screen.getByTestId(`opts-${name}`).textContent?.split(",") ?? [];
+			expect(options, `${name} has no option for stored value "${stored}"`).toContain(stored);
+		}
 	});
 
 	it("should render in edit mode when editId is provided", async () => {

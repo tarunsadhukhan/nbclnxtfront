@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 //import { useRouter } from "next/navigation";
 import { LoginForm } from "@/components/auth/login-form";
-import Image from "next/image";
+import InfoSkyMark from "@/components/ui/InfoSkyMark";
+import { brand } from "@/styles/brand";
 
 export default function Home() {
 //  const router = useRouter();
@@ -34,18 +35,29 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-8 bg-[hsl(var(--brand-primary)/0.08)]">
-      <div className="w-full max-w-md space-y-8">
-        <div className="flex justify-center items-center w-full">
-          <Image
-            src="/ts-global-erp-glowing-128.gif"
-            alt="TS Global ERP Logo"
-            width={180}
-            height={180}
-            priority
-            className="logo-glow mx-auto w-auto h-auto rounded-full"
-            unoptimized
-          />
+    <main
+      className="min-h-screen flex items-center justify-center p-4"
+      style={{ background: `linear-gradient(160deg, ${brand.navy900}, ${brand.navy800} 60%, #0b1830)` }}
+    >
+      {/* max-w-sm + small logo keeps the whole form inside one viewport */}
+      <div className="w-full max-w-sm space-y-4">
+        {/* Brand lockup — mark over wordmark, as on the dark logo variant */}
+        <div className="flex flex-col items-center gap-2">
+          <InfoSkyMark size={64} navy="#ffffff" green={brand.greenLight} />
+          <div className="text-center">
+            <div
+              className="text-lg font-bold tracking-[0.14em]"
+              style={{ color: brand.onNavy }}
+            >
+              INFOSKY GLOBAL
+            </div>
+            <div
+              className="text-[10px] font-semibold tracking-[0.42em] mt-0.5"
+              style={{ color: brand.greenLight }}
+            >
+              IT SOLUTIONS
+            </div>
+          </div>
         </div>
         <LoginForm subdomain={subdomain} />
       </div>
