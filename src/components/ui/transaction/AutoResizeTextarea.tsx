@@ -1,5 +1,15 @@
 import React from "react";
 
+/**
+ * The event `onInput` actually receives, derived from React's own textarea
+ * props. React 19 narrowed this from `FormEvent` to `InputEvent`; deriving it
+ * keeps the handler in step with the types instead of re-breaking the build on
+ * the next change.
+ */
+type TextareaInputEvent = Parameters<
+  NonNullable<React.TextareaHTMLAttributes<HTMLTextAreaElement>["onInput"]>
+>[0];
+
 export interface AutoResizeTextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   minHeight?: number;
@@ -45,7 +55,7 @@ export const AutoResizeTextarea = React.forwardRef<HTMLTextAreaElement, AutoResi
     );
 
     const handleInput = React.useCallback(
-      (event: React.FormEvent<HTMLTextAreaElement>) => {
+      (event: TextareaInputEvent) => {
         adjustHeight(event.currentTarget);
         onInput?.(event);
       },

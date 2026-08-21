@@ -3,16 +3,22 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Control } from "react-hook-form";
+import { Control, FieldPath, FieldValues } from "react-hook-form";
 
 type Option = {
   value: string;
   label: string;
 };
 
-type FormFieldWrapperProps = {
-  name: string;
-  control: Control<any>;
+/**
+ * Generic over the form's value type so a typed `useForm<T>()` control passes
+ * straight through. `Control<any>` used to stand in here, but react-hook-form
+ * types `validate` invariantly, so `Control<T>` is NOT assignable to
+ * `Control<any>` and every typed caller failed the build.
+ */
+type FormFieldWrapperProps<TFieldValues extends FieldValues> = {
+  name: FieldPath<TFieldValues>;
+  control: Control<TFieldValues>;
   label: string;
   placeholder?: string;
   type?: "text" | "email" | "password" | "number" | "select" | "checkbox";
@@ -22,7 +28,7 @@ type FormFieldWrapperProps = {
   customInput?: ReactNode;
 };
 
-const FormFieldWrapper = ({
+const FormFieldWrapper = <TFieldValues extends FieldValues>({
   name,
   control,
   label,
@@ -32,7 +38,7 @@ const FormFieldWrapper = ({
   disabled = false,
   required = false,
   customInput,
-}: FormFieldWrapperProps) => {
+}: FormFieldWrapperProps<TFieldValues>) => {
   return (
     <FormField
       name={name}
