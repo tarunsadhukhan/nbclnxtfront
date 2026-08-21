@@ -45,6 +45,28 @@ interface SidebarContextType {
   handleBranchChange: (branchIds: number[]) => void;
 }
 
+/**
+ * Root menus for the nav tree (top bar buttons + sidebar sections).
+ *
+ * A root is a menu with no parent. A menu whose parent is NOT in the granted
+ * set is an orphan — e.g. the `report = 1` leaves under a module's report hub,
+ * which stay granted in `role_menu_map` after the module's own grant is
+ * removed — and stays hidden, so pulling a module's permission hides its whole
+ * subtree the way the admin intended.
+ *
+ * ponytail: promoting orphans to root instead (the previous behaviour) is what
+ * flooded the top bar with dozens of stranded report leaves. Promotion is kept
+ * only as a fallback for when pruning would leave no nav at all, so a tenant
+ * that grants leaves without their parents still gets a usable menu.
+ */
+export function computeParentMenus(allMenus: MenuItem[]): MenuItem[] {
+  const isRoot = (m: MenuItem) => m.menu_parent_id === null || m.menu_parent_id === 0;
+  const roots = allMenus.filter(isRoot);
+  if (roots.length > 0) return roots;
+  const ids = new Set(allMenus.map(m => m.menu_id));
+  return allMenus.filter(m => isRoot(m) || !ids.has(m.menu_parent_id as number));
+}
+
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
 export const SidebarProvider = ({ children }: { children: ReactNode }) => {
@@ -151,10 +173,7 @@ export const SidebarProvider = ({ children }: { children: ReactNode }) => {
         });
       });
     setAvailableMenus(allMenus);
-    // A menu whose parent wasn't granted to this user has no visible ancestor to
-    // hang off, so surface it as a root rather than dropping it from the tree.
-    const ids = new Set(allMenus.map(m => m.menu_id));
-    setParentMenus(allMenus.filter(menu => menu.menu_parent_id === null || !ids.has(menu.menu_parent_id)));
+    setParentMenus(computeParentMenus(allMenus));
   }, [selectedCompany, selectedBranches]);
 
   // Handlers
