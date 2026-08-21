@@ -71,6 +71,18 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
+            # set -e: without it a failed `docker compose pull` fell through to
+            # `up -d`, which reported "Container nbclerp-frontend Running" for the
+            # OLD image — the deploy silently no-op'd and only died on the prune.
+            set -e
+            # This VPS also hosts nbclerp3be, whose deploy ends in the same
+            # `docker image prune -f`. GitHub's `concurrency` group is per-repo,
+            # so that prune can delete layer content while THIS job is extracting
+            # it — pnpm's node_modules is hardlink-dense, so extraction dies with
+            # "link <a> <b>: no such file or directory" at a different file each
+            # run. One lock file shared by both repos serialises them on the host.
+            exec 9>/tmp/nbclerp-deploy.lock
+            flock -w 900 9
             cd /opt/nbjcl/nbclerp3ui
             docker network inspect nbclerp >/dev/null 2>&1 || docker network create nbclerp
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
