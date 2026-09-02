@@ -191,6 +191,15 @@ export default function ClassicSidebar() {
     try { setCollapsed(localStorage.getItem(COLLAPSE_KEY) === "1"); } catch { /* ignore */ }
   }, []);
 
+  // Published for full-screen entry dialogs, which sit beside the rail instead
+  // of covering it (see fullScreenBesideSidebar in components/ui/entryGrid).
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      "--portal-sidebar-w",
+      `${mounted && collapsed ? STRIP_W : WIDTH}px`,
+    );
+  }, [mounted, collapsed]);
+
   const toggleCollapsed = useCallback(() => {
     setCollapsed((prev) => {
       const next = !prev;

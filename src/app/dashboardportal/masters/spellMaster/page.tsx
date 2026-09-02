@@ -18,6 +18,7 @@ type SpellRow = {
 	starting_time: string;
 	end_time: string;
 	working_hours: number;
+	active_label: "Yes" | "No";
 	[key: string]: unknown;
 };
 
@@ -77,6 +78,7 @@ export default function SpellMasterPage() {
 					starting_time: (r.starting_time as string) ?? "",
 					end_time: (r.end_time as string) ?? "",
 					working_hours: (r.working_hours as number) ?? 0,
+					active_label: r.active === 0 ? "No" : "Yes",
 				})
 			);
 
@@ -164,6 +166,12 @@ export default function SpellMasterPage() {
 				headerName: "Working Hours",
 				flex: 1,
 				minWidth: 120,
+			},
+			{
+				field: "active_label",
+				headerName: "Active",
+				flex: 0.6,
+				minWidth: 80,
 			},
 		],
 		[]

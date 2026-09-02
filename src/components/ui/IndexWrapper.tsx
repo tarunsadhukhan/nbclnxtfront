@@ -20,6 +20,7 @@ const CLASSIC_ROUTES = [
   "/dashboardportal/hrms",
   "/dashboardportal/hrmsmasters",
   "/dashboardportal/masters",
+  "/dashboardportal/production",
 ];
 
 const ICON = 16;

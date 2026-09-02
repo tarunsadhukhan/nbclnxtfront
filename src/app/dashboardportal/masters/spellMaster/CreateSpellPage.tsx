@@ -101,6 +101,7 @@ export default function CreateSpellPage({
 					late_minutes: rec.late_minutes != null ? String(rec.late_minutes) : "",
 					late_minutes2: rec.late_minutes2 != null ? String(rec.late_minutes2) : "",
 					is_overnight: rec.is_overnight != null ? String(rec.is_overnight) : "0",
+					active: rec.active !== 0,
 				});
 			} else {
 				setInitialValues({
@@ -116,6 +117,7 @@ export default function CreateSpellPage({
 					late_minutes: "",
 					late_minutes2: "",
 					is_overnight: "0",
+					active: true,
 				});
 			}
 
@@ -225,6 +227,12 @@ export default function CreateSpellPage({
 					options: YES_NO_OPTIONS,
 					grid: { xs: 12, sm: 6 },
 				},
+				{
+					name: "active",
+					label: "Active",
+					type: "checkbox",
+					grid: { xs: 12, sm: 6 },
+				},
 			],
 		}),
 		[editId, shiftOptions]
@@ -246,6 +254,7 @@ export default function CreateSpellPage({
 				late_minutes: values.late_minutes || null,
 				late_minutes2: values.late_minutes2 || null,
 				is_overnight: values.is_overnight || 0,
+				active: values.active ? 1 : 0,
 			};
 
 			let url: string;

@@ -722,6 +722,38 @@ const apiRoutesPortalMasters = {
     DAILY_RATE_EDIT: `${API_URL}/hrmsMasters/daily_rate_edit`,
     DAILY_RATE_DELETE: `${API_URL}/hrmsMasters/daily_rate_delete`,
 
+    // Worker Rate Muster (worker_rate_mst)
+    WORKER_RATE_SETUP: `${API_URL}/hrmsMasters/worker_rate_setup`,
+    WORKER_RATE_TABLE: `${API_URL}/hrmsMasters/get_worker_rate_table`,
+    WORKER_RATE_BY_ID: `${API_URL}/hrmsMasters/get_worker_rate_by_id`,
+    WORKER_RATE_CREATE: `${API_URL}/hrmsMasters/worker_rate_create`,
+    WORKER_RATE_EDIT: `${API_URL}/hrmsMasters/worker_rate_edit`,
+    WORKER_RATE_DELETE: `${API_URL}/hrmsMasters/worker_rate_delete`,
+    WORKER_RATE_BULK: `${API_URL}/hrmsMasters/worker_rate_bulk_update`,
+
+    // Misc Earn / Extra Allowance Master (misc_earn_mst)
+    MISC_EARN_SETUP: `${API_URL}/hrmsMasters/misc_earn_setup`,
+    MISC_EARN_TABLE: `${API_URL}/hrmsMasters/get_misc_earn_table`,
+    MISC_EARN_BY_ID: `${API_URL}/hrmsMasters/get_misc_earn_by_id`,
+    MISC_EARN_CREATE: `${API_URL}/hrmsMasters/misc_earn_create`,
+    MISC_EARN_EDIT: `${API_URL}/hrmsMasters/misc_earn_edit`,
+    MISC_EARN_DELETE: `${API_URL}/hrmsMasters/misc_earn_delete`,
+
+    // Attendance Incentive Master (atten_incentive_mst)
+    ATTEN_INCENTIVE_SETUP: `${API_URL}/hrmsMasters/atten_incentive_setup`,
+    ATTEN_INCENTIVE_TABLE: `${API_URL}/hrmsMasters/get_atten_incentive_table`,
+    ATTEN_INCENTIVE_BY_ID: `${API_URL}/hrmsMasters/get_atten_incentive_by_id`,
+    ATTEN_INCENTIVE_CREATE: `${API_URL}/hrmsMasters/atten_incentive_create`,
+    ATTEN_INCENTIVE_EDIT: `${API_URL}/hrmsMasters/atten_incentive_edit`,
+    ATTEN_INCENTIVE_DELETE: `${API_URL}/hrmsMasters/atten_incentive_delete`,
+
+    // Winding Incentive Master (winding_incentive_mst)
+    WINDING_INCENTIVE_TABLE: `${API_URL}/hrmsMasters/get_winding_incentive_table`,
+    WINDING_INCENTIVE_BY_ID: `${API_URL}/hrmsMasters/get_winding_incentive_by_id`,
+    WINDING_INCENTIVE_CREATE: `${API_URL}/hrmsMasters/winding_incentive_create`,
+    WINDING_INCENTIVE_EDIT: `${API_URL}/hrmsMasters/winding_incentive_edit`,
+    WINDING_INCENTIVE_DELETE: `${API_URL}/hrmsMasters/winding_incentive_delete`,
+
     // Canteen Details (canteen_details)
     CANTEEN_SETUP: `${API_URL}/hrms/canteen_setup`,
     CANTEEN_TABLE: `${API_URL}/hrms/get_canteen_table`,
@@ -730,6 +762,14 @@ const apiRoutesPortalMasters = {
     CANTEEN_EDIT: `${API_URL}/hrms/canteen_edit`,
     CANTEEN_APPROVE: `${API_URL}/hrms/canteen_approve`,
     CANTEEN_DELETE: `${API_URL}/hrms/canteen_delete`,
+
+    // Electric Data (electric_details) — Other Menus -> Electric Data
+    ELECTRIC_SETUP: `${API_URL}/hrms/electric_setup`,
+    ELECTRIC_TABLE: `${API_URL}/hrms/get_electric_table`,
+    ELECTRIC_BY_ID: `${API_URL}/hrms/get_electric_by_id`,
+    ELECTRIC_CREATE: `${API_URL}/hrms/electric_create`,
+    ELECTRIC_EDIT: `${API_URL}/hrms/electric_edit`,
+    ELECTRIC_DELETE: `${API_URL}/hrms/electric_delete`,
 
     DESIGNATION_TABLE: `${API_URL}/hrmsMasters/get_designation_table`,
     DESIGNATION_BY_ID: `${API_URL}/hrmsMasters/get_designation_by_id`,
@@ -841,6 +881,56 @@ const apiRoutesPortalMasters = {
     GRADE_BY_ID: `${API_URL}/hrmsMasters/get_grade_by_id`,
     GRADE_CREATE: `${API_URL}/hrmsMasters/grade_create`,
     GRADE_EDIT: `${API_URL}/hrmsMasters/grade_edit`,
+
+    // Production Wages Quality Master endpoints
+    QUALITY_TABLE: `${API_URL}/productionMasters/get_quality_table`,
+    QUALITY_BY_ID: `${API_URL}/productionMasters/get_quality_by_id`,
+    QUALITY_CREATE: `${API_URL}/productionMasters/quality_create`,
+    QUALITY_EDIT: `${API_URL}/productionMasters/quality_edit`,
+    QUALITY_STATUS: `${API_URL}/productionMasters/quality_status`,
+
+    // Winding Production (winding_production) — rate resolved from the winding incentive master
+    WINDING_PROD_SETUP: `${API_URL}/production/winding_prod_setup`,
+    WINDING_PROD_TABLE: `${API_URL}/production/get_winding_prod_table`,
+    WINDING_PROD_BY_ID: `${API_URL}/production/get_winding_prod_by_id`,
+    WINDING_PROD_CREATE: `${API_URL}/production/winding_prod_create`,
+    WINDING_PROD_BULK_CREATE: `${API_URL}/production/winding_prod_bulk_create`,
+    WINDING_PROD_EDIT: `${API_URL}/production/winding_prod_edit`,
+    WINDING_PROD_DELETE: `${API_URL}/production/winding_prod_delete`,
+
+    // Beaming Production (beaming_production) — rate resolved from the wages quality master
+    BEAMING_PROD_SETUP: `${API_URL}/production/beaming_prod_setup`,
+    BEAMING_PROD_TABLE: `${API_URL}/production/get_beaming_prod_table`,
+    BEAMING_PROD_BY_ID: `${API_URL}/production/get_beaming_prod_by_id`,
+    BEAMING_PROD_CREATE: `${API_URL}/production/beaming_prod_create`,
+    BEAMING_PROD_EDIT: `${API_URL}/production/beaming_prod_edit`,
+    BEAMING_PROD_DELETE: `${API_URL}/production/beaming_prod_delete`,
+    BEAMING_PROD_BULK_CREATE: `${API_URL}/production/beaming_prod_bulk_create`,
+
+    // Press Production (press_production) — rate resolved from the wages quality master
+    PRESS_PROD_SETUP: `${API_URL}/production/press_prod_setup`,
+    PRESS_PROD_TABLE: `${API_URL}/production/get_press_prod_table`,
+    PRESS_PROD_BY_ID: `${API_URL}/production/get_press_prod_by_id`,
+    PRESS_PROD_CREATE: `${API_URL}/production/press_prod_create`,
+    PRESS_PROD_EDIT: `${API_URL}/production/press_prod_edit`,
+    PRESS_PROD_DELETE: `${API_URL}/production/press_prod_delete`,
+    PRESS_PROD_BULK_CREATE: `${API_URL}/production/press_prod_bulk_create`,
+
+    // Weaving Production (weaving_production) — rate resolved from the wages quality master
+    WEAVING_PROD_SETUP: `${API_URL}/production/weaving_prod_setup`,
+    WEAVING_PROD_TABLE: `${API_URL}/production/get_weaving_prod_table`,
+    WEAVING_PROD_BY_ID: `${API_URL}/production/get_weaving_prod_by_id`,
+    WEAVING_PROD_CREATE: `${API_URL}/production/weaving_prod_create`,
+    WEAVING_PROD_EDIT: `${API_URL}/production/weaving_prod_edit`,
+    WEAVING_PROD_DELETE: `${API_URL}/production/weaving_prod_delete`,
+
+    // Finishing/Sewing Production (finishing_production) — rate resolved from the wages quality master
+    FINISHING_PROD_SETUP: `${API_URL}/production/finishing_prod_setup`,
+    FINISHING_PROD_TABLE: `${API_URL}/production/get_finishing_prod_table`,
+    FINISHING_PROD_BY_ID: `${API_URL}/production/get_finishing_prod_by_id`,
+    FINISHING_PROD_CREATE: `${API_URL}/production/finishing_prod_create`,
+    FINISHING_PROD_EDIT: `${API_URL}/production/finishing_prod_edit`,
+    FINISHING_PROD_DELETE: `${API_URL}/production/finishing_prod_delete`,
 
     // HRMS Bio Attendance (employee↔device mapping + bio data process)
     BIO_EMP_LINK_SETUP: `${API_URL}/hrmsMasters/bio_emp_link_setup`,
