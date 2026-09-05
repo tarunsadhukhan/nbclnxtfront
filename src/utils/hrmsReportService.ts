@@ -608,3 +608,43 @@ export function cashHandsPdfUrl(p: {
   if (p.companyName) qs.set("company_name", p.companyName);
   return `${apiRoutesPortalMasters.CASH_HANDS_PDF}?${qs.toString()}`;
 }
+
+/** Row from GET /hrmsReports/employee-face (employee_face_mst register). */
+export interface EmployeeFaceRow {
+  id: number;
+  emp_code: string | null;
+  emp_name: string | null;
+  department: string | null;
+  sub_department: string | null;
+  active: string;
+  has_face: string;
+  has_mobile_face: string;
+  has_photo: string;
+  mobile_model_ver: string | null;
+  mobile_embed_updated: string | null;
+  updated_by: number | null;
+  updated_date_time: string | null;
+}
+
+/** Employee face register (branch-scoped; no date range). `active` is "0"/"1"/"" (all). */
+export async function fetchEmployeeFace(p: {
+  coId: number;
+  branchId?: number | null;
+  active?: string;
+}): Promise<EmployeeFaceRow[]> {
+  const qs = new URLSearchParams();
+  qs.set("co_id", String(p.coId));
+  if (p.branchId != null) qs.set("branch_id", String(p.branchId));
+  if (p.active) qs.set("active", p.active);
+  const url = `${apiRoutesPortalMasters.EMPLOYEE_FACE_REPORT}?${qs.toString()}`;
+  const result = await fetchWithCookie<{ data: EmployeeFaceRow[] }>(url);
+  if (result.error || !result.data) {
+    throw new Error(result.error ?? "Failed to fetch employee face register");
+  }
+  return result.data.data;
+}
+
+/** Image URL for one face register row's captured photo (streamed by the backend). */
+export function employeeFacePhotoUrl(coId: number, empFaceId: number): string {
+  return `${apiRoutesPortalMasters.EMPLOYEE_FACE_PHOTO}/${empFaceId}?co_id=${coId}`;
+}
