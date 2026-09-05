@@ -580,8 +580,6 @@ const apiRoutesPortalMasters = {
     CASH_HANDS_REPORT: `${API_URL}/hrmsReports/cash-hands`,
     CASH_HANDS_SUMMARY_REPORT: `${API_URL}/hrmsReports/cash-hands-summary`,
     CASH_HANDS_PDF: `${API_URL}/hrmsReports/cash-hands-pdf`,
-    EMPLOYEE_FACE_REPORT: `${API_URL}/hrmsReports/employee-face`,
-    EMPLOYEE_FACE_PHOTO: `${API_URL}/hrmsReports/employee-face-photo`,
 
     // Sales Quotation endpoints
     QUOTATION_TABLE: `${API_URL}/salesQuotation/get_quotation_table`,

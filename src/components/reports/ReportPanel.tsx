@@ -87,15 +87,7 @@ export default function ReportPanel<TRow extends GridValidRowModel>({
   onRowDoubleClick,
 }: ReportPanelProps<TRow>) {
   // Draft filters — bound to the inputs.
-  // The branch is adopted after mount rather than seeded into useState:
-  // initialBranchId comes from SidebarContext, whose selectedBranches is read
-  // from localStorage in a lazy initializer (empty on the server, set on the
-  // client), so seeding it here made the Autocomplete hydrate with a value
-  // the server HTML did not have.
-  const [branchId, setBranchId] = useState<number | null>(null);
-  useEffect(() => {
-    if (initialBranchId != null) setBranchId((b) => b ?? initialBranchId);
-  }, [initialBranchId]);
+  const [branchId, setBranchId] = useState<number | null>(initialBranchId);
   const [dateFrom, setDateFrom] = useState<string>(initialDateFrom);
   const [dateTo, setDateTo] = useState<string>(initialDateTo);
   const [extraValue, setExtraValue] = useState<string>(initialExtra);
