@@ -178,7 +178,9 @@ Files: `page.tsx` (list), `CreateBeamProductionPage.tsx` (dialog), `types.ts`, n
 - **Right grid:** SlNo · Q. Code (Autocomplete showing `code - name`) · Q. Name (read-only) · Prod_KG (input) ·
   Rate (read-only, 6 dp) · Amt (read-only, 2 dp). A trailing blank row is auto-added when the last row is
   complete; rows can be removed; blank rows are ignored on save.
-- **Footer:** Save (disabled until valid) · Cancel (reset to the loaded/blank state) · Close.
+- **Footer:** Save (disabled until valid) · Cancel (reset to the loaded/blank state) · Delete (edit mode only,
+  with confirm — `IndexWrapper` has no row delete action) · Close. After a successful create the form keeps
+  F/N E. Date + shift and clears machine, hours and lines for the next machine.
 - Form payload validated with a Zod schema mirroring §3 before submit; server errors shown in the snackbar.
 - Create mode: F/N E. Date defaults to the current fortnight end. Edit mode loads header + lines via by-id.
 - Company/branch come from `SidebarContext`; `branch_id` = first selected branch (existing behaviour).
