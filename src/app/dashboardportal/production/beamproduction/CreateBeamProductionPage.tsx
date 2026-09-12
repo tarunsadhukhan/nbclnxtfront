@@ -6,8 +6,8 @@ import {
   Autocomplete,
   Box,
   Button,
-  Chip,
   CircularProgress,
+  createFilterOptions,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -24,22 +24,32 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Save as SaveIcon, Trash2 as DeleteIcon, X } from "lucide-react";
+import { Trash2 as DeleteIcon, X } from "lucide-react";
+import { z } from "zod";
 import { entryGridCellColorsSx, fullScreenBesideSidebar, handleGridEnterKey } from "@/components/ui/entryGrid";
 import { fetchWithCookie } from "@/utils/apiClient2";
 import { apiRoutesPortalMasters } from "@/utils/api";
 import { useSidebarContext } from "@/components/dashboard/sidebarContext";
 import { todayIso } from "@/components/reports/reportDates";
+import { beamingTotals, fortnightEndFor, isFortnightEnd, periodLabel } from "./beamingTotals";
 import type {
-  BeamingProdGridRow,
-  BeamingProdRecord,
+  BeamingEntryRecord,
+  BeamingGridLine,
   BeamingProdSetup,
+  MachineOption,
   Option,
   QualityOption,
 } from "./types";
 
 const EMPTY_OPTIONS: Option[] = Object.freeze([]) as unknown as Option[];
+const EMPTY_MACHINES: MachineOption[] = Object.freeze([]) as unknown as MachineOption[];
 const EMPTY_QUALITIES: QualityOption[] = Object.freeze([]) as unknown as QualityOption[];
+const EMPTY_SETUP: BeamingProdSetup = Object.freeze({
+  dept: null,
+  machines: EMPTY_MACHINES,
+  shifts: EMPTY_OPTIONS,
+  qualities: EMPTY_QUALITIES,
+});
 
 interface Props {
   open: boolean;
@@ -48,273 +58,277 @@ interface Props {
   editId?: number;
 }
 
-const blankGridRow = (): BeamingProdGridRow => ({
-  machine_id: "",
-  quality_id: "",
-  prod_qty: "",
-  wk_hrs: "",
-  lost_hrs: "",
-  saved_id: null,
-  dirty: false,
-  remarks: null,
-});
+const blankLine = (): BeamingGridLine => ({ quality_id: "", prod_qty: "" });
 
-/** Saved and untouched since — shown as "Saved", skipped by Save All. */
-function isRowSavedClean(row: BeamingProdGridRow): boolean {
-  return row.saved_id != null && !row.dirty;
-}
+const isLineBlank = (l: BeamingGridLine): boolean => l.quality_id === "" && l.prod_qty.trim() === "";
 
-/** A row is "complete" when it can become a saved line: machine + quality chosen, qty > 0. */
-function isRowComplete(row: BeamingProdGridRow): boolean {
-  const qty = Number(row.prod_qty);
-  return (
-    row.machine_id !== "" &&
-    row.quality_id !== "" &&
-    row.prod_qty.trim() !== "" &&
-    Number.isFinite(qty) &&
-    qty > 0
-  );
-}
+/** Keyed number or NaN when empty, so Zod reports it as missing. */
+const toNum = (s: string): number => (s.trim() === "" ? Number.NaN : Number(s));
 
-/** A wholly-blank row (e.g. the trailing auto-added row) is ignored on save. */
-function isRowBlank(row: BeamingProdGridRow): boolean {
-  return (
-    row.machine_id === "" &&
-    row.quality_id === "" &&
-    row.prod_qty.trim() === "" &&
-    row.wk_hrs.trim() === "" &&
-    row.lost_hrs.trim() === ""
-  );
-}
+const fmt = (n: number, dp: number): string => (Number.isFinite(n) ? n.toFixed(dp) : "");
 
-function optionalHourValid(value: string): boolean {
-  if (value.trim() === "") return true;
-  const n = Number(value);
-  return Number.isFinite(n) && n >= 0;
-}
+const machineFilter = createFilterOptions<MachineOption>({ stringify: (o) => `${o.code} ${o.name}` });
+const qualityFilter = createFilterOptions<QualityOption>({ stringify: (o) => o.label });
 
-function hoursValid(row: BeamingProdGridRow): boolean {
-  return optionalHourValid(row.wk_hrs) && optionalHourValid(row.lost_hrs);
-}
-
-/** Read-only cell display for the rate / derived hours ("—" until known). */
-function fmtNum(n: number | null): string {
-  return n != null && Number.isFinite(n) ? String(n) : "—";
-}
-
-// Shared spreadsheet-cell styling — full grid lines (theme divider token) and
-// tight padding, applied to every TableCell instead of repeating it per cell.
+// Shared spreadsheet-cell styling — full grid lines and tight padding.
 const cellSx = { border: "1px solid", borderColor: "divider", py: 0.5, px: 1 } as const;
 const headCellSx = { ...cellSx, fontWeight: 600, backgroundColor: "action.hover" } as const;
 
+/** Payload rules mirrored from the API (spec §3) — checked before submit. */
+const entrySchema = z
+  .object({
+    branch_id: z.number({ error: "Select a branch in the sidebar" }).int(),
+    fne_date: z.string().refine(isFortnightEnd, "F/N E. Date must be the 15th or the last day of the month"),
+    shift: z.string().trim().min(1, "Select the W. Shift"),
+    machine_id: z.number({ error: "Select the machine" }).int(),
+    mach_hrs: z.number({ error: "Enter Mach. HR" }).positive("Mach. HR must be greater than 0"),
+    lost_hrs: z.number({ error: "Lost HR must be a number" }).min(0, "Lost HR must be zero or more"),
+    lines: z
+      .array(
+        z.object({
+          quality_id: z.number({ error: "Select the Q. Code on every line" }).int(),
+          prod_qty: z.number({ error: "Enter Prod_KG on every line" }).positive("Prod_KG must be greater than 0"),
+        }),
+      )
+      .min(1, "Enter at least one quality line"),
+  })
+  .refine((e) => e.lost_hrs <= e.mach_hrs, { message: "Lost HR cannot exceed Mach. HR", path: ["lost_hrs"] })
+  .refine((e) => new Set(e.lines.map((l) => l.quality_id)).size === e.lines.length, {
+    message: "A quality code is entered twice",
+    path: ["lines"],
+  });
+
+type EntryPayload = z.infer<typeof entrySchema>;
+
+interface ReadOnlyFieldProps {
+  label: string;
+  value: string;
+  numeric?: boolean;
+}
+
+/** Derived/display-only field; skipped by Enter navigation (readOnly). */
+function ReadOnlyField({ label, value, numeric = false }: ReadOnlyFieldProps) {
+  return (
+    <TextField
+      size="small"
+      label={label}
+      value={value}
+      slotProps={{
+        input: { readOnly: true },
+        htmlInput: { tabIndex: -1, style: numeric ? { textAlign: "right" } : undefined },
+        inputLabel: { shrink: true },
+      }}
+    />
+  );
+}
+
+interface HoursFieldProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+}
+
+function HoursField({ label, value, onChange }: HoursFieldProps) {
+  return (
+    <TextField
+      type="number"
+      size="small"
+      label={label}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      slotProps={{
+        htmlInput: { step: "any", min: 0, style: { textAlign: "right" } },
+        inputLabel: { shrink: true },
+      }}
+    />
+  );
+}
+
 /**
- * Create / edit dialog for Beaming Production entries — one spreadsheet-style
- * grid for both modes. Production Date + Spell are entered once at the top;
- * below is an Excel-like bordered grid of machine/quality/qty rows.
- *
- * CREATE: the last row auto-extends into a fresh blank row once complete, and
- * one POST saves every non-blank row as a bulk batch. EDIT: the record loads
- * as a single editable grid row (no auto-extend) and Save PUTs that record.
- * The rate shows read-only from the quality master; Div Hrs shows wk_hrs * 3.
- * The server resolves the real rate and computes amount/divisible hours.
+ * "Prod - Beaming" entry dialog, laid out like the legacy Smart Eye screen:
+ * company/location/F/N date/shift/department on top, machine + hours and the
+ * derived Eff/Div HR, values, KAV and Rate1-3 on the left, and the quality
+ * grid (SlNo, Q. Code, Q. Name, Prod_KG, Rate, Amt) on the right with a
+ * trailing blank row. Derived values are previewed with beamingTotals(); the
+ * server resolves rates and vw_beaming_prod_hdr is the source of truth.
  */
-export default function CreateBeamProductionPage({
-  open,
-  onClose,
-  onSaved,
-  editId,
-}: Props) {
+export default function CreateBeamProductionPage({ open, onClose, onSaved, editId }: Props) {
   const { selectedCompany, selectedBranches } = useSidebarContext();
   const coId = selectedCompany?.co_id;
   const branchId = selectedBranches.length > 0 ? selectedBranches[0] : undefined;
+  const branchName = selectedCompany?.branches.find((b) => b.branch_id === branchId)?.branch_name ?? "";
   const isEdit = editId !== undefined;
 
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [machines, setMachines] = useState<Option[]>(EMPTY_OPTIONS);
-  const [shifts, setShifts] = useState<Option[]>(EMPTY_OPTIONS);
-  const [qualities, setQualities] = useState<QualityOption[]>(EMPTY_QUALITIES);
+  const [setup, setSetup] = useState<BeamingProdSetup>(EMPTY_SETUP);
+  const [loaded, setLoaded] = useState<BeamingEntryRecord | null>(null);
 
-  const [prodDate, setProdDate] = useState("");
+  const [fneDate, setFneDate] = useState("");
   const [shift, setShift] = useState("");
-  const [rows, setRows] = useState<BeamingProdGridRow[]>(() => [blankGridRow()]);
+  const [machineId, setMachineId] = useState<number | "">("");
+  const [machHrs, setMachHrs] = useState("");
+  const [lostHrs, setLostHrs] = useState("");
+  const [lines, setLines] = useState<BeamingGridLine[]>(() => [blankLine()]);
 
-  const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: "success" | "error";
-  }>({ open: false, message: "", severity: "success" });
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string }>({ open: false, message: "" });
+  const notifyError = useCallback((message: string) => setSnackbar({ open: true, message }), []);
 
-  const notifyError = useCallback(
-    (message: string) => setSnackbar({ open: true, message, severity: "error" }),
-    [],
-  );
+  /** Load a saved entry into the form, or reset to a blank one (Cancel uses this too). */
+  const applyRecord = useCallback((rec: BeamingEntryRecord | null) => {
+    setFneDate(rec ? rec.fne_date.slice(0, 10) : fortnightEndFor(todayIso()));
+    setShift(rec?.shift ?? "");
+    setMachineId(rec?.machine_id ?? "");
+    setMachHrs(rec ? String(rec.mach_hrs) : "");
+    setLostHrs(rec ? String(rec.lost_hrs) : "");
+    setLines([
+      ...(rec?.lines ?? []).map((l) => ({ quality_id: l.quality_id, prod_qty: String(l.prod_qty) })),
+      blankLine(),
+    ]);
+  }, []);
 
-  // Dropdown options, refreshed whenever the dialog opens for a new branch.
+  // Branch-scoped dropdowns, refreshed whenever the dialog opens.
   useEffect(() => {
     if (!open || coId == null) return;
+    if (branchId == null) {
+      notifyError("Select a branch in the sidebar");
+      return;
+    }
     let cancelled = false;
     (async () => {
-      const params = new URLSearchParams({ co_id: String(coId) });
-      if (branchId != null) params.append("branch_id", String(branchId));
+      const params = new URLSearchParams({ co_id: String(coId), branch_id: String(branchId) });
       const { data, error } = await fetchWithCookie<{ data: BeamingProdSetup }>(
         `${apiRoutesPortalMasters.BEAMING_PROD_SETUP}?${params}`,
         "GET",
       );
       if (cancelled) return;
-      if (error || !data) {
+      if (error || !data?.data) {
         notifyError(error || "Failed to load dropdown options");
         return;
       }
-      setMachines(data.data?.machines ?? EMPTY_OPTIONS);
-      setShifts(data.data?.shifts ?? EMPTY_OPTIONS);
-      setQualities(data.data?.qualities ?? EMPTY_QUALITIES);
+      setSetup(data.data);
     })();
     return () => {
       cancelled = true;
     };
   }, [open, coId, branchId, notifyError]);
 
-  const loadRecord = useCallback(async () => {
-    if (editId === undefined) return;
+  // Blank form for create; header + lines for edit.
+  useEffect(() => {
+    if (!open) return;
+    if (editId === undefined) {
+      setLoaded(null);
+      applyRecord(null);
+      return;
+    }
+    let cancelled = false;
     setLoading(true);
-    try {
-      const { data, error } = await fetchWithCookie<{ data: BeamingProdRecord }>(
+    (async () => {
+      const { data, error } = await fetchWithCookie<{ data: BeamingEntryRecord }>(
         `${apiRoutesPortalMasters.BEAMING_PROD_BY_ID}/${editId}`,
         "GET",
       );
-      if (error || !data) throw new Error(error || "Failed to load beaming entry");
-      const rec = data.data;
-      setProdDate((rec.prod_date ?? "").slice(0, 10));
-      setShift(rec.shift ?? "");
-      setRows([
-        {
-          machine_id: rec.machine_id ?? "",
-          quality_id: rec.quality_id ?? "",
-          prod_qty: rec.prod_qty != null ? String(rec.prod_qty) : "",
-          wk_hrs: rec.wk_hrs != null ? String(rec.wk_hrs) : "",
-          lost_hrs: rec.lost_hrs != null ? String(rec.lost_hrs) : "",
-          saved_id: rec.beaming_prod_id,
-          dirty: false,
-          remarks: rec.remarks ?? null,
-        },
-      ]);
-    } catch (err: unknown) {
-      notifyError(err instanceof Error ? err.message : "Error loading beaming entry");
-    } finally {
       setLoading(false);
-    }
-  }, [editId, notifyError]);
+      if (cancelled) return;
+      if (error || !data?.data) {
+        notifyError(error || "Failed to load beaming entry");
+        return;
+      }
+      setLoaded(data.data);
+      applyRecord(data.data);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [open, editId, applyRecord, notifyError]);
 
-  useEffect(() => {
-    if (!open) return;
-    if (editId !== undefined) {
-      void loadRecord();
-    } else {
-      setProdDate(todayIso());
-      setShift("");
-      setRows([blankGridRow()]);
-    }
-  }, [open, editId, loadRecord]);
-
-  const machineById = useMemo(() => {
-    const m = new Map<number, Option>();
-    for (const o of machines) m.set(Number(o.value), o);
-    return m;
-  }, [machines]);
-
-  const qualityById = useMemo(() => {
-    const m = new Map<number, QualityOption>();
-    for (const o of qualities) m.set(Number(o.value), o);
-    return m;
-  }, [qualities]);
-
-  const setRowField = useCallback(
-    <K extends keyof BeamingProdGridRow>(index: number, key: K, value: BeamingProdGridRow[K]) => {
-      setRows((prev) => {
-        const next = [...prev];
-        // Any change makes the row pending again ("Saved" clears until re-saved).
-        next[index] = { ...next[index], [key]: value, dirty: true };
-        // Auto-add a fresh blank row once the LAST row becomes complete (create only).
-        if (!isEdit && index === next.length - 1 && isRowComplete(next[index])) {
-          next.push(blankGridRow());
-        }
-        return next;
-      });
-    },
-    [isEdit],
+  const machineById = useMemo(
+    () => new Map(setup.machines.map((o) => [Number(o.value), o])),
+    [setup.machines],
+  );
+  const qualityById = useMemo(
+    () => new Map(setup.qualities.map((o) => [Number(o.value), o])),
+    [setup.qualities],
   );
 
-  // Date/spell apply to every row — changing them makes saved rows pending again.
-  const markSavedRowsDirty = useCallback(() => {
-    setRows((prev) =>
-      prev.some((r) => r.saved_id != null && !r.dirty)
-        ? prev.map((r) => (r.saved_id != null ? { ...r, dirty: true } : r))
-        : prev,
-    );
+  const setLine = useCallback((index: number, patch: Partial<BeamingGridLine>) => {
+    setLines((prev) => {
+      const next = prev.map((l, i) => (i === index ? { ...l, ...patch } : l));
+      // Always keep one trailing blank row, like the legacy "*" row.
+      if (!isLineBlank(next[next.length - 1])) next.push(blankLine());
+      return next;
+    });
   }, []);
 
-  const removeRow = useCallback((index: number) => {
-    setRows((prev) => (prev.length <= 1 ? prev : prev.filter((_, i) => i !== index)));
+  const removeLine = useCallback((index: number) => {
+    setLines((prev) => {
+      const next = prev.filter((_, i) => i !== index);
+      return next.length > 0 && isLineBlank(next[next.length - 1]) ? next : [...next, blankLine()];
+    });
   }, []);
 
-  const nonBlankRows = useMemo(() => rows.filter((r) => !isRowBlank(r)), [rows]);
-  const pendingRows = useMemo(() => nonBlankRows.filter((r) => !isRowSavedClean(r)), [nonBlankRows]);
+  const filledLines = useMemo(() => lines.filter((l) => !isLineBlank(l)), [lines]);
 
-  const headerValid = prodDate.trim() !== "" && shift.trim() !== "";
-  const rowSaveable = (r: BeamingProdGridRow) =>
-    headerValid && isRowComplete(r) && hoursValid(r);
-
-  // Save All only sends pending rows (unsaved or edited); "Saved" rows are skipped.
-  const canSaveAll =
-    pendingRows.length > 0 && nonBlankRows.every((r) => rowSaveable(r));
-
-  /** POST a new row or PUT an already-saved one; returns the row's server id. */
-  const saveRowRequest = async (
-    r: BeamingProdGridRow,
-  ): Promise<{ id: number | null; error: string | null }> => {
-    const body = {
-      branch_id: branchId ?? null,
-      prod_date: prodDate,
-      shift,
-      machine_id: r.machine_id,
-      quality_id: r.quality_id,
-      prod_qty: Number(r.prod_qty),
-      wk_hrs: r.wk_hrs.trim() === "" ? null : Number(r.wk_hrs),
-      lost_hrs: r.lost_hrs.trim() === "" ? null : Number(r.lost_hrs),
-      remarks: r.remarks,
-    };
-    if (r.saved_id != null) {
-      const { error } = await fetchWithCookie(
-        `${apiRoutesPortalMasters.BEAMING_PROD_EDIT}/${r.saved_id}`,
-        "PUT",
-        body,
-      );
-      return { id: r.saved_id, error: error ?? null };
-    }
-    const { data, error } = await fetchWithCookie<{ beaming_prod_id: number }>(
-      apiRoutesPortalMasters.BEAMING_PROD_CREATE,
-      "POST",
-      body,
-    );
-    return { id: data?.beaming_prod_id ?? null, error: error ?? null };
-  };
-
-  const markRowSaved = useCallback((index: number, id: number | null) => {
-    setRows((prev) =>
-      prev.map((row, j) =>
-        j === index ? { ...row, saved_id: id ?? row.saved_id, dirty: false } : row,
+  const totals = useMemo(
+    () =>
+      beamingTotals(
+        Number(machHrs) || 0,
+        Number(lostHrs) || 0,
+        filledLines.map((l) => ({
+          prodQty: Number(l.prod_qty) || 0,
+          rate: (l.quality_id === "" ? null : qualityById.get(l.quality_id)?.quality_rate) ?? 0,
+        })),
       ),
-    );
-  }, []);
+    [machHrs, lostHrs, filledLines, qualityById],
+  );
 
-  const handleSaveRow = async (index: number) => {
+  const parsed = useMemo(
+    () =>
+      entrySchema.safeParse({
+        branch_id: branchId ?? Number.NaN,
+        fne_date: fneDate,
+        shift,
+        machine_id: machineId === "" ? Number.NaN : machineId,
+        mach_hrs: toNum(machHrs),
+        lost_hrs: lostHrs.trim() === "" ? 0 : Number(lostHrs),
+        lines: filledLines.map((l) => ({
+          quality_id: l.quality_id === "" ? Number.NaN : l.quality_id,
+          prod_qty: toNum(l.prod_qty),
+        })),
+      }),
+    [branchId, fneDate, shift, machineId, machHrs, lostHrs, filledLines],
+  );
+  const firstIssue = parsed.success ? null : (parsed.error.issues[0]?.message ?? "Invalid entry");
+  const touched = machineId !== "" || filledLines.length > 0 || machHrs.trim() !== "";
+  const fneDateInvalid = fneDate !== "" && !isFortnightEnd(fneDate);
+
+  const handleSave = async () => {
+    if (!parsed.success) {
+      notifyError(firstIssue ?? "Invalid entry");
+      return;
+    }
+    const body: EntryPayload = parsed.data;
     setSaving(true);
     try {
-      const { id, error } = await saveRowRequest(rows[index]);
-      if (error) throw new Error(`Row ${index + 1}: ${error}`);
-      markRowSaved(index, id);
-      onSaved?.(`Row ${index + 1} saved`);
+      if (isEdit) {
+        const { error } = await fetchWithCookie(`${apiRoutesPortalMasters.BEAMING_PROD_EDIT}/${editId}`, "PUT", body);
+        if (error) throw new Error(error);
+        onSaved?.("Beaming entry updated");
+        onClose();
+      } else {
+        const { error } = await fetchWithCookie<{ beaming_hdr_id: number }>(
+          apiRoutesPortalMasters.BEAMING_PROD_CREATE,
+          "POST",
+          body,
+        );
+        if (error) throw new Error(error);
+        onSaved?.("Beaming entry saved");
+        // Next machine for the same fortnight and shift, like the legacy form.
+        setMachineId("");
+        setMachHrs("");
+        setLostHrs("");
+        setLines([blankLine()]);
+      }
     } catch (err: unknown) {
       notifyError(err instanceof Error ? err.message : "Save failed");
     } finally {
@@ -322,48 +336,30 @@ export default function CreateBeamProductionPage({
     }
   };
 
-  const handleSaveAll = async () => {
+  const handleDelete = async () => {
+    if (!isEdit || !window.confirm("Delete this beaming entry?")) return;
     setSaving(true);
     try {
-      let savedCount = 0;
-      for (let i = 0; i < rows.length; i++) {
-        const r = rows[i];
-        if (isRowBlank(r) || isRowSavedClean(r)) continue;
-        const { id, error } = await saveRowRequest(r);
-        // Rows saved before the failing one keep their "Saved" state.
-        if (error) throw new Error(`Row ${i + 1}: ${error}`);
-        markRowSaved(i, id);
-        savedCount += 1;
-      }
-      if (savedCount > 0) {
-        onSaved?.(savedCount === 1 ? "1 row saved" : `${savedCount} rows saved`);
-      }
+      const { error } = await fetchWithCookie(`${apiRoutesPortalMasters.BEAMING_PROD_DELETE}/${editId}`, "DELETE");
+      if (error) throw new Error(error);
+      onSaved?.("Beaming entry deleted");
+      onClose();
     } catch (err: unknown) {
-      notifyError(err instanceof Error ? err.message : "Save failed");
+      notifyError(err instanceof Error ? err.message : "Delete failed");
     } finally {
       setSaving(false);
     }
   };
 
-  const title = isEdit ? "Edit Beaming Production" : "Create Beaming Production";
+  const dept = setup.dept;
+  const machine = machineId === "" ? null : (machineById.get(machineId) ?? null);
 
   return (
     <>
-      <Dialog
-        open={open}
-        onClose={onClose}
-        {...fullScreenBesideSidebar}
-      >
-        <DialogTitle
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            pb: 1,
-          }}
-        >
+      <Dialog open={open} onClose={onClose} {...fullScreenBesideSidebar}>
+        <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", pb: 1 }}>
           <Typography variant="h6" component="span">
-            {title}
+            {isEdit ? "Prod - Beaming (Edit)" : "Prod - Beaming"}
           </Typography>
           <IconButton onClick={onClose} size="small" aria-label="Close dialog">
             <X size={20} />
@@ -372,260 +368,225 @@ export default function CreateBeamProductionPage({
 
         <DialogContent dividers>
           {loading ? (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                minHeight: 200,
-              }}
-            >
+            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200 }}>
               <CircularProgress />
             </Box>
           ) : (
-            <Box sx={{ pt: 1, display: "flex", flexDirection: "column", gap: 2, ...entryGridCellColorsSx }}>
+            <Box
+              onKeyDown={handleGridEnterKey}
+              sx={{ pt: 1, display: "flex", flexDirection: "column", gap: 2, ...entryGridCellColorsSx }}
+            >
+              {/* Header: company, location, fortnight, shift, department */}
               <Box
                 sx={{
                   display: "grid",
-                  gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)" },
                   gap: 2,
+                  gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", lg: "2fr 1fr 1fr 1fr" },
                 }}
               >
+                <ReadOnlyField label="Company" value={selectedCompany?.co_name ?? ""} />
                 <TextField
                   type="date"
                   size="small"
-                  label="Production Date"
-                  value={prodDate}
-                  onChange={(e) => {
-                    setProdDate(e.target.value);
-                    markSavedRowsDirty();
-                  }}
+                  label="F/N E. Date"
+                  value={fneDate}
+                  onChange={(e) => setFneDate(e.target.value)}
+                  error={fneDateInvalid}
+                  helperText={fneDateInvalid ? "Must be the 15th or the month end" : undefined}
                   slotProps={{ inputLabel: { shrink: true } }}
                   required
                 />
+                <ReadOnlyField label="Period" value={periodLabel(fneDate)} />
                 <TextField
                   select
                   size="small"
-                  label="Spell / Shift"
+                  label="W. Shift"
                   value={shift}
-                  onChange={(e) => {
-                    setShift(e.target.value);
-                    markSavedRowsDirty();
-                  }}
+                  onChange={(e) => setShift(e.target.value)}
+                  required
                 >
-                  {shifts.map((o) => (
+                  {setup.shifts.map((o) => (
                     <MenuItem key={o.value} value={o.value}>
                       {o.label}
                     </MenuItem>
                   ))}
                 </TextField>
+                <ReadOnlyField label="Location" value={branchName} />
+                <ReadOnlyField
+                  label="Department"
+                  value={dept ? `${dept.dept_desc}${dept.dept_code ? ` / ${dept.dept_code}` : ""}` : ""}
+                />
               </Box>
 
-              <TableContainer sx={{ overflowX: "auto" }} onKeyDown={handleGridEnterKey}>
-                <Table
-                  size="small"
-                  sx={{
-                    minWidth: 900,
-                    border: "1px solid",
-                    borderColor: "divider",
-                    borderCollapse: "collapse",
-                    "& .MuiInputBase-input": { fontSize: "0.875rem" },
-                  }}
-                >
-                  <TableHead>
-                    <TableRow>
-                      <TableCell sx={{ ...headCellSx, width: 36 }}>#</TableCell>
-                      <TableCell sx={{ ...headCellSx, minWidth: 170 }}>MC No.</TableCell>
-                      <TableCell sx={{ ...headCellSx, minWidth: 230 }}>Q-Code / Quality</TableCell>
-                      <TableCell align="right" sx={{ ...headCellSx, minWidth: 90 }}>
-                        Rate
-                      </TableCell>
-                      <TableCell align="right" sx={{ ...headCellSx, minWidth: 110 }}>
-                        Prod KG/YDS
-                      </TableCell>
-                      <TableCell align="right" sx={{ ...headCellSx, minWidth: 90 }}>
-                        WK Hrs
-                      </TableCell>
-                      <TableCell align="right" sx={{ ...headCellSx, minWidth: 90 }}>
-                        Lost Hrs
-                      </TableCell>
-                      <TableCell align="right" sx={{ ...headCellSx, minWidth: 90 }}>
-                        Div Hrs
-                      </TableCell>
-                      <TableCell align="center" sx={{ ...headCellSx, width: 110 }}>
-                        Save
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rows.map((r, i) => {
-                      const quality = r.quality_id === "" ? undefined : qualityById.get(r.quality_id);
-                      const wk = Number(r.wk_hrs);
-                      // ponytail: divisible hrs = wk hrs * 3, mirrored from the DB generated column
-                      const divHrs =
-                        r.wk_hrs.trim() !== "" && Number.isFinite(wk) && wk >= 0 ? wk * 3 : null;
-                      return (
-                        <TableRow key={`beam-row-${i}`}>
-                          <TableCell sx={cellSx}>{i + 1}</TableCell>
-                          <TableCell sx={cellSx}>
-                            <Autocomplete
-                              autoHighlight
-                              options={machines}
-                              getOptionLabel={(opt) => opt.label}
-                              value={r.machine_id === "" ? null : machineById.get(r.machine_id) ?? null}
-                              onChange={(_, newVal) =>
-                                setRowField(i, "machine_id", newVal ? Number(newVal.value) : "")
-                              }
-                              isOptionEqualToValue={(opt, val) => opt.value === val.value}
-                              size="small"
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  variant="standard"
-                                  placeholder="MC No."
-                                  InputProps={{ ...params.InputProps, disableUnderline: true }}
-                                />
-                              )}
-                            />
-                          </TableCell>
-                          <TableCell sx={cellSx}>
-                            <Autocomplete
-                              autoHighlight
-                              options={qualities}
-                              getOptionLabel={(opt) => opt.label}
-                              value={r.quality_id === "" ? null : qualityById.get(r.quality_id) ?? null}
-                              onChange={(_, newVal) =>
-                                setRowField(i, "quality_id", newVal ? Number(newVal.value) : "")
-                              }
-                              isOptionEqualToValue={(opt, val) => opt.value === val.value}
-                              size="small"
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  variant="standard"
-                                  placeholder="Q-Code"
-                                  InputProps={{ ...params.InputProps, disableUnderline: true }}
-                                />
-                              )}
-                            />
-                          </TableCell>
-                          <TableCell align="right" sx={cellSx}>
-                            <Typography variant="body2" color="text.secondary" sx={{ fontSize: "0.875rem" }}>
-                              {fmtNum(quality?.quality_rate ?? null)}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="right" sx={cellSx}>
-                            <TextField
-                              type="number"
-                              size="small"
-                              variant="standard"
-                              value={r.prod_qty}
-                              onChange={(e) => setRowField(i, "prod_qty", e.target.value)}
-                              InputProps={{ disableUnderline: true }}
-                              inputProps={{
-                                step: "any",
-                                min: 0,
-                                "aria-label": `Row ${i + 1} prod qty`,
-                                style: { textAlign: "right" },
-                              }}
-                              sx={{ width: 92 }}
-                            />
-                          </TableCell>
-                          <TableCell align="right" sx={cellSx}>
-                            <TextField
-                              type="number"
-                              size="small"
-                              variant="standard"
-                              placeholder="—"
-                              value={r.wk_hrs}
-                              onChange={(e) => setRowField(i, "wk_hrs", e.target.value)}
-                              InputProps={{ disableUnderline: true }}
-                              inputProps={{
-                                step: "any",
-                                min: 0,
-                                "aria-label": `Row ${i + 1} work hrs`,
-                                style: { textAlign: "right" },
-                              }}
-                              sx={{ width: 76 }}
-                            />
-                          </TableCell>
-                          <TableCell align="right" sx={cellSx}>
-                            <TextField
-                              type="number"
-                              size="small"
-                              variant="standard"
-                              placeholder="—"
-                              value={r.lost_hrs}
-                              onChange={(e) => setRowField(i, "lost_hrs", e.target.value)}
-                              InputProps={{ disableUnderline: true }}
-                              inputProps={{
-                                step: "any",
-                                min: 0,
-                                "aria-label": `Row ${i + 1} lost hrs`,
-                                style: { textAlign: "right" },
-                              }}
-                              sx={{ width: 76 }}
-                            />
-                          </TableCell>
-                          <TableCell align="right" sx={cellSx}>
-                            <Typography variant="body2" color="text.secondary" sx={{ fontSize: "0.875rem" }}>
-                              {fmtNum(divHrs)}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="center" sx={{ ...cellSx, whiteSpace: "nowrap" }}>
-                            {isRowSavedClean(r) ? (
-                              <Chip size="small" color="success" label="Saved" />
-                            ) : (
-                              <Tooltip title={`Save row ${i + 1}`}>
-                                <span>
+              <Box
+                sx={{
+                  display: "grid",
+                  gap: 2,
+                  gridTemplateColumns: { xs: "1fr", md: "minmax(300px, 400px) 1fr" },
+                  alignItems: "start",
+                }}
+              >
+                {/* Left: machine, hours and derived values (legacy two-column block) */}
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+                  <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1.5 }}>
+                    <Autocomplete
+                      autoHighlight
+                      options={setup.machines}
+                      filterOptions={machineFilter}
+                      getOptionLabel={(o) => o.code}
+                      value={machine}
+                      onChange={(_, v) => setMachineId(v ? Number(v.value) : "")}
+                      isOptionEqualToValue={(o, v) => o.value === v.value}
+                      size="small"
+                      renderInput={(params) => <TextField {...params} label="Machine" required />}
+                    />
+                    <ReadOnlyField label="Machine Name" value={machine?.name ?? ""} />
+                    <HoursField label="Mach. HR" value={machHrs} onChange={setMachHrs} />
+                    <ReadOnlyField label="Div. HR" value={fmt(totals.divHrs, 2)} numeric />
+                    <HoursField label="Lost HR" value={lostHrs} onChange={setLostHrs} />
+                    <ReadOnlyField label="Prod." value={fmt(totals.prodQty, 2)} numeric />
+                    <ReadOnlyField label="Eff. HR" value={fmt(totals.effHrs, 2)} numeric />
+                    <ReadOnlyField label="Prod. Value" value={fmt(totals.prodValue, 2)} numeric />
+                    <ReadOnlyField label="L.HR Value" value={fmt(totals.lhrValue, 2)} numeric />
+                    <ReadOnlyField label="Total Value" value={fmt(totals.totalValue, 2)} numeric />
+                    <ReadOnlyField label="KAV" value={fmt(totals.kav, 6)} numeric />
+                    <span />
+                    <span />
+                    <ReadOnlyField label="Rate1" value={fmt(totals.rate1, 6)} numeric />
+                    <span />
+                    <ReadOnlyField label="Rate2" value={fmt(totals.rate2, 6)} numeric />
+                    <span />
+                    <ReadOnlyField label="Rate3" value={fmt(totals.rate3, 6)} numeric />
+                  </Box>
+                </Box>
+
+                {/* Right: quality lines */}
+                <TableContainer sx={{ overflowX: "auto" }}>
+                  <Table
+                    size="small"
+                    sx={{ minWidth: 640, borderCollapse: "collapse", "& .MuiInputBase-input": { fontSize: "0.875rem" } }}
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell sx={{ ...headCellSx, width: 52 }}>SlNo</TableCell>
+                        <TableCell sx={{ ...headCellSx, minWidth: 130 }}>Q. Code</TableCell>
+                        <TableCell sx={{ ...headCellSx, minWidth: 200 }}>Q. Name</TableCell>
+                        <TableCell align="right" sx={{ ...headCellSx, minWidth: 110 }}>
+                          Prod_KG
+                        </TableCell>
+                        <TableCell align="right" sx={{ ...headCellSx, minWidth: 90 }}>
+                          Rate
+                        </TableCell>
+                        <TableCell align="right" sx={{ ...headCellSx, minWidth: 90 }}>
+                          Amt
+                        </TableCell>
+                        <TableCell sx={{ ...headCellSx, width: 44 }} aria-label="Remove line" />
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {lines.map((l, i) => {
+                        const q = l.quality_id === "" ? null : (qualityById.get(l.quality_id) ?? null);
+                        const qty = Number(l.prod_qty);
+                        const amt =
+                          q?.quality_rate != null && l.prod_qty.trim() !== "" && Number.isFinite(qty)
+                            ? qty * q.quality_rate
+                            : null;
+                        const trailing = i === lines.length - 1 && isLineBlank(l);
+                        return (
+                          <TableRow key={`beam-line-${i}`}>
+                            <TableCell sx={cellSx}>{trailing ? "*" : i + 1}</TableCell>
+                            <TableCell sx={cellSx}>
+                              <Autocomplete
+                                autoHighlight
+                                options={setup.qualities}
+                                filterOptions={qualityFilter}
+                                getOptionLabel={(o) => o.code}
+                                renderOption={(props, o) => {
+                                  const { key, ...rest } = props;
+                                  return (
+                                    <li key={key} {...rest}>
+                                      {o.label}
+                                    </li>
+                                  );
+                                }}
+                                value={q}
+                                onChange={(_, v) => setLine(i, { quality_id: v ? Number(v.value) : "" })}
+                                isOptionEqualToValue={(o, v) => o.value === v.value}
+                                size="small"
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    variant="standard"
+                                    placeholder="Q. Code"
+                                    InputProps={{ ...params.InputProps, disableUnderline: true }}
+                                  />
+                                )}
+                              />
+                            </TableCell>
+                            <TableCell sx={cellSx}>{q?.name ?? ""}</TableCell>
+                            <TableCell align="right" sx={cellSx}>
+                              <TextField
+                                type="number"
+                                size="small"
+                                variant="standard"
+                                value={l.prod_qty}
+                                onChange={(e) => setLine(i, { prod_qty: e.target.value })}
+                                InputProps={{ disableUnderline: true }}
+                                inputProps={{
+                                  step: "any",
+                                  min: 0,
+                                  "aria-label": `Line ${i + 1} Prod_KG`,
+                                  style: { textAlign: "right" },
+                                }}
+                                sx={{ width: 100 }}
+                              />
+                            </TableCell>
+                            <TableCell align="right" sx={cellSx}>
+                              {q?.quality_rate != null ? q.quality_rate.toFixed(6) : ""}
+                            </TableCell>
+                            <TableCell align="right" sx={cellSx}>
+                              {amt != null ? amt.toFixed(2) : ""}
+                            </TableCell>
+                            <TableCell align="center" sx={cellSx}>
+                              {!trailing && (
+                                <Tooltip title="Remove line">
                                   <IconButton
                                     size="small"
-                                    color="primary"
-                                    disabled={!rowSaveable(r) || saving}
-                                    onClick={() => void handleSaveRow(i)}
-                                    aria-label={`Save row ${i + 1}`}
+                                    color="error"
+                                    onClick={() => removeLine(i)}
+                                    aria-label={`Remove line ${i + 1}`}
                                   >
-                                    <SaveIcon size={16} />
+                                    <DeleteIcon size={16} />
                                   </IconButton>
-                                </span>
-                              </Tooltip>
-                            )}
-                            <Tooltip
-                              title={
-                                r.saved_id != null
-                                  ? "Already saved — cannot remove here"
-                                  : "Remove row"
-                              }
-                            >
-                              <span>
-                                <IconButton
-                                  size="small"
-                                  color="error"
-                                  disabled={rows.length <= 1 || r.saved_id != null}
-                                  onClick={() => removeRow(i)}
-                                  aria-label={`Remove row ${i + 1}`}
-                                >
-                                  <DeleteIcon size={16} />
-                                </IconButton>
-                              </span>
-                            </Tooltip>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                                </Tooltip>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Box>
 
-              <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
-                <Button onClick={onClose}>Close</Button>
-                <Button
-                  variant="contained"
-                  startIcon={<SaveIcon size={18} />}
-                  onClick={handleSaveAll}
-                  disabled={!canSaveAll || saving}
-                >
-                  {saving ? "Saving..." : "Save All"}
+              {touched && firstIssue && <Alert severity="info">{firstIssue}</Alert>}
+
+              <Box sx={{ display: "flex", justifyContent: "space-between", gap: 1, flexWrap: "wrap" }}>
+                <Box sx={{ display: "flex", gap: 1 }}>
+                  <Button variant="contained" onClick={handleSave} disabled={!parsed.success || saving}>
+                    {saving ? "Saving..." : "Save"}
+                  </Button>
+                  <Button onClick={() => applyRecord(loaded)} disabled={saving}>
+                    Cancel
+                  </Button>
+                  {isEdit && (
+                    <Button color="error" onClick={handleDelete} disabled={saving}>
+                      Delete
+                    </Button>
+                  )}
+                </Box>
+                <Button variant="outlined" onClick={onClose}>
+                  Close
                 </Button>
               </Box>
             </Box>
@@ -635,15 +596,11 @@ export default function CreateBeamProductionPage({
 
       <Snackbar
         open={snackbar.open}
-        autoHideDuration={4000}
+        autoHideDuration={5000}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert
-          severity={snackbar.severity}
-          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-          sx={{ width: "100%" }}
-        >
+        <Alert severity="error" onClose={() => setSnackbar((s) => ({ ...s, open: false }))} sx={{ width: "100%" }}>
           {snackbar.message}
         </Alert>
       </Snackbar>

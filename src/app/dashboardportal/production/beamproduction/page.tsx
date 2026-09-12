@@ -7,22 +7,23 @@ import { apiRoutesPortalMasters } from "@/utils/api";
 import IndexWrapper from "@/components/ui/IndexWrapper";
 import { useSidebarContext } from "@/components/dashboard/sidebarContext";
 import CreateBeamProductionPage from "./CreateBeamProductionPage";
-import type { BeamingProdRow } from "./types";
+import type { BeamingHdrRow } from "./types";
+
+/** Fixed-decimal cell formatter; blank for null. */
+const fixed = (dp: number) => (value: number | null) => (value != null ? value.toFixed(dp) : "");
 
 /**
- * Beaming Production — daily per-machine production entries for the beaming
- * department (table beaming_production). Each row records the machine, date,
- * shift, quality and production qty; the rate comes from the wages quality
- * master and the amount (rate x qty) is computed by the database. Work/lost/
- * divisible hours are keyed on the machine+shift group row, as on the mill
- * sheet. Scoped by the sidebar company/branch selection.
+ * Beaming Production — fortnight entries per shift + machine, as on the legacy
+ * Smart Eye "Prod - Beaming" screen. Each row is one header (beaming_prod_hdr)
+ * with its derived Eff/Div HR, Prod Value, L.HR Value, Total, KAV and Rate1-3
+ * from vw_beaming_prod_hdr. Scoped by the sidebar company/branch selection.
  */
 export default function BeamProductionPage() {
   const { selectedCompany, selectedBranches } = useSidebarContext();
   const coId = selectedCompany?.co_id;
   const branchId = selectedBranches.length > 0 ? selectedBranches[0] : undefined;
 
-  const [rows, setRows] = useState<BeamingProdRow[]>([]);
+  const [rows, setRows] = useState<BeamingHdrRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalRows, setTotalRows] = useState(0);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
@@ -51,12 +52,12 @@ export default function BeamProductionPage() {
       if (searchQuery) params.append("search", searchQuery);
 
       const { data, error } = await fetchWithCookie<{
-        data: BeamingProdRow[];
+        data: BeamingHdrRow[];
         total: number;
       }>(`${apiRoutesPortalMasters.BEAMING_PROD_TABLE}?${params}`, "GET");
       if (error || !data) throw new Error(error || "Failed to fetch beaming production");
 
-      setRows((data.data || []).map((r) => ({ ...r, id: r.beaming_prod_id })));
+      setRows((data.data || []).map((r) => ({ ...r, id: r.beaming_hdr_id })));
       setTotalRows(data.total || 0);
     } catch (err: unknown) {
       setSnackbar({
@@ -78,8 +79,8 @@ export default function BeamProductionPage() {
     setDialogOpen(true);
   }, []);
 
-  const handleEdit = useCallback((row: BeamingProdRow) => {
-    setSelectedId(row.beaming_prod_id);
+  const handleEdit = useCallback((row: BeamingHdrRow) => {
+    setSelectedId(row.beaming_hdr_id);
     setDialogOpen(true);
   }, []);
 
@@ -96,26 +97,24 @@ export default function BeamProductionPage() {
     [fetchEntries],
   );
 
-  const columns = useMemo<GridColDef<BeamingProdRow>[]>(
+  const columns = useMemo<GridColDef<BeamingHdrRow>[]>(
     () => [
-      { field: "prod_date", headerName: "DATE", width: 105 },
+      { field: "fne_date", headerName: "F/N E. DATE", width: 110 },
+      { field: "period", headerName: "PERIOD", width: 100 },
       { field: "shift", headerName: "SHIFT", width: 70 },
-      { field: "machine_name", headerName: "MC NO.", width: 100 },
-      { field: "quality_code", headerName: "Q-CODE", width: 85 },
-      { field: "quality_desc", headerName: "QUALITY", flex: 1, minWidth: 160 },
-      { field: "prod_qty", headerName: "PROD-KG", type: "number", width: 100 },
-      {
-        field: "rate",
-        headerName: "RATE",
-        type: "number",
-        width: 110,
-        valueFormatter: (value: number | null) =>
-          value != null ? value.toFixed(7) : "",
-      },
-      { field: "amount", headerName: "AMOUNT", type: "number", width: 95 },
-      { field: "wk_hrs", headerName: "WK HRS", type: "number", width: 85 },
-      { field: "lost_hrs", headerName: "LOST HRS", type: "number", width: 90 },
-      { field: "divisible_hrs", headerName: "DIV HRS", type: "number", width: 90 },
+      { field: "machine_name", headerName: "MACHINE", width: 100 },
+      { field: "mach_hrs", headerName: "MACH HR", type: "number", width: 85 },
+      { field: "lost_hrs", headerName: "LOST HR", type: "number", width: 85 },
+      { field: "eff_hrs", headerName: "EFF HR", type: "number", width: 80 },
+      { field: "div_hrs", headerName: "DIV HR", type: "number", width: 80 },
+      { field: "prod_qty", headerName: "PROD", type: "number", width: 100 },
+      { field: "prod_value", headerName: "PROD VALUE", type: "number", width: 110, valueFormatter: fixed(2) },
+      { field: "lhr_value", headerName: "L.HR VALUE", type: "number", width: 105, valueFormatter: fixed(2) },
+      { field: "total_value", headerName: "TOTAL", type: "number", width: 95, valueFormatter: fixed(2) },
+      { field: "kav", headerName: "KAV", type: "number", width: 100, valueFormatter: fixed(6) },
+      { field: "rate1", headerName: "RATE1", type: "number", width: 100, valueFormatter: fixed(6) },
+      { field: "rate2", headerName: "RATE2", type: "number", width: 100, valueFormatter: fixed(6) },
+      { field: "rate3", headerName: "RATE3", type: "number", width: 100, valueFormatter: fixed(6) },
     ],
     [],
   );
@@ -136,7 +135,7 @@ export default function BeamProductionPage() {
           setSearchQuery(e.target.value);
           setPaginationModel((prev) => ({ ...prev, page: 0 }));
         },
-        placeholder: "Search by MC no, Q-code or quality",
+        placeholder: "Search by machine, shift or period",
         debounceDelayMs: 500,
       }}
       createAction={{ label: "Create Entry", onClick: handleCreate }}

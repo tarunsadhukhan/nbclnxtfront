@@ -900,14 +900,13 @@ const apiRoutesPortalMasters = {
     WINDING_PROD_EDIT: `${API_URL}/production/winding_prod_edit`,
     WINDING_PROD_DELETE: `${API_URL}/production/winding_prod_delete`,
 
-    // Beaming Production (beaming_production) — rate resolved from the wages quality master
+    // Beaming Production — fortnight header (beaming_prod_hdr) + quality lines (beaming_production)
     BEAMING_PROD_SETUP: `${API_URL}/production/beaming_prod_setup`,
     BEAMING_PROD_TABLE: `${API_URL}/production/get_beaming_prod_table`,
     BEAMING_PROD_BY_ID: `${API_URL}/production/get_beaming_prod_by_id`,
     BEAMING_PROD_CREATE: `${API_URL}/production/beaming_prod_create`,
     BEAMING_PROD_EDIT: `${API_URL}/production/beaming_prod_edit`,
     BEAMING_PROD_DELETE: `${API_URL}/production/beaming_prod_delete`,
-    BEAMING_PROD_BULK_CREATE: `${API_URL}/production/beaming_prod_bulk_create`,
 
     // Press Production (press_production) — rate resolved from the wages quality master
     PRESS_PROD_SETUP: `${API_URL}/production/press_prod_setup`,

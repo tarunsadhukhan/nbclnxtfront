@@ -1,52 +1,50 @@
 /**
- * Types for Beaming Production entries (beaming_production).
- * Single type file for the page — do not split (avoids circular deps).
- *
- * One row per machine + date + shift + quality (BEAMING PROD sheet).
- * The rate is resolved server-side from the wages quality master
- * (tbl_nbcl_wages_quality_mst, BEAMING dept); amount is a database
- * generated column (rate * prod qty).
+ * Types for Beaming Production entries — fortnight header (beaming_prod_hdr)
+ * with quality lines (beaming_production); derived values come from the view
+ * vw_beaming_prod_hdr. Single type file for the page — do not split
+ * (avoids circular deps).
  */
 
-/** A row of GET /production/get_beaming_prod_table (joined for display). */
-export interface BeamingProdRow {
+/** A row of GET /production/get_beaming_prod_table (one per header). */
+export interface BeamingHdrRow {
   id?: number;
-  beaming_prod_id: number;
+  beaming_hdr_id: number;
   branch_id: number;
-  prod_date: string;
+  fne_date: string;
+  period: string;
   shift: string;
   machine_id: number;
   machine_name: string | null;
+  mach_hrs: number;
+  lost_hrs: number;
+  eff_hrs: number;
+  div_hrs: number;
+  prod_qty: number;
+  line_count: number;
+  prod_value: number;
+  lhr_value: number;
+  total_value: number;
+  kav: number;
+  rate1: number | null;
+  rate2: number;
+  rate3: number;
+  [key: string]: unknown;
+}
+
+/** One quality line of a loaded entry. */
+export interface BeamingLineRecord {
+  beaming_prod_id: number;
   quality_id: number;
   quality_code: string | null;
   quality_desc: string | null;
   prod_qty: number;
   rate: number;
   amount: number | null;
-  wk_hrs: number | null;
-  lost_hrs: number | null;
-  divisible_hrs: number | null;
-  remarks: string | null;
-  active: number;
-  [key: string]: unknown;
 }
 
-/** A single record from GET /production/get_beaming_prod_by_id/{id}. */
-export interface BeamingProdRecord {
-  beaming_prod_id: number;
-  branch_id: number;
-  prod_date: string;
-  shift: string;
-  machine_id: number;
-  quality_id: number;
-  prod_qty: number;
-  rate: number;
-  amount: number | null;
-  wk_hrs: number | null;
-  lost_hrs: number | null;
-  divisible_hrs: number | null;
-  remarks: string | null;
-  active: number;
+/** GET /production/get_beaming_prod_by_id/{beaming_hdr_id}. */
+export interface BeamingEntryRecord extends BeamingHdrRow {
+  lines: BeamingLineRecord[];
 }
 
 export interface Option {
@@ -54,30 +52,34 @@ export interface Option {
   value: string;
 }
 
-/** Quality option carries the master rate so the dialog can preview it. */
+export interface MachineOption extends Option {
+  code: string;
+  name: string;
+}
+
+/** Quality option carries the master rate so the dialog can preview amounts. */
 export interface QualityOption extends Option {
+  code: string;
+  name: string;
   quality_rate: number | null;
 }
 
-/** Body of GET /production/beaming_prod_setup. */
+export interface BeamingDept {
+  dept_id: number;
+  dept_code: string | null;
+  dept_desc: string;
+}
+
+/** Body of GET /production/beaming_prod_setup (per branch). */
 export interface BeamingProdSetup {
-  machines: Option[];
+  dept: BeamingDept | null;
+  machines: MachineOption[];
   shifts: Option[];
   qualities: QualityOption[];
 }
 
-/** One line of the grid-entry form (numeric fields kept as strings).
- * divisible_hrs is not keyed in — the DB computes it as wk_hrs * 3. */
-export interface BeamingProdGridRow {
-  machine_id: number | "";
+/** One grid line of the entry dialog (numeric input kept as a string). */
+export interface BeamingGridLine {
   quality_id: number | "";
   prod_qty: string;
-  wk_hrs: string;
-  lost_hrs: string;
-  /** beaming_prod_id once this row has been saved; null while unsaved. */
-  saved_id: number | null;
-  /** Edited since last save — pending again, picked up by Save All. */
-  dirty: boolean;
-  /** Hidden passthrough so an existing remark survives a grid update. */
-  remarks: string | null;
 }
