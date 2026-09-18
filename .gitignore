@@ -53,3 +53,7 @@ storybook-static
 .worktrees/
 .security-key
 logs/security/
+
+# Local copies of docker/deploy files taken before the two-VPS split.
+# Never commit: pyhback's copy includes env.original with live DB credentials.
+docker-backup/

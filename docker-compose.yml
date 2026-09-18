@@ -8,7 +8,8 @@ services:
     container_name: nbclerp-frontend
     restart: unless-stopped
     # 3001 inside the container: package.json start is "next start -p 3001".
-    # Host 3001 too, so nginx for nbcl.infoskyglobalit.in proxies to :3001.
+    # Host 3001 too, so nginx for nbjcl.punrasargroup.com proxies to :3001.
+    # Vhost is version-controlled at deploy/nginx/nbjcl.punrasargroup.com.conf.
     ports:
       - "3001:3001"
     environment:
