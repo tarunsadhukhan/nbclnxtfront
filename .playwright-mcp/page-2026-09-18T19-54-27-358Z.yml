@@ -1,0 +1,38 @@
+- generic [active] [ref=f2e1]:
+  - main [ref=f2e2]:
+    - generic [ref=f2e3]:
+      - generic [ref=f2e4]:
+        - img "InfoSky Global" [ref=f2e5]:
+          - generic [ref=f2e10]: S
+        - generic [ref=f2e12]:
+          - generic [ref=f2e13]: INFOSKY GLOBAL
+          - generic [ref=f2e14]: IT SOLUTIONS
+      - generic [ref=f2e15]:
+        - generic [ref=f2e16]:
+          - heading "Sign in" [level=2] [ref=f2e17]
+          - paragraph [ref=f2e18]: Enter your credentials to continue
+        - generic [ref=f2e19]:
+          - generic [ref=f2e20]:
+            - text: User Name
+            - textbox "User Name" [ref=f2e21]
+          - generic [ref=f2e22]:
+            - text: Password
+            - generic [ref=f2e23]:
+              - textbox "••••••••" [ref=f2e24]
+              - button "Toggle password visibility" [ref=f2e25]
+          - generic [ref=f2e29]:
+            - generic [ref=f2e30]:
+              - radio "Admin Login" [ref=f2e31]
+              - generic [ref=f2e32]: Admin Login
+            - generic [ref=f2e33]:
+              - radio "Portal Login" [checked] [ref=f2e34]
+              - generic [ref=f2e35]: Portal Login
+          - generic [ref=f2e36]:
+            - generic [ref=f2e37]:
+              - checkbox "Keep me signed in" [ref=f2e38]
+              - checkbox [aria-hidden]
+              - generic [ref=f2e39]: Keep me signed in
+            - button "Forgot Password?" [ref=f2e40]
+          - button "Login" [ref=f2e41]
+  - region "Notifications (F8)":
+    - list

@@ -741,6 +741,13 @@ const apiRoutesPortalMasters = {
     MISC_EARN_EDIT: `${API_URL}/hrmsMasters/misc_earn_edit`,
     MISC_EARN_DELETE: `${API_URL}/hrmsMasters/misc_earn_delete`,
 
+    // Holiday Master (holiday_master)
+    HOLIDAY_TABLE: `${API_URL}/hrmsMasters/get_holiday_table`,
+    HOLIDAY_BY_ID: `${API_URL}/hrmsMasters/get_holiday_by_id`,
+    HOLIDAY_CREATE: `${API_URL}/hrmsMasters/holiday_create`,
+    HOLIDAY_EDIT: `${API_URL}/hrmsMasters/holiday_edit`,
+    HOLIDAY_DELETE: `${API_URL}/hrmsMasters/holiday_delete`,
+
     // Attendance Incentive Master (atten_incentive_mst)
     ATTEN_INCENTIVE_SETUP: `${API_URL}/hrmsMasters/atten_incentive_setup`,
     ATTEN_INCENTIVE_TABLE: `${API_URL}/hrmsMasters/get_atten_incentive_table`,
@@ -1008,6 +1015,26 @@ const apiRoutesPortalMasters = {
     ATTENDANCE_CREATE_SETUP: `${API_URL}/hrms/attendance_create_setup`,
     ATTENDANCE_LEAVE_STATUS: `${API_URL}/hrms/attendance_leave_status`,
     ATTENDANCE_MACHINES: `${API_URL}/hrms/attendance_machines_by_designation`,
+    // Daily wages process: daily_attendance -> pay_attendance (legacy Attn_Process)
+    DAILY_WAGES_PROCESS: `${API_URL}/hrms/daily_wages_process`,
+    DAILY_WAGES_SHIFTS: `${API_URL}/hrms/daily_wages_shifts`,
+    // Wages / Salary process for a pay_period (legacy SP_WagesProcessing chain)
+    WAGES_SALARY_PERIODS: `${API_URL}/hrms/wages_salary_periods`,
+    WAGES_SALARY_PROCESS: `${API_URL}/hrms/wages_salary_process`,
+    // Holiday process entry (hrms_holiday_transactions); *_DELETE is a base path, caller appends /${id}
+    HOLIDAY_PROCESS_SETUP: `${API_URL}/hrms/holiday_process_setup`,
+    HOLIDAY_TRAN_BY_HOLIDAY: `${API_URL}/hrms/holiday_tran_by_holiday`,
+    HOLIDAY_TRAN_SAVE: `${API_URL}/hrms/holiday_tran_save`,
+    HOLIDAY_TRAN_DELETE: `${API_URL}/hrms/holiday_tran_delete`,
+    HOLIDAY_PROCESS: `${API_URL}/hrms/holiday_process`,
+    // Adjustment entries (adjustments); *_DELETE is a base path, caller appends /${id}
+    ADJUSTMENT_SETUP: `${API_URL}/hrms/adjustment_setup`,
+    ADJUSTMENT_BY_DATE: `${API_URL}/hrms/adjustment_by_date`,
+    ADJUSTMENT_SAVE: `${API_URL}/hrms/adjustment_save`,
+    ADJUSTMENT_DELETE: `${API_URL}/hrms/adjustment_delete`,
+    // Gate pass correction: idle_hours on approved daily_attendance rows
+    GATE_PASS_CORRECTION_LIST: `${API_URL}/hrms/gate_pass_correction_list`,
+    GATE_PASS_CORRECTION_SAVE: `${API_URL}/hrms/gate_pass_correction_save`,
     // Attendance register report (checklist page) — served by the Flask mobileapp
     // mounted at the backend root (no /hrms prefix).
     // vowerp3be/src/mobileapp/src/attendance/attendance.py

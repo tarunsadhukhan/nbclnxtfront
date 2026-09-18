@@ -1,0 +1,384 @@
+[     175ms] [LOG] [Fast Refresh] rebuilding @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[     441ms] [LOG] [Fast Refresh] done in 377ms @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    1963ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    2213ms] [LOG] [HMR] connected @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   19005ms] [LOG] Login API Response: {data: Object, status: 200, statusText: OK, headers: AxiosHeaders, config: Object} @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   19364ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   19455ms] [LOG] [Fast Refresh] done in 196ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   19865ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   19901ms] [LOG] [HMR] connected @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   21098ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   22313ms] [LOG] [Fast Refresh] done in 1318ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   30327ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   30419ms] [LOG] [Fast Refresh] done in 202ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   30886ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   30962ms] [LOG] [HMR] connected @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   31413ms] Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <WagesSalaryProcessPage params={Promise} searchParams={Promise}>
+      <Box className="flex flex-...">
+        <Styled(div) as="div" ref={null} className="flex flex-..." theme={{...}} sx={{}}>
+          <Insertion>
+          <div className="flex flex-...">
+            <Typography>
+            <Paper className="flex flex-...">
+              <MuiPaper-root as="div" ownerState={{...}} className="MuiPaper-r..." ref={null} style={{...}}>
+                <Insertion>
+                <div className="MuiPaper-r..." style={{...}}>
+                  ...
+                    <MuiFormControl-root as="div" ownerState={{disabled:false, ...}} className="MuiFormCon..." ref={null}>
+                      <Insertion>
+                      <div className="MuiFormCon...">
+                        <InputLabel htmlFor="_R_6ainebn..." id="_R_6ainebn..." ref={null} ownerState={{select:true, ...}}>
+                          <MuiInputLabel-root data-shrink={true} ref={null} className="MuiInputLa..." ...>
+                            <Insertion>
+                            <FormLabel data-shrink={true} className="MuiInputLa..." htmlFor="_R_6ainebn..." ...>
+                              <MuiFormLabel-root as="label" ownerState={{...}} className="MuiFormLab..." ref={null} ...>
+                                <Insertion>
+                                <label
+                                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLa..."
+                                  data-shrink={true}
++                                 htmlFor="_R_6ainebn5rl5remlb_"
+-                                 htmlFor="_R_paatpesnel5remlb_"
++                                 id="_R_6ainebn5rl5remlb_-label"
+-                                 id="_R_paatpesnel5remlb_-label"
+                                >
+                        ...
+                          <MuiOutlinedInput-input aria-invalid={false} aria-describedby={undefined} ...>
+                            <Insertion>
+                            <SelectInput aria-invalid={false} aria-describedby={undefined} autoComplete={undefined} ...>
+                              <MuiSelect-select as="div" ...>
+                                <Insertion>
+                                <div
+                                  tabIndex={0}
+                                  role="combobox"
+                                  aria-controls={undefined}
+                                  aria-disabled={undefined}
+                                  aria-expanded="false"
+                                  aria-haspopup="listbox"
+                                  aria-label={undefined}
++                                 aria-labelledby="_R_6ainebn5rl5remlb_-label _R_6ainebn5rl5remlb_"
+-                                 aria-labelledby="_R_paatpesnel5remlb_-label _R_paatpesnel5remlb_"
+                                  aria-describedby={undefined}
+                                  aria-required={undefined}
+                                  aria-invalid={undefined}
+                                  onKeyDown={function handleKeyDown}
+                                  onMouseDown={function handleMouseDown}
+                                  onBlur={function handleBlur}
+                                  onFocus={function handleFocus}
++                                 id="_R_6ainebn5rl5remlb_"
+-                                 id="_R_paatpesnel5remlb_"
+                                  className="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-i..."
+                                  ref={function SelectInput.SelectInput.useCallback[handleDisplayRef]}
+                                >
++                                 Wages
+                              ...
+                  <TextField select={true} size="small" label="Period" value="" onChange={function onChange} ...>
+                    <MuiTextField-root disabled={true} error={false} fullWidth={false} required={false} color="primary" ...>
+                      <Insertion>
+                      <FormControl disabled={true} error={false} fullWidth={false} required={false} color="primary" ...>
+                        <MuiFormControl-root as="div" ownerState={{disabled:true, ...}} className="MuiFormCon..." ...>
+                          <Insertion>
+                          <div className="MuiFormCon...">
+                            <InputLabel htmlFor="_R_aainebn..." id="_R_aainebn..." ref={null} ...>
+                              <MuiInputLabel-root data-shrink={false} ref={null} className="MuiInputLa..." ...>
+                                <Insertion>
+                                <FormLabel data-shrink={false} className="MuiInputLa..." htmlFor="_R_aainebn..." ...>
+                                  <MuiFormLabel-root as="label" ownerState={{...}} className="MuiFormLab..." ref={null} ...>
+                                    <Insertion>
+                                    <label
+                                      className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInp..."
+                                      data-shrink={false}
++                                     htmlFor="_R_aainebn5rl5remlb_"
+-                                     htmlFor="_R_19aatpesnel5remlb_"
++                                     id="_R_aainebn5rl5remlb_-label"
+-                                     id="_R_19aatpesnel5remlb_-label"
+                                    >
+                            ...
+                              <MuiOutlinedInput-input aria-invalid={false} aria-describedby="_R_aainebn..." ...>
+                                <Insertion>
+                                <SelectInput aria-invalid={false} aria-describedby="_R_aainebn..." ...>
+                                  <MuiSelect-select as="div" ...>
+                                    <Insertion>
+                                    <div
+                                      tabIndex={null}
+                                      role="combobox"
+                                      aria-controls={undefined}
+                                      aria-disabled="true"
+                                      aria-expanded="false"
+                                      aria-haspopup="listbox"
+                                      aria-label={undefined}
++                                     aria-labelledby="_R_aainebn5rl5remlb_-label _R_aainebn5rl5remlb_"
+-                                     aria-labelledby="_R_19aatpesnel5remlb_-label _R_19aatpesnel5remlb_"
++                                     aria-describedby="_R_aainebn5rl5remlb_-helper-text"
+-                                     aria-describedby="_R_19aatpesnel5remlb_-helper-text"
+                                      aria-required={undefined}
+                                      aria-invalid={undefined}
+                                      onKeyDown={function handleKeyDown}
+                                      onMouseDown={null}
+                                      onBlur={function handleBlur}
+                                      onFocus={function handleFocus}
++                                     id="_R_aainebn5rl5remlb_"
+-                                     id="_R_19aatpesnel5remlb_"
+                                      className="MuiSelect-select MuiSelect-outlined Mui-disabled MuiInputBase-input M..."
+                                      ref={function SelectInput.SelectInput.useCallback[handleDisplayRef]}
+                                    >
+                                  ...
+                            <FormHelperText id="_R_aainebn..." ref={null} ownerState={{select:true, ...}}>
+                              <MuiFormHelperText-root as="p" className="MuiFormHel..." ref={null} id="_R_aainebn..." ...>
+                                <Insertion>
+                                <p
+                                  className="MuiFormHelperText-root Mui-disabled MuiFormHelperText-sizeSmall MuiFormHe..."
++                                 id="_R_aainebn5rl5remlb_-helper-text"
+-                                 id="_R_19aatpesnel5remlb_-helper-text"
+                                >
++                                 No wages periods (code P…) for this branch
+-                                 Select a branch in the sidebar
+                  ...
+            ...
+
+    at throwOnHydrationMismatch (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:3348:56)
+    at prepareToHydrateHostInstance (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:3402:23)
+    at completeWork (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:6934:60)
+    at runWithFiberInDEV (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:965:74)
+    at completeUnitOfWork (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:9627:23)
+    at performUnitOfWork (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:9564:28)
+    at workLoopConcurrentByScheduler (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:9558:58)
+    at renderRootConcurrent (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:9541:71)
+    at performWorkOnRoot (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:9068:150)
+    at performWorkOnRootViaSchedulerTask (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:10230:9)
+    at MessagePort.performWorkUntilDeadline (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_0a376505._.js:2647:64)
+[   31453ms] TypeError: Cannot read properties of undefined (reading 'filter')
+    at SidebarProvider.useEffect (http://nbjcl.localhost:3001/_next/static/chunks/src_a6c4315e._.js:355:38)
+    at Object.react_stack_bottom_frame (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:14876:22)
+    at runWithFiberInDEV (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:965:74)
+    at commitHookEffectListMount (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:7266:167)
+    at commitHookPassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:7301:60)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8696:33)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8695:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8695:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8757:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8695:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8757:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8757:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8695:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8700:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8695:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8700:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8695:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8695:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8695:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8700:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8695:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8695:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8757:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8757:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8695:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8695:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8757:17)
+    at recursivelyTraversePassiveMountEffects (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8683:316)
+    at commitPassiveMountOnFiber (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:8757:17)
+[   31774ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   32039ms] [LOG] [Fast Refresh] done in 380ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   49865ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   49901ms] [LOG] [Fast Refresh] done in 142ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   52106ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   52251ms] [LOG] [HMR] connected @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   53754ms] Error: Hydration failed because the server rendered text didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <WagesSalaryProcessPage params={Promise} searchParams={Promise}>
+      <Box className="flex flex-...">
+        <Styled(div) as="div" ref={null} className="flex flex-..." theme={{...}} sx={{}}>
+          <Insertion>
+          <div className="flex flex-...">
+            <Typography>
+            <Paper className="flex flex-...">
+              <MuiPaper-root as="div" ownerState={{...}} className="MuiPaper-r..." ref={null} style={{...}}>
+                <Insertion>
+                <div className="MuiPaper-r..." style={{...}}>
+                  ...
+                    <MuiFormControl-root as="div" ownerState={{disabled:false, ...}} className="MuiFormCon..." ref={null}>
+                      <Insertion>
+                      <div className="MuiFormCon...">
+                        <InputLabel htmlFor="_R_6ainebn..." id="_R_6ainebn..." ref={null} ownerState={{select:true, ...}}>
+                          <MuiInputLabel-root data-shrink={true} ref={null} className="MuiInputLa..." ...>
+                            <Insertion>
+                            <FormLabel data-shrink={true} className="MuiInputLa..." htmlFor="_R_6ainebn..." ...>
+                              <MuiFormLabel-root as="label" ownerState={{...}} className="MuiFormLab..." ref={null} ...>
+                                <Insertion>
+                                <label
+                                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLa..."
+                                  data-shrink={true}
++                                 htmlFor="_R_6ainebn5rl5remlb_"
+-                                 htmlFor="_R_paatpesnel5remlb_"
++                                 id="_R_6ainebn5rl5remlb_-label"
+-                                 id="_R_paatpesnel5remlb_-label"
+                                >
+                        ...
+                          <MuiOutlinedInput-input aria-invalid={false} aria-describedby={undefined} ...>
+                            <Insertion>
+                            <SelectInput aria-invalid={false} aria-describedby={undefined} autoComplete={undefined} ...>
+                              <MuiSelect-select as="div" ...>
+                                <Insertion>
+                                <div
+                                  tabIndex={0}
+                                  role="combobox"
+                                  aria-controls={undefined}
+                                  aria-disabled={undefined}
+                                  aria-expanded="false"
+                                  aria-haspopup="listbox"
+                                  aria-label={undefined}
++                                 aria-labelledby="_R_6ainebn5rl5remlb_-label _R_6ainebn5rl5remlb_"
+-                                 aria-labelledby="_R_paatpesnel5remlb_-label _R_paatpesnel5remlb_"
+                                  aria-describedby={undefined}
+                                  aria-required={undefined}
+                                  aria-invalid={undefined}
+                                  onKeyDown={function handleKeyDown}
+                                  onMouseDown={function handleMouseDown}
+                                  onBlur={function handleBlur}
+                                  onFocus={function handleFocus}
++                                 id="_R_6ainebn5rl5remlb_"
+-                                 id="_R_paatpesnel5remlb_"
+                                  className="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-i..."
+                                  ref={function SelectInput.SelectInput.useCallback[handleDisplayRef]}
+                                >
++                                 Wages
+                              ...
+                  <TextField select={true} size="small" label="Period" value="" onChange={function onChange} ...>
+                    <MuiTextField-root disabled={true} error={false} fullWidth={false} required={false} color="primary" ...>
+                      <Insertion>
+                      <FormControl disabled={true} error={false} fullWidth={false} required={false} color="primary" ...>
+                        <MuiFormControl-root as="div" ownerState={{disabled:true, ...}} className="MuiFormCon..." ...>
+                          <Insertion>
+                          <div className="MuiFormCon...">
+                            <InputLabel htmlFor="_R_aainebn..." id="_R_aainebn..." ref={null} ...>
+                              <MuiInputLabel-root data-shrink={false} ref={null} className="MuiInputLa..." ...>
+                                <Insertion>
+                                <FormLabel data-shrink={false} className="MuiInputLa..." htmlFor="_R_aainebn..." ...>
+                                  <MuiFormLabel-root as="label" ownerState={{...}} className="MuiFormLab..." ref={null} ...>
+                                    <Insertion>
+                                    <label
+                                      className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInp..."
+                                      data-shrink={false}
++                                     htmlFor="_R_aainebn5rl5remlb_"
+-                                     htmlFor="_R_19aatpesnel5remlb_"
++                                     id="_R_aainebn5rl5remlb_-label"
+-                                     id="_R_19aatpesnel5remlb_-label"
+                                    >
+                            ...
+                              <MuiOutlinedInput-input aria-invalid={false} aria-describedby="_R_aainebn..." ...>
+                                <Insertion>
+                                <SelectInput aria-invalid={false} aria-describedby="_R_aainebn..." ...>
+                                  <MuiSelect-select as="div" ...>
+                                    <Insertion>
+                                    <div
+                                      tabIndex={null}
+                                      role="combobox"
+                                      aria-controls={undefined}
+                                      aria-disabled="true"
+                                      aria-expanded="false"
+                                      aria-haspopup="listbox"
+                                      aria-label={undefined}
++                                     aria-labelledby="_R_aainebn5rl5remlb_-label _R_aainebn5rl5remlb_"
+-                                     aria-labelledby="_R_19aatpesnel5remlb_-label _R_19aatpesnel5remlb_"
++                                     aria-describedby="_R_aainebn5rl5remlb_-helper-text"
+-                                     aria-describedby="_R_19aatpesnel5remlb_-helper-text"
+                                      aria-required={undefined}
+                                      aria-invalid={undefined}
+                                      onKeyDown={function handleKeyDown}
+                                      onMouseDown={null}
+                                      onBlur={function handleBlur}
+                                      onFocus={function handleFocus}
++                                     id="_R_aainebn5rl5remlb_"
+-                                     id="_R_19aatpesnel5remlb_"
+                                      className="MuiSelect-select MuiSelect-outlined Mui-disabled MuiInputBase-input M..."
+                                      ref={function SelectInput.SelectInput.useCallback[handleDisplayRef]}
+                                    >
+                                  ...
+                            <FormHelperText id="_R_aainebn..." ref={null} ownerState={{select:true, ...}}>
+                              <MuiFormHelperText-root as="p" className="MuiFormHel..." ref={null} id="_R_aainebn..." ...>
+                                <Insertion>
+                                <p
+                                  className="MuiFormHelperText-root Mui-disabled MuiFormHelperText-sizeSmall MuiFormHe..."
++                                 id="_R_aainebn5rl5remlb_-helper-text"
+-                                 id="_R_19aatpesnel5remlb_-helper-text"
+                                >
++                                 No wages periods (code P…) for this branch
+-                                 Select a branch in the sidebar
+                  ...
+            ...
+
+    at throwOnHydrationMismatch (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:3348:56)
+    at prepareToHydrateHostInstance (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:3402:23)
+    at completeWork (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:6934:60)
+    at runWithFiberInDEV (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:965:74)
+    at completeUnitOfWork (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:9627:23)
+    at performUnitOfWork (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:9564:28)
+    at workLoopConcurrentByScheduler (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:9558:58)
+    at renderRootConcurrent (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:9541:71)
+    at performWorkOnRoot (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:9068:150)
+    at performWorkOnRootViaSchedulerTask (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:10230:9)
+    at MessagePort.performWorkUntilDeadline (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_0a376505._.js:2647:64)
+[   58941ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   60062ms] [LOG] [Fast Refresh] done in 1235ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   76616ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   77553ms] [LOG] [Fast Refresh] done in 1047ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   93523ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   94439ms] [LOG] [Fast Refresh] done in 1020ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  104271ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  105638ms] [LOG] [Fast Refresh] done in 1472ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  133171ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  134557ms] [LOG] [Fast Refresh] done in 1495ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  210468ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  211284ms] [LOG] [Fast Refresh] done in 924ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  266769ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  266984ms] [LOG] [Fast Refresh] done in 324ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  546654ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  547129ms] [LOG] [Fast Refresh] done in 587ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  562981ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  565366ms] [LOG] [Fast Refresh] done in 2199ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  565747ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  567899ms] [LOG] [Fast Refresh] done in 2082ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297

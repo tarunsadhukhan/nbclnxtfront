@@ -1,0 +1,19 @@
+[     548ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    6030ms] [LOG] [Fast Refresh] done in 5587ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    7571ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    7715ms] [LOG] [HMR] connected @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    8378ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    8391ms] [LOG] [Fast Refresh] done in 117ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    9363ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    9735ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://nbjcl.localhost:3001/api/companyAdmin/get_co_logo/106:0
+[   11060ms] [LOG] [Fast Refresh] done in 2419ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   36513ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   39913ms] [LOG] [Fast Refresh] done in 3505ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   40006ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://nbjcl.localhost:3001/api/admin/PortalData/portal_menu_permissions:0
+[   43859ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   45744ms] [LOG] [Fast Refresh] done in 1991ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   57984ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   60105ms] [LOG] [Fast Refresh] done in 2236ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  115338ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  117024ms] [LOG] [Fast Refresh] done in 1790ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  641734ms] [LOG] [HMR] connected @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297

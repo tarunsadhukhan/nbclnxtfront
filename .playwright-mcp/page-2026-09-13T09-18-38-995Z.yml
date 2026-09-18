@@ -1,0 +1,40 @@
+- generic [active] [ref=f1e1]:
+  - main [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - generic [ref=f1e4]:
+        - img "InfoSky Global" [ref=f1e5]:
+          - generic [ref=f1e10]: S
+        - generic [ref=f1e12]:
+          - generic [ref=f1e13]: INFOSKY GLOBAL
+          - generic [ref=f1e14]: IT SOLUTIONS
+      - generic [ref=f1e15]:
+        - generic [ref=f1e16]:
+          - heading "Sign in" [level=2] [ref=f1e17]
+          - paragraph [ref=f1e18]: Enter your credentials to continue
+        - generic [ref=f1e19]:
+          - generic [ref=f1e20]:
+            - text: User Name
+            - textbox "User Name" [ref=f1e21]
+          - generic [ref=f1e22]:
+            - text: Password
+            - generic [ref=f1e23]:
+              - textbox "••••••••" [ref=f1e24]
+              - button "Toggle password visibility" [ref=f1e25]
+          - generic [ref=f1e29]:
+            - generic [ref=f1e30]:
+              - radio "Admin Login" [ref=f1e31]
+              - generic [ref=f1e32]: Admin Login
+            - generic [ref=f1e33]:
+              - radio "Portal Login" [checked] [ref=f1e34]
+              - generic [ref=f1e35]: Portal Login
+          - generic [ref=f1e36]:
+            - generic [ref=f1e37]:
+              - checkbox "Keep me signed in" [ref=f1e38]
+              - checkbox [aria-hidden]
+              - generic [ref=f1e39]: Keep me signed in
+            - button "Forgot Password?" [ref=f1e40]
+          - button "Login" [ref=f1e41]
+  - region "Notifications (F8)":
+    - list
+  - button "Open Next.js Dev Tools" [ref=f1e47] [cursor=pointer]
+  - alert [ref=f1e51]

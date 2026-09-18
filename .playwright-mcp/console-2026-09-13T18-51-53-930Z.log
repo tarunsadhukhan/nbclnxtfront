@@ -1,0 +1,14 @@
+[     567ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    3273ms] [LOG] [Fast Refresh] done in 2815ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    4444ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    5260ms] [LOG] [HMR] connected @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    7691ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    9294ms] [LOG] [Fast Refresh] done in 3557ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   11604ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://nbjcl.localhost:3001/api/companyAdmin/get_co_logo/106:0
+[   38454ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   40098ms] [LOG] [Fast Refresh] done in 2228ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   49982ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   51463ms] [LOG] [Fast Refresh] done in 1595ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   98066ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://nbjcl.localhost:3001/api/hrms/wages_salary_process:0
+[   98877ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  100205ms] [LOG] [Fast Refresh] done in 1442ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297

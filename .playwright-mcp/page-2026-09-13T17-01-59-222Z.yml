@@ -1,0 +1,32 @@
+- generic [active] [ref=f5e1]:
+  - generic [ref=f5e2]:
+    - button "User Settings" [ref=f5e6] [cursor=pointer]
+    - generic [ref=f5e12]:
+      - navigation "Portal menu" [ref=f5e13]:
+        - generic [ref=f5e14]:
+          - img "InfoSky Global" [ref=f5e15]:
+            - generic [ref=f5e20]: S
+          - button "Hide menu" [expanded] [ref=f5e25] [cursor=pointer]
+      - main [ref=f5e28]:
+        - generic [ref=f5e29]:
+          - heading "Wages / Salary Process" [level=1] [ref=f5e30]
+          - generic [ref=f5e31]:
+            - generic [ref=f5e32]:
+              - generic [ref=f5e33]: Processing
+              - generic [ref=f5e34]:
+                - combobox "Processing Wages" [ref=f5e35] [cursor=pointer]: Wages
+                - textbox [aria-hidden]: W
+                - group [aria-hidden]:
+                  - generic: Processing
+            - generic [ref=f5e36]:
+              - generic: Period
+              - generic [ref=f5e37]:
+                - combobox "Period" [disabled] [ref=f5e38]
+                - textbox [disabled] [aria-hidden]
+                - group [aria-hidden]:
+                  - generic: Period
+            - button "Submit" [disabled]
+    - button "Raise a support ticket" [ref=f5e39] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list
+  - button "Open Next.js Dev Tools" [ref=f5e52] [cursor=pointer]

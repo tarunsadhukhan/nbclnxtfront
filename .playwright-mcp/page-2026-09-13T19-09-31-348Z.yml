@@ -1,0 +1,106 @@
+- generic [ref=f9e1]:
+  - generic [aria-hidden] [ref=f9e2]:
+    - generic [ref=f9e3]:
+      - button [ref=f9e56] [cursor=pointer]: Masters
+      - button [ref=f9e57] [cursor=pointer]: HRMS
+      - button [ref=f9e58] [cursor=pointer]: HRMS Master
+      - button [ref=f9e59] [cursor=pointer]: Production Masters
+      - button [ref=f9e60] [cursor=pointer]: Productions
+      - button [ref=f9e61] [cursor=pointer]: Other Menus
+      - button [ref=f9e62] [cursor=pointer]: Wages Menus
+      - generic [ref=f9e4]:
+        - generic [ref=f9e5]: NORTHBROOK JUTE COMPANY LIMITED · MILL
+        - button [ref=f9e63] [cursor=pointer]: User Settings
+    - generic [ref=f9e12]:
+      - navigation [ref=f9e64]:
+        - generic [ref=f9e14]:
+          - img [ref=f9e65]:
+            - generic [ref=f9e20]: S
+          - generic [ref=f9e22]:
+            - generic [ref=f9e23]: NORTHBROOK JUTE COMPANY LIMITED
+            - generic [ref=f9e24]: MILL
+          - button [expanded] [ref=f9e66] [cursor=pointer]
+        - generic [ref=f9e27]:
+          - generic [ref=f9e67]:
+            - button [ref=f9e68] [cursor=pointer]
+            - generic [aria-hidden] [ref=f9e71]: category
+            - button [ref=f9e72] [cursor=pointer]: Masters
+          - generic [ref=f9e73]:
+            - button [expanded] [ref=f9e74] [cursor=pointer]
+            - generic [aria-hidden] [ref=f9e77]: groups
+            - button [ref=f9e78] [cursor=pointer]: HRMS
+          - generic [ref=f9e79]:
+            - generic [aria-hidden] [ref=f9e80]: assessment
+            - button [ref=f9e81] [cursor=pointer]: Pay Register
+          - generic [ref=f9e82]:
+            - generic [aria-hidden] [ref=f9e83]: event_busy
+            - button [ref=f9e84] [cursor=pointer]: Leave Request
+          - generic [ref=f9e85]:
+            - generic [aria-hidden] [ref=f9e86]: payments
+            - button [ref=f9e87] [cursor=pointer]: Pay Roll
+          - generic [ref=f9e88]:
+            - generic [aria-hidden] [ref=f9e89]: event_available
+            - button [ref=f9e90] [cursor=pointer]: Bio Metric Attendance
+          - generic [ref=f9e91]:
+            - generic [aria-hidden] [ref=f9e92]: how_to_reg
+            - button [ref=f9e93] [cursor=pointer]: On boarding
+          - generic [ref=f9e94]:
+            - generic [aria-hidden] [ref=f9e95]: event_available
+            - button [ref=f9e96] [cursor=pointer]: Attendance Calendar
+          - generic [ref=f9e97]:
+            - button [ref=f9e98] [cursor=pointer]
+            - generic [aria-hidden] [ref=f9e101]: assessment
+            - button [ref=f9e102] [cursor=pointer]: HRMS Reports
+          - generic [ref=f9e103]:
+            - generic [aria-hidden] [ref=f9e104]: restaurant
+            - button [ref=f9e105] [cursor=pointer]: Canteen Details
+          - generic [ref=f9e106]:
+            - generic [aria-hidden] [ref=f9e107]: event_available
+            - button [ref=f9e108] [cursor=pointer]: Attendance Open Close
+          - generic [ref=f9e109]:
+            - button [ref=f9e110] [cursor=pointer]
+            - generic [aria-hidden] [ref=f9e113]: badge
+            - button [ref=f9e114] [cursor=pointer]: HRMS Master
+          - generic [ref=f9e115]:
+            - button [ref=f9e116] [cursor=pointer]
+            - generic [aria-hidden] [ref=f9e119]: list_alt
+            - button [ref=f9e120] [cursor=pointer]: Production Masters
+          - generic [ref=f9e121]:
+            - button [ref=f9e122] [cursor=pointer]
+            - generic [aria-hidden] [ref=f9e125]: description
+            - button [ref=f9e126] [cursor=pointer]: Productions
+          - generic [ref=f9e127]:
+            - button [ref=f9e128] [cursor=pointer]
+            - generic [aria-hidden] [ref=f9e131]: description
+            - button [ref=f9e132] [cursor=pointer]: Other Menus
+          - generic [ref=f9e133]:
+            - button [ref=f9e134] [cursor=pointer]
+            - generic [aria-hidden] [ref=f9e137]: description
+            - button [ref=f9e138] [cursor=pointer]: Wages Menus
+      - main [ref=f9e28]:
+        - generic [ref=f9e29]:
+          - heading [level=1] [ref=f9e139]: Wages / Salary Process
+          - generic [ref=f9e31]:
+            - generic [ref=f9e32]:
+              - generic [ref=f9e33]: Processing
+              - generic [ref=f9e34]:
+                - combobox [ref=f9e140] [cursor=pointer]: Wages
+                - textbox [aria-hidden]: W
+                - group [aria-hidden]:
+                  - generic: Processing
+            - generic [ref=f9e36]:
+              - generic [ref=f9e141]: Period
+              - generic [ref=f9e37]:
+                - combobox [expanded] [ref=f9e142] [cursor=pointer]
+                - textbox [aria-hidden]
+                - group [aria-hidden]:
+                  - generic: Period
+            - button [disabled]: Submit
+    - button [ref=f9e143] [cursor=pointer]
+  - list
+  - button "Open Next.js Dev Tools" [ref=f9e52] [cursor=pointer]
+  - alert [ref=f9e144]
+  - listbox "Period" [ref=f9e147]:
+    - option "P20260901 — 2026-09-01 to 2026-09-15" [active] [ref=f9e148] [cursor=pointer]
+    - option "P20260802 — 2026-08-16 to 2026-08-31" [ref=f9e149] [cursor=pointer]
+    - option "P20260801 — 2026-08-01 to 2026-08-15" [ref=f9e150] [cursor=pointer]

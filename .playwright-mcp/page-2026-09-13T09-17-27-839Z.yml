@@ -1,0 +1,40 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - img "InfoSky Global" [ref=e5]:
+          - generic [ref=e10]: S
+        - generic [ref=e12]:
+          - generic [ref=e13]: INFOSKY GLOBAL
+          - generic [ref=e14]: IT SOLUTIONS
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - heading "Sign in" [level=2] [ref=e17]
+          - paragraph [ref=e18]: Enter your credentials to continue
+        - generic [ref=e19]:
+          - generic [ref=e20]:
+            - text: User Name
+            - textbox "User Name" [ref=e21]: nbcluser@nbcl.in
+          - generic [ref=e22]:
+            - text: Password
+            - generic [ref=e23]:
+              - textbox "••••••••" [ref=e24]: sls#123456
+              - button "Toggle password visibility" [ref=e25]
+          - generic [ref=e29]:
+            - generic [ref=e30]:
+              - radio "Admin Login" [ref=e31]
+              - generic [ref=e32]: Admin Login
+            - generic [ref=e33]:
+              - radio "Portal Login" [checked] [ref=e34]
+              - generic [ref=e35]: Portal Login
+          - generic [ref=e36]:
+            - generic [ref=e37]:
+              - checkbox "Keep me signed in" [ref=e38]
+              - checkbox [aria-hidden]
+              - generic [ref=e39]: Keep me signed in
+            - button "Forgot Password?" [ref=e40]
+          - button "Login" [ref=e41]
+  - region "Notifications (F8)":
+    - list
+  - button "Open Next.js Dev Tools" [ref=e47] [cursor=pointer]
+  - alert [ref=e51]

@@ -1,0 +1,78 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]:
+    - generic [ref=f3e3]:
+      - button "Masters" [ref=f3e144] [cursor=pointer]
+      - button "HRMS" [ref=f3e145] [cursor=pointer]
+      - button "HRMS Master" [ref=f3e146] [cursor=pointer]
+      - button "Production Masters" [ref=f3e147] [cursor=pointer]
+      - button "Productions" [ref=f3e148] [cursor=pointer]
+      - button "Other Menus" [ref=f3e149] [cursor=pointer]
+      - button "Wages Menus" [ref=f3e150] [cursor=pointer]
+      - generic [ref=f3e4]:
+        - generic [ref=f3e5]: NORTHBROOK JUTE COMPANY LIMITED · MILL
+        - button "User Settings" [ref=f3e151] [cursor=pointer]
+    - generic [ref=f3e12]:
+      - navigation "Portal menu" [ref=f3e152]:
+        - generic [ref=f3e14]:
+          - img "InfoSky Global" [ref=f3e153]:
+            - generic [ref=f3e20]: S
+          - generic [ref=f3e22]:
+            - generic "NORTHBROOK JUTE COMPANY LIMITED" [ref=f3e154]
+            - generic [ref=f3e24]: MILL
+          - button "Hide menu" [expanded] [ref=f3e155] [cursor=pointer]
+        - generic [ref=f3e27]:
+          - generic [ref=f3e64]:
+            - button "Expand Masters" [ref=f3e156] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e68]: category
+            - button "Masters" [ref=f3e157] [cursor=pointer]
+          - generic [ref=f3e70]:
+            - button "Expand HRMS" [ref=f3e158] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e74]: groups
+            - button "HRMS" [ref=f3e159] [cursor=pointer]
+          - generic [ref=f3e76]:
+            - button "Expand HRMS Master" [ref=f3e160] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e80]: badge
+            - button "HRMS Master" [ref=f3e161] [cursor=pointer]
+          - generic [ref=f3e82]:
+            - button "Expand Production Masters" [ref=f3e162] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e86]: list_alt
+            - button "Production Masters" [ref=f3e163] [cursor=pointer]
+          - generic [ref=f3e88]:
+            - button "Expand Productions" [ref=f3e164] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e92]: description
+            - button "Productions" [ref=f3e165] [cursor=pointer]
+          - generic [ref=f3e94]:
+            - button "Expand Other Menus" [ref=f3e166] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e98]: description
+            - button "Other Menus" [ref=f3e167] [cursor=pointer]
+          - generic [ref=f3e100]:
+            - button "Expand Wages Menus" [ref=f3e168] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e104]: description
+            - button "Wages Menus" [ref=f3e169] [cursor=pointer]
+      - main [ref=f3e28]:
+        - generic [ref=f3e29]:
+          - heading "Wages / Salary Process" [level=1] [ref=f3e170]
+          - generic [ref=f3e31]:
+            - generic [ref=f3e32]:
+              - generic [ref=f3e33]: Processing
+              - generic [ref=f3e34]:
+                - combobox "Processing Wages" [ref=f3e171] [cursor=pointer]: Wages
+                - textbox [aria-hidden]: W
+                - group [aria-hidden]:
+                  - generic: Processing
+            - generic [ref=f3e36]:
+              - generic [ref=f3e135]: Period
+              - generic [ref=f3e37]:
+                - combobox "Period P20260901 — 2026-09-01 to 2026-09-15" [ref=f3e172] [cursor=pointer]: P20260901 — 2026-09-01 to 2026-09-15
+                - textbox [aria-hidden]: "21"
+                - group [aria-hidden]:
+                  - generic: Period
+            - button "Submit" [ref=f3e173]
+          - alert [ref=f3e175]:
+            - generic [ref=f3e179]: P20260901 already has final wages in paywages (180 employees, net payable 97,371). Re-processing would replace them, and the amount steps are not ported yet.
+            - button "Close" [ref=f3e181] [cursor=pointer]
+    - button "Raise a support ticket" [ref=f3e174] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list
+  - button "Open Next.js Dev Tools" [ref=f3e52] [cursor=pointer]
+  - alert [ref=f3e106]

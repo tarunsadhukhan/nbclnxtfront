@@ -1,0 +1,33 @@
+[     134ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[     225ms] [LOG] [Fast Refresh] done in 193ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[     410ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[     427ms] [LOG] [HMR] connected @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   23393ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   24966ms] [LOG] [Fast Refresh] done in 1687ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   31168ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   32592ms] [LOG] [Fast Refresh] done in 1525ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   37680ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   39120ms] [LOG] [Fast Refresh] done in 1554ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   43347ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://nbjcl.localhost:3001/api/hrms/wages_salary_process:0
+[   44131ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   45660ms] [LOG] [Fast Refresh] done in 1642ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  151679ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://nbjcl.localhost:3001/api/hrms/wages_salary_process:0
+[  152458ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  153830ms] [LOG] [Fast Refresh] done in 1473ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  257483ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  259082ms] [LOG] [Fast Refresh] done in 1704ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  287602ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  288803ms] [LOG] [Fast Refresh] done in 1303ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  302548ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  304009ms] [LOG] [Fast Refresh] done in 1562ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  581077ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  583896ms] [LOG] [Fast Refresh] done in 2937ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  600717ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  601852ms] [LOG] [Fast Refresh] done in 1246ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  617040ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  617995ms] [LOG] [Fast Refresh] done in 1065ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[ 3447676ms] [LOG] [HMR] connected @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[ 3448065ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[ 3448104ms] [LOG] [Fast Refresh] done in 157ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[ 3547415ms] [LOG] [HMR] connected @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[ 3547546ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297

@@ -1,0 +1,14 @@
+[   20156ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   20391ms] [LOG] [HMR] connected @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   21057ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://nbjcl.localhost:3001/api/admin/PortalData/portal_menu_items:0
+[   21062ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://nbjcl.localhost:3001/api/companyAdmin/get_co_logo/106:0
+[   21064ms] [ERROR] Failed to load resource: the server responded with a status of 403 (Forbidden) @ http://nbjcl.localhost:3001/api/hrms/wages_salary_periods?branch_id=87&process_type=W:0
+[   22956ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   22983ms] [LOG] [HMR] connected @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   44113ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   45927ms] [LOG] [Fast Refresh] done in 1915ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   53575ms] [LOG] Login API Response: {data: Object, status: 200, statusText: OK, headers: AxiosHeaders, config: Object} @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   53928ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   54077ms] [LOG] [Fast Refresh] done in 252ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   54433ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   54462ms] [LOG] [HMR] connected @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297

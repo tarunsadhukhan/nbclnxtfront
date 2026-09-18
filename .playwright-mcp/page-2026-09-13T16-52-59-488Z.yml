@@ -1,0 +1,113 @@
+- generic [ref=f4e1]:
+  - generic [ref=f4e6] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=f4e7]
+    - generic [ref=f4e11]:
+      - button "Open issues overlay" [ref=f4e12]:
+        - generic [ref=f4e13]:
+          - generic [aria-hidden] [ref=f4e14]: "0"
+          - generic [ref=f4e15]: "1"
+        - generic [ref=f4e16]: Issue
+      - button "Collapse issues badge" [ref=f4e17]
+  - generic [aria-hidden] [ref=f4e20]:
+    - generic [ref=f4e21]:
+      - button [ref=f4e145] [cursor=pointer]: Masters
+      - button [ref=f4e146] [cursor=pointer]: HRMS
+      - button [ref=f4e147] [cursor=pointer]: HRMS Master
+      - button [ref=f4e148] [cursor=pointer]: Production Masters
+      - button [ref=f4e149] [cursor=pointer]: Productions
+      - button [ref=f4e150] [cursor=pointer]: Other Menus
+      - button [ref=f4e151] [cursor=pointer]: Wages Menus
+      - generic [ref=f4e29]:
+        - generic [ref=f4e30]: NORTHBROOK JUTE COMPANY LIMITED · MILL
+        - button [ref=f4e152] [cursor=pointer]: User Settings
+    - generic [ref=f4e37]:
+      - navigation [ref=f4e153]:
+        - generic [ref=f4e39]:
+          - img [ref=f4e154]:
+            - generic [ref=f4e45]: S
+          - generic [ref=f4e47]:
+            - generic [ref=f4e155]: NORTHBROOK JUTE COMPANY LIMITED
+            - generic [ref=f4e49]: MILL
+          - button [expanded] [ref=f4e156] [cursor=pointer]
+        - generic [ref=f4e52]:
+          - generic [ref=f4e53]:
+            - button [ref=f4e157] [cursor=pointer]
+            - generic [aria-hidden] [ref=f4e57]: category
+            - button [ref=f4e158] [cursor=pointer]: Masters
+          - generic [ref=f4e59]:
+            - button [expanded] [ref=f4e159] [cursor=pointer]
+            - generic [aria-hidden] [ref=f4e63]: groups
+            - button [ref=f4e160] [cursor=pointer]: HRMS
+          - generic [ref=f4e65]:
+            - generic [aria-hidden] [ref=f4e66]: assessment
+            - button [ref=f4e161] [cursor=pointer]: Pay Register
+          - generic [ref=f4e68]:
+            - generic [aria-hidden] [ref=f4e69]: event_busy
+            - button [ref=f4e162] [cursor=pointer]: Leave Request
+          - generic [ref=f4e71]:
+            - generic [aria-hidden] [ref=f4e72]: payments
+            - button [ref=f4e163] [cursor=pointer]: Pay Roll
+          - generic [ref=f4e74]:
+            - generic [aria-hidden] [ref=f4e75]: event_available
+            - button [ref=f4e164] [cursor=pointer]: Bio Metric Attendance
+          - generic [ref=f4e77]:
+            - generic [aria-hidden] [ref=f4e78]: how_to_reg
+            - button [ref=f4e165] [cursor=pointer]: On boarding
+          - generic [ref=f4e80]:
+            - generic [aria-hidden] [ref=f4e81]: event_available
+            - button [ref=f4e166] [cursor=pointer]: Attendance Calendar
+          - generic [ref=f4e83]:
+            - button [ref=f4e167] [cursor=pointer]
+            - generic [aria-hidden] [ref=f4e87]: assessment
+            - button [ref=f4e168] [cursor=pointer]: HRMS Reports
+          - generic [ref=f4e89]:
+            - generic [aria-hidden] [ref=f4e90]: restaurant
+            - button [ref=f4e169] [cursor=pointer]: Canteen Details
+          - generic [ref=f4e92]:
+            - generic [aria-hidden] [ref=f4e93]: event_available
+            - button [ref=f4e170] [cursor=pointer]: Attendance Open Close
+          - generic [ref=f4e95]:
+            - button [ref=f4e171] [cursor=pointer]
+            - generic [aria-hidden] [ref=f4e99]: badge
+            - button [ref=f4e172] [cursor=pointer]: HRMS Master
+          - generic [ref=f4e101]:
+            - button [ref=f4e173] [cursor=pointer]
+            - generic [aria-hidden] [ref=f4e105]: list_alt
+            - button [ref=f4e174] [cursor=pointer]: Production Masters
+          - generic [ref=f4e107]:
+            - button [ref=f4e175] [cursor=pointer]
+            - generic [aria-hidden] [ref=f4e111]: description
+            - button [ref=f4e176] [cursor=pointer]: Productions
+          - generic [ref=f4e113]:
+            - button [ref=f4e177] [cursor=pointer]
+            - generic [aria-hidden] [ref=f4e117]: description
+            - button [ref=f4e178] [cursor=pointer]: Other Menus
+          - generic [ref=f4e119]:
+            - button [ref=f4e179] [cursor=pointer]
+            - generic [aria-hidden] [ref=f4e123]: description
+            - button [ref=f4e180] [cursor=pointer]: Wages Menus
+      - main [ref=f4e125]:
+        - generic [ref=f4e126]:
+          - heading [level=1] [ref=f4e181]: Wages / Salary Process
+          - generic [ref=f4e128]:
+            - generic [ref=f4e129]:
+              - generic [ref=f4e130]: Processing
+              - generic [ref=f4e131]:
+                - combobox [ref=f4e182] [cursor=pointer]: Wages
+                - textbox [aria-hidden]: W
+                - group [aria-hidden]:
+                  - generic: Processing
+            - generic [ref=f4e133]:
+              - generic [ref=f4e183]: Period
+              - generic [ref=f4e134]:
+                - combobox [expanded] [ref=f4e184] [cursor=pointer]
+                - textbox [aria-hidden]
+                - group [aria-hidden]:
+                  - generic: Period
+            - button [disabled]: Submit
+    - button [ref=f4e185] [cursor=pointer]
+  - list
+  - alert [ref=f4e144]
+  - listbox "Period" [ref=f4e188]:
+    - option "P20260802 — 2026-08-16 to 2026-08-31" [active] [ref=f4e189] [cursor=pointer]
+    - option "P20260801 — 2026-08-01 to 2026-08-15" [ref=f4e190] [cursor=pointer]

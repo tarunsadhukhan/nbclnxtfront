@@ -1,0 +1,5 @@
+[    3807ms] [INFO] Slow network is detected. See https://www.chromestatus.com/feature/5636954674692096 for more details. Fallback font will be used while loading: https://vowerp.com/assets/fonts/Poppins-Regular.ttf @ https://vowerp.com/:375
+[    3807ms] [INFO] Slow network is detected. See https://www.chromestatus.com/feature/5636954674692096 for more details. Fallback font will be used while loading: https://vowerp.com/assets/fonts/Poppins-Bold.ttf @ https://vowerp.com/:375
+[    3808ms] [INFO] Slow network is detected. See https://www.chromestatus.com/feature/5636954674692096 for more details. Fallback font will be used while loading: https://vowerp.com/assets/fonts/PTSerif-Bold.ttf @ https://vowerp.com/:375
+[    3808ms] [INFO] Slow network is detected. See https://www.chromestatus.com/feature/5636954674692096 for more details. Fallback font will be used while loading: https://vowerp.com/assets/fonts/MrDafoe-Regular.ttf @ https://vowerp.com/:375
+[    7333ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ https://vowerp.com/favicon.ico:0

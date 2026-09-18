@@ -1,0 +1,31 @@
+- generic [active] [ref=f7e1]:
+  - generic [ref=f7e2]:
+    - button "User Settings" [ref=f7e6] [cursor=pointer]
+    - generic [ref=f7e12]:
+      - navigation "Portal menu" [ref=f7e13]:
+        - generic [ref=f7e14]:
+          - img "InfoSky Global" [ref=f7e15]:
+            - generic [ref=f7e20]: S
+          - button "Hide menu" [expanded] [ref=f7e25] [cursor=pointer]
+      - main [ref=f7e28]:
+        - generic [ref=f7e29]:
+          - heading "Wages / Salary Process" [level=1] [ref=f7e30]
+          - generic [ref=f7e31]:
+            - generic [ref=f7e32]:
+              - generic [ref=f7e33]: Processing
+              - generic [ref=f7e34]:
+                - combobox "Processing Wages" [ref=f7e35] [cursor=pointer]: Wages
+                - textbox [aria-hidden]: W
+                - group [aria-hidden]:
+                  - generic: Processing
+            - generic [ref=f7e36]:
+              - generic: Period
+              - generic [ref=f7e37]:
+                - combobox "Period" [disabled] [ref=f7e38]
+                - textbox [disabled] [aria-hidden]
+                - group [aria-hidden]:
+                  - generic: Period
+            - button "Submit" [disabled]
+    - button "Raise a support ticket" [ref=f7e39] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list

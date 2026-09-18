@@ -1,0 +1,24 @@
+[     136ms] [LOG] [Fast Refresh] rebuilding @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[     188ms] [LOG] [Fast Refresh] done in 152ms @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[     629ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[     836ms] [LOG] [HMR] connected @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  166664ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  166670ms] [LOG] [Fast Refresh] done in 106ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  176806ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  176807ms] [LOG] [Fast Refresh] done in 105ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  340429ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://nbjcl.localhost:3001/api/authRoutes/login:0
+[  340432ms] [LOG] Login API Response: {data: Object, status: 401, statusText: Unauthorized, headers: AxiosHeaders, config: Object} @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  356582ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://nbjcl.localhost:3001/api/authRoutes/login:0
+[  356583ms] [LOG] Login API Response: {data: Object, status: 401, statusText: Unauthorized, headers: AxiosHeaders, config: Object} @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  407129ms] [LOG] Subdomain: nbjcl @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  407129ms] [LOG] API_URL for all /api @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  407129ms] [LOG] API Request Data: {username: sls@vowerp.com, password: sls#123456, logintype: admin, rememberMe: false} path /api/authRoutes/loginconsole @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  407568ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://nbjcl.localhost:3001/api/authRoutes/loginconsole:0
+[  407569ms] [LOG] API Response: {data: Object, status: 401, statusText: Unauthorized, headers: AxiosHeaders, config: Object} @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  407569ms] [LOG] Cookies after login:  @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  407569ms] [LOG] Login unsuccessful @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  429025ms] [LOG] Login API Response: {data: Object, status: 200, statusText: OK, headers: AxiosHeaders, config: Object} @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  429382ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  429495ms] [LOG] [Fast Refresh] done in 217ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  429783ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  429925ms] [LOG] [HMR] connected @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297

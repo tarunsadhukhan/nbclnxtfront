@@ -833,6 +833,198 @@ export const fetchMachinesByDesignation = async (
   );
 };
 
+/** Rebuilds pay_attendance for a branch + date range from approved daily attendance. */
+export const processDailyWages = async (payload: {
+  branch_id: number;
+  from_date: string;
+  to_date: string;
+  /** shift_mst.shift_id — processes every spell under it. Omit for all shifts. */
+  shift_id?: number;
+}) => fetchWithCookie(apiRoutesPortalMasters.DAILY_WAGES_PROCESS, "POST", payload);
+
+/** Active shift_mst rows for a branch: [{ shift_id, shift_name }]. */
+export const fetchDailyWagesShifts = async (branchId: string | number) =>
+  fetchWithCookie(
+    `${apiRoutesPortalMasters.DAILY_WAGES_SHIFTS}?branch_id=${branchId}`,
+    "GET",
+  );
+
+// ─── Wages / Salary Process (pay_period -> pay_attendance amounts) ─
+
+/** W = wages (pay_period.code P...), S = salary (code S...). */
+export type WagesProcessType = "W" | "S";
+
+export interface PayPeriodOption {
+  id: number;
+  code: string;
+  name: string | null;
+  from_date: string;
+  to_date: string;
+}
+
+export type WageAmountField =
+  | "FBasic_Amt"
+  | "DA_Amt"
+  | "NS_Amt"
+  | "OT_Amt"
+  | "BeamChange_Amt"
+  | "MiscEarn"
+  | "Oil_Amt";
+
+export interface WagesSalaryResult {
+  code: string;
+  from_date: string;
+  to_date: string;
+  processed: number;
+  /** employees with attendance but no worker_rate_mst row: basic/DA stay 0 */
+  without_rate: number;
+  totals: Record<WageAmountField, number>;
+  /** paywages register rows written by step 2 (SP_WagesProcessing_GetAtten) */
+  register: {
+    employees: number;
+    hours: Record<"Work_HR" | "GP_HR" | "Holiday_HR" | "STL_HR" | "NS_HR" | "OT_HR" | "Work_Day", number>;
+    /** step 4 (SP_WagesProcessing_GetRate) totals */
+    amounts: Record<"Wages_Gross" | "PFEmployee" | "ESI_Amt" | "PTax_Amt" | "TotalDeduction" | "NetPayable", number>;
+  };
+  /** paywagesot OT payment rows written by step 3 (SP_WagesProcessing_GetOthAmt) */
+  ot: { employees: number; hours: number; amount: number; payable: number };
+}
+
+export const fetchWagesSalaryPeriods = async (branchId: string | number, processType: WagesProcessType) =>
+  fetchWithCookie<{ data: PayPeriodOption[] }>(
+    `${apiRoutesPortalMasters.WAGES_SALARY_PERIODS}?branch_id=${branchId}&process_type=${processType}`,
+    "GET",
+  );
+
+export const processWagesSalary = async (payload: {
+  branch_id: number;
+  pay_period_id: number;
+  process_type: WagesProcessType;
+}) =>
+  fetchWithCookie<{ data: WagesSalaryResult }>(apiRoutesPortalMasters.WAGES_SALARY_PROCESS, "POST", payload);
+
+// ─── Holiday Process Entry (hrms_holiday_transactions) ─────────────
+
+export interface HolidayOption {
+  holiday_id: number;
+  holiday: string | null;
+  holiday_date: string | null;
+}
+
+export interface HolidayTran {
+  holiday_tran_id: number;
+  eb_id: number;
+  holiday_hours: number | null;
+  /** 1 = keyed on the entry grid, 0 = written by the holiday process */
+  manual: number;
+  emp_label: string;
+}
+
+/** Holidays (latest date first) + employee options for the company/branch. */
+export const fetchHolidayProcessSetup = async (coId: string | number, branchId: string | number) =>
+  fetchWithCookie<{
+    data: { holidays: HolidayOption[]; employees: { value: string; label: string }[] };
+  }>(`${apiRoutesPortalMasters.HOLIDAY_PROCESS_SETUP}?co_id=${coId}&branch_id=${branchId}`, "GET");
+
+export const fetchHolidayTrans = async (branchId: string | number, holidayId: number) =>
+  fetchWithCookie<{ data: HolidayTran[] }>(
+    `${apiRoutesPortalMasters.HOLIDAY_TRAN_BY_HOLIDAY}?branch_id=${branchId}&holiday_id=${holidayId}`,
+    "GET",
+  );
+
+/** Insert (no holiday_tran_id) or update one manual holiday-hours row. */
+export const saveHolidayTran = async (payload: {
+  branch_id: number;
+  holiday_id: number;
+  eb_id: number;
+  holiday_hours: number;
+  holiday_tran_id?: number;
+}) =>
+  fetchWithCookie<{ holiday_tran_id: number }>(
+    apiRoutesPortalMasters.HOLIDAY_TRAN_SAVE,
+    "POST",
+    payload,
+  );
+
+export const deleteHolidayTran = async (holidayTranId: number) =>
+  fetchWithCookie(`${apiRoutesPortalMasters.HOLIDAY_TRAN_DELETE}/${holidayTranId}`, "DELETE");
+
+/** Legacy SP_HolidayProcessing: replaces the holiday's processed (manual = 0) rows. */
+export const processHoliday = async (payload: { branch_id: number; holiday_id: number }) =>
+  fetchWithCookie<{ data: { attendance_date: string; eligible: number } }>(
+    apiRoutesPortalMasters.HOLIDAY_PROCESS,
+    "POST",
+    payload,
+  );
+
+// ─── Adjustment Entries (adjustments) ──────────────────────────────
+
+export interface Adjustment {
+  adjustment_id: number;
+  eb_id: number;
+  adj_hours: number | null;
+  adj_pf_amt: number | null;
+  adj_npf_amt: number | null;
+  emp_label: string;
+}
+
+/** Employee options for the company/branch. */
+export const fetchAdjustmentSetup = async (coId: string | number, branchId: string | number) =>
+  fetchWithCookie<{ data: { employees: { value: string; label: string }[] } }>(
+    `${apiRoutesPortalMasters.ADJUSTMENT_SETUP}?co_id=${coId}&branch_id=${branchId}`,
+    "GET",
+  );
+
+/** Active adjustments for one date, branch employees only. */
+export const fetchAdjustmentsByDate = async (branchId: string | number, adjDate: string) =>
+  fetchWithCookie<{ data: Adjustment[] }>(
+    `${apiRoutesPortalMasters.ADJUSTMENT_BY_DATE}?branch_id=${branchId}&adj_date=${adjDate}`,
+    "GET",
+  );
+
+/** Insert (no adjustment_id) or update one adjustment row. */
+export const saveAdjustment = async (payload: {
+  branch_id: number;
+  adj_date: string;
+  eb_id: number;
+  adj_hours: number;
+  adj_pf_amt: number;
+  adj_npf_amt: number;
+  adjustment_id?: number;
+}) => fetchWithCookie<{ adjustment_id: number }>(apiRoutesPortalMasters.ADJUSTMENT_SAVE, "POST", payload);
+
+/** Soft delete (status 6). */
+export const deleteAdjustment = async (adjustmentId: number, branchId: number) =>
+  fetchWithCookie(`${apiRoutesPortalMasters.ADJUSTMENT_DELETE}/${adjustmentId}?branch_id=${branchId}`, "DELETE");
+
+// ─── Gate Pass Correction (daily_attendance.idle_hours, status 3) ──
+
+export interface GatePassRow {
+  daily_atten_id: number;
+  eb_no: string;
+  worker_name: string;
+  spell: string;
+  worked_department: string;
+  worked_designation: string;
+  working_hours: number;
+  /** labelled "Gate Pass Hours" */
+  idle_hours: number;
+}
+
+/** Approved, active attendance rows for one branch + date. */
+export const fetchGatePassRows = async (branchId: string | number, attendanceDate: string) =>
+  fetchWithCookie<{ data: GatePassRow[] }>(
+    `${apiRoutesPortalMasters.GATE_PASS_CORRECTION_LIST}?branch_id=${branchId}&attendance_date=${attendanceDate}`,
+    "GET",
+  );
+
+/** All-or-nothing update of idle_hours only. */
+export const saveGatePassRows = async (payload: {
+  branch_id: number;
+  rows: { daily_atten_id: number; idle_hours: number }[];
+}) =>
+  fetchWithCookie<{ saved: number }>(apiRoutesPortalMasters.GATE_PASS_CORRECTION_SAVE, "POST", payload);
+
 // ─── Attendance Checklist (flat register report) ───────────────────
 
 export interface AttendanceRegisterParams {

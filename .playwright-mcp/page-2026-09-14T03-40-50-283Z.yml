@@ -1,0 +1,78 @@
+- generic [ref=f3e1]:
+  - generic [aria-hidden] [ref=f3e2]:
+    - generic [ref=f3e3]:
+      - button [ref=f3e107] [cursor=pointer]: Masters
+      - button [ref=f3e108] [cursor=pointer]: HRMS
+      - button [ref=f3e109] [cursor=pointer]: HRMS Master
+      - button [ref=f3e110] [cursor=pointer]: Production Masters
+      - button [ref=f3e111] [cursor=pointer]: Productions
+      - button [ref=f3e112] [cursor=pointer]: Other Menus
+      - button [ref=f3e113] [cursor=pointer]: Wages Menus
+      - generic [ref=f3e4]:
+        - generic [ref=f3e5]: NORTHBROOK JUTE COMPANY LIMITED · MILL
+        - button [ref=f3e114] [cursor=pointer]: User Settings
+    - generic [ref=f3e12]:
+      - navigation [ref=f3e115]:
+        - generic [ref=f3e14]:
+          - img [ref=f3e116]:
+            - generic [ref=f3e20]: S
+          - generic [ref=f3e22]:
+            - generic [ref=f3e117]: NORTHBROOK JUTE COMPANY LIMITED
+            - generic [ref=f3e24]: MILL
+          - button [expanded] [ref=f3e118] [cursor=pointer]
+        - generic [ref=f3e27]:
+          - generic [ref=f3e64]:
+            - button [ref=f3e119] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e68]: category
+            - button [ref=f3e120] [cursor=pointer]: Masters
+          - generic [ref=f3e70]:
+            - button [ref=f3e121] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e74]: groups
+            - button [ref=f3e122] [cursor=pointer]: HRMS
+          - generic [ref=f3e76]:
+            - button [ref=f3e123] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e80]: badge
+            - button [ref=f3e124] [cursor=pointer]: HRMS Master
+          - generic [ref=f3e82]:
+            - button [ref=f3e125] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e86]: list_alt
+            - button [ref=f3e126] [cursor=pointer]: Production Masters
+          - generic [ref=f3e88]:
+            - button [ref=f3e127] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e92]: description
+            - button [ref=f3e128] [cursor=pointer]: Productions
+          - generic [ref=f3e94]:
+            - button [ref=f3e129] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e98]: description
+            - button [ref=f3e130] [cursor=pointer]: Other Menus
+          - generic [ref=f3e100]:
+            - button [ref=f3e131] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e104]: description
+            - button [ref=f3e132] [cursor=pointer]: Wages Menus
+      - main [ref=f3e28]:
+        - generic [ref=f3e29]:
+          - heading [level=1] [ref=f3e133]: Wages / Salary Process
+          - generic [ref=f3e31]:
+            - generic [ref=f3e32]:
+              - generic [ref=f3e33]: Processing
+              - generic [ref=f3e34]:
+                - combobox [ref=f3e134] [cursor=pointer]: Wages
+                - textbox [aria-hidden]: W
+                - group [aria-hidden]:
+                  - generic: Processing
+            - generic [ref=f3e36]:
+              - generic [ref=f3e135]: Period
+              - generic [ref=f3e37]:
+                - combobox [expanded] [ref=f3e136] [cursor=pointer]
+                - textbox [aria-hidden]
+                - group [aria-hidden]:
+                  - generic: Period
+            - button [disabled]: Submit
+    - button [ref=f3e137] [cursor=pointer]
+  - list
+  - button "Open Next.js Dev Tools" [ref=f3e52] [cursor=pointer]
+  - alert [ref=f3e106]
+  - listbox "Period" [ref=f3e140]:
+    - option "P20260901 — 2026-09-01 to 2026-09-15" [active] [ref=f3e141] [cursor=pointer]
+    - option "P20260802 — 2026-08-16 to 2026-08-31" [ref=f3e142] [cursor=pointer]
+    - option "P20260801 — 2026-08-01 to 2026-08-15" [ref=f3e143] [cursor=pointer]

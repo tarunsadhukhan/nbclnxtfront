@@ -1,0 +1,140 @@
+- generic [active] [ref=f4e1]:
+  - generic [ref=f4e6] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=f4e7]
+    - generic [ref=f4e11]:
+      - button "Open issues overlay" [ref=f4e12]:
+        - generic [ref=f4e13]:
+          - generic [aria-hidden] [ref=f4e14]: "0"
+          - generic [ref=f4e15]: "1"
+        - generic [ref=f4e16]: Issue
+      - button "Collapse issues badge" [ref=f4e17]
+  - generic [ref=f4e20]:
+    - generic [ref=f4e21]:
+      - button "Masters" [ref=f4e191] [cursor=pointer]
+      - button "HRMS" [ref=f4e192] [cursor=pointer]
+      - button "HRMS Master" [ref=f4e193] [cursor=pointer]
+      - button "Production Masters" [ref=f4e194] [cursor=pointer]
+      - button "Productions" [ref=f4e195] [cursor=pointer]
+      - button "Other Menus" [ref=f4e196] [cursor=pointer]
+      - button "Wages Menus" [ref=f4e197] [cursor=pointer]
+      - generic [ref=f4e29]:
+        - generic [ref=f4e30]: NORTHBROOK JUTE COMPANY LIMITED · MILL
+        - button "User Settings" [ref=f4e198] [cursor=pointer]
+    - generic [ref=f4e37]:
+      - navigation "Portal menu" [ref=f4e199]:
+        - generic [ref=f4e39]:
+          - img "InfoSky Global" [ref=f4e200]:
+            - generic [ref=f4e45]: S
+          - generic [ref=f4e47]:
+            - generic "NORTHBROOK JUTE COMPANY LIMITED" [ref=f4e201]
+            - generic [ref=f4e49]: MILL
+          - button "Hide menu" [expanded] [ref=f4e202] [cursor=pointer]
+        - generic [ref=f4e52]:
+          - generic [ref=f4e53]:
+            - button "Expand Masters" [ref=f4e203] [cursor=pointer]
+            - generic [aria-hidden] [ref=f4e57]: category
+            - button "Masters" [ref=f4e204] [cursor=pointer]
+          - generic [ref=f4e59]:
+            - button "Collapse HRMS" [expanded] [ref=f4e205] [cursor=pointer]
+            - generic [aria-hidden] [ref=f4e63]: groups
+            - button "HRMS" [ref=f4e206] [cursor=pointer]
+          - generic [ref=f4e65]:
+            - generic [aria-hidden] [ref=f4e66]: assessment
+            - button "Pay Register" [ref=f4e207] [cursor=pointer]
+          - generic [ref=f4e68]:
+            - generic [aria-hidden] [ref=f4e69]: event_busy
+            - button "Leave Request" [ref=f4e208] [cursor=pointer]
+          - generic [ref=f4e71]:
+            - generic [aria-hidden] [ref=f4e72]: payments
+            - button "Pay Roll" [ref=f4e209] [cursor=pointer]
+          - generic [ref=f4e74]:
+            - generic [aria-hidden] [ref=f4e75]: event_available
+            - button "Bio Metric Attendance" [ref=f4e210] [cursor=pointer]
+          - generic [ref=f4e77]:
+            - generic [aria-hidden] [ref=f4e78]: how_to_reg
+            - button "On boarding" [ref=f4e211] [cursor=pointer]
+          - generic [ref=f4e80]:
+            - generic [aria-hidden] [ref=f4e81]: event_available
+            - button "Attendance Calendar" [ref=f4e212] [cursor=pointer]
+          - generic [ref=f4e83]:
+            - button "Expand HRMS Reports" [ref=f4e213] [cursor=pointer]
+            - generic [aria-hidden] [ref=f4e87]: assessment
+            - button "HRMS Reports" [ref=f4e214] [cursor=pointer]
+          - generic [ref=f4e89]:
+            - generic [aria-hidden] [ref=f4e90]: restaurant
+            - button "Canteen Details" [ref=f4e215] [cursor=pointer]
+          - generic [ref=f4e92]:
+            - generic [aria-hidden] [ref=f4e93]: event_available
+            - button "Attendance Open Close" [ref=f4e216] [cursor=pointer]
+          - generic [ref=f4e95]:
+            - button "Expand HRMS Master" [ref=f4e217] [cursor=pointer]
+            - generic [aria-hidden] [ref=f4e99]: badge
+            - button "HRMS Master" [ref=f4e218] [cursor=pointer]
+          - generic [ref=f4e101]:
+            - button "Expand Production Masters" [ref=f4e219] [cursor=pointer]
+            - generic [aria-hidden] [ref=f4e105]: list_alt
+            - button "Production Masters" [ref=f4e220] [cursor=pointer]
+          - generic [ref=f4e107]:
+            - button "Expand Productions" [ref=f4e221] [cursor=pointer]
+            - generic [aria-hidden] [ref=f4e111]: description
+            - button "Productions" [ref=f4e222] [cursor=pointer]
+          - generic [ref=f4e113]:
+            - button "Expand Other Menus" [ref=f4e223] [cursor=pointer]
+            - generic [aria-hidden] [ref=f4e117]: description
+            - button "Other Menus" [ref=f4e224] [cursor=pointer]
+          - generic [ref=f4e119]:
+            - button "Expand Wages Menus" [ref=f4e225] [cursor=pointer]
+            - generic [aria-hidden] [ref=f4e123]: description
+            - button "Wages Menus" [ref=f4e226] [cursor=pointer]
+      - main [ref=f4e125]:
+        - generic [ref=f4e126]:
+          - heading "Wages / Salary Process" [level=1] [ref=f4e227]
+          - generic [ref=f4e128]:
+            - generic [ref=f4e129]:
+              - generic [ref=f4e130]: Processing
+              - generic [ref=f4e131]:
+                - combobox "Processing Wages" [ref=f4e228] [cursor=pointer]: Wages
+                - textbox [aria-hidden]: W
+                - group [aria-hidden]:
+                  - generic: Processing
+            - generic [ref=f4e133]:
+              - generic [ref=f4e183]: Period
+              - generic [ref=f4e134]:
+                - combobox "Period P20260802 — 2026-08-16 to 2026-08-31" [ref=f4e229] [cursor=pointer]: P20260802 — 2026-08-16 to 2026-08-31
+                - textbox [aria-hidden]: "20"
+                - group [aria-hidden]:
+                  - generic: Period
+            - button "Submit" [ref=f4e230]
+          - generic [ref=f4e232]:
+            - 'heading "P20260802: 2026-08-16 to 2026-08-31" [level=6] [ref=f4e233]'
+            - paragraph [ref=f4e234]: 8373 attendance records processed — 11 employees have no worker rate (basic/DA left 0)
+            - table [ref=f4e235]:
+              - rowgroup [ref=f4e236]:
+                - row [ref=f4e237]:
+                  - cell "Basic" [ref=f4e238]
+                  - cell "7,21,602.26" [ref=f4e239]
+                - row [ref=f4e240]:
+                  - cell "DA" [ref=f4e241]
+                  - cell "43,48,978.54" [ref=f4e242]
+                - row [ref=f4e243]:
+                  - cell "Night Shift" [ref=f4e244]
+                  - cell "0.00" [ref=f4e245]
+                - row [ref=f4e246]:
+                  - cell "Overtime" [ref=f4e247]
+                  - cell "83.93" [ref=f4e248]
+                - row [ref=f4e249]:
+                  - cell "Beam Change" [ref=f4e250]
+                  - cell "285.60" [ref=f4e251]
+                - row [ref=f4e252]:
+                  - cell "Misc. Earning" [ref=f4e253]
+                  - cell "773.40" [ref=f4e254]
+                - row [ref=f4e255]:
+                  - cell "Oil" [ref=f4e256]
+                  - cell "1,209.88" [ref=f4e257]
+          - alert [ref=f4e258]:
+            - generic [ref=f4e262]: Processed 8373 attendance records
+            - button "Close" [ref=f4e264] [cursor=pointer]
+    - button "Raise a support ticket" [ref=f4e231] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list
+  - alert [ref=f4e144]

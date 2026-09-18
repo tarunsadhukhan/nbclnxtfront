@@ -1,0 +1,43 @@
+[     340ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    3242ms] [LOG] [Fast Refresh] done in 3015ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    4771ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[    5678ms] [LOG] [HMR] connected @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   12084ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   14495ms] [LOG] [Fast Refresh] done in 2537ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   25014ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   26773ms] [LOG] [Fast Refresh] done in 1869ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   34110ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://nbjcl.localhost:3001/api/admin/PortalData/portal_menu_permissions:0
+[   55866ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   57895ms] [LOG] [Fast Refresh] done in 2144ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   72091ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   74985ms] [LOG] [Fast Refresh] done in 3011ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   93726ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   95951ms] [LOG] [Fast Refresh] done in 2397ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  121719ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  127284ms] [LOG] [Fast Refresh] done in 5675ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[ 1225308ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[ 1235041ms] TypeError: Cannot read properties of undefined (reading 'Wages_Gross')
+    at WagesSalaryProcessPage (http://nbjcl.localhost:3001/_next/static/chunks/_b3d1f5b0._.js?id=%255Bproject%255D%252Fsrc%252Fapp%252Fdashboardportal%252Fwagesmenus%252FwagesSalaryProcess%252Fpage.tsx+%255Bapp-client%255D+%2528ecmascript%2529:305:53)
+    at Object.react_stack_bottom_frame (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:14826:24)
+    at renderWithHooks (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:4651:24)
+    at updateFunctionComponent (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:6112:21)
+    at beginWork (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:6708:24)
+    at runWithFiberInDEV (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:965:74)
+    at performUnitOfWork (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:9562:97)
+    at workLoopSync (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:9456:40)
+    at renderRootSync (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:9440:13)
+    at performWorkOnRoot (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:9105:47)
+    at performSyncWorkOnRoot (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:10238:9)
+    at flushSyncWorkAcrossRoots_impl (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:10154:316)
+    at flushSyncWork$1 (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:9237:86)
+    at Object.scheduleRefresh (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_react-dom_aa2189c6._.js:299:13)
+    at http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_0a376505._.js:391:33
+    at Set.forEach (<anonymous>)
+    at Object.performReactRefresh (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_0a376505._.js:384:38)
+    at applyUpdate (http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_0a376505._.js:878:31)
+    at http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_compiled_0a376505._.js:886:13
+[ 1235060ms] [LOG] [Fast Refresh] done in 9388ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[ 1235506ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[ 1236573ms] [LOG] [Fast Refresh] done in 1180ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[ 1325317ms] [LOG] [Fast Refresh] rebuilding @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[ 1325327ms] [LOG] [Fast Refresh] done in 115ms @ http://nbjcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297

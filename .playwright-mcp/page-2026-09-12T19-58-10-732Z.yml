@@ -1,0 +1,60 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - button "User Settings" [ref=e6] [cursor=pointer]
+    - generic [ref=e12]:
+      - navigation "Portal menu" [ref=e13]:
+        - generic [ref=e14]:
+          - img "InfoSky Global" [ref=e15]:
+            - generic [ref=e20]: S
+          - button "Hide menu" [expanded] [ref=e25] [cursor=pointer]
+      - main [ref=e28]:
+        - generic [ref=e29]:
+          - generic [ref=e30]:
+            - img "InfoSky Global" [ref=e31]:
+              - generic [ref=e36]: S
+            - generic [ref=e38]: InfoSky Global - [Beaming Production]
+            - generic [aria-hidden] [ref=e39]:
+              - generic [ref=e40]: –
+              - generic [ref=e41]: ▫
+              - generic [ref=e42]: ✕
+          - generic [ref=e43]:
+            - generic [ref=e44]: Dashboard
+            - generic [ref=e45]: Beaming Production ✕
+          - generic [ref=e46]:
+            - button "New" [disabled] [ref=e47]
+            - button "Edit" [disabled] [ref=e50]
+            - button "View" [disabled] [ref=e55]
+            - button "Refresh" [ref=e61] [cursor=pointer]
+            - button "Export Excel" [disabled] [ref=e68]
+            - button "Print" [ref=e73] [cursor=pointer]
+            - button "Columns" [ref=e80] [cursor=pointer]
+            - button "Filter" [ref=e84] [cursor=pointer]
+            - button "Close" [ref=e89] [cursor=pointer]
+          - generic [ref=e95]:
+            - generic [ref=e96]: Search
+            - generic [ref=e98]:
+              - textbox "Search by machine, shift or period" [ref=e99]
+              - group [aria-hidden]
+            - button "Search" [ref=e100] [cursor=pointer]
+            - button "Clear" [ref=e104] [cursor=pointer]
+          - generic [ref=e110]:
+            - button "«" [disabled] [ref=e111]
+            - button "‹" [disabled] [ref=e112]
+            - button "›" [disabled] [ref=e113]
+            - button "»" [disabled] [ref=e114]
+            - generic [ref=e115]: "Page Size:"
+            - combobox [ref=e116]:
+              - option "10" [selected]
+              - option "20"
+              - option "50"
+              - option "100"
+            - generic [ref=e117]: Page 1 of 1 (0 Records)
+          - generic [ref=e118]:
+            - generic [ref=e119]: "User: —"
+            - generic [ref=e120]: "Company: —"
+            - generic [ref=e121]: "Branch: —"
+            - generic [ref=e125]: "Tenant: —"
+    - button "Raise a support ticket" [ref=e126] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list
+  - button "Open Next.js Dev Tools" [ref=e139] [cursor=pointer]

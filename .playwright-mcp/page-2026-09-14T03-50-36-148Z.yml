@@ -1,0 +1,107 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]:
+    - generic [ref=f3e3]:
+      - button "Masters" [ref=f3e144] [cursor=pointer]
+      - button "HRMS" [ref=f3e145] [cursor=pointer]
+      - button "HRMS Master" [ref=f3e146] [cursor=pointer]
+      - button "Production Masters" [ref=f3e147] [cursor=pointer]
+      - button "Productions" [ref=f3e148] [cursor=pointer]
+      - button "Other Menus" [ref=f3e149] [cursor=pointer]
+      - button "Wages Menus" [ref=f3e150] [cursor=pointer]
+      - generic [ref=f3e4]:
+        - generic [ref=f3e5]: NORTHBROOK JUTE COMPANY LIMITED · MILL
+        - button "User Settings" [ref=f3e151] [cursor=pointer]
+    - generic [ref=f3e12]:
+      - navigation "Portal menu" [ref=f3e152]:
+        - generic [ref=f3e14]:
+          - img "InfoSky Global" [ref=f3e153]:
+            - generic [ref=f3e20]: S
+          - generic [ref=f3e22]:
+            - generic "NORTHBROOK JUTE COMPANY LIMITED" [ref=f3e154]
+            - generic [ref=f3e24]: MILL
+          - button "Hide menu" [expanded] [ref=f3e155] [cursor=pointer]
+        - generic [ref=f3e27]:
+          - generic [ref=f3e64]:
+            - button "Expand Masters" [ref=f3e156] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e68]: category
+            - button "Masters" [ref=f3e157] [cursor=pointer]
+          - generic [ref=f3e70]:
+            - button "Expand HRMS" [ref=f3e158] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e74]: groups
+            - button "HRMS" [ref=f3e159] [cursor=pointer]
+          - generic [ref=f3e76]:
+            - button "Expand HRMS Master" [ref=f3e160] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e80]: badge
+            - button "HRMS Master" [ref=f3e161] [cursor=pointer]
+          - generic [ref=f3e82]:
+            - button "Expand Production Masters" [ref=f3e162] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e86]: list_alt
+            - button "Production Masters" [ref=f3e163] [cursor=pointer]
+          - generic [ref=f3e88]:
+            - button "Expand Productions" [ref=f3e164] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e92]: description
+            - button "Productions" [ref=f3e165] [cursor=pointer]
+          - generic [ref=f3e94]:
+            - button "Expand Other Menus" [ref=f3e166] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e98]: description
+            - button "Other Menus" [ref=f3e167] [cursor=pointer]
+          - generic [ref=f3e100]:
+            - button "Expand Wages Menus" [ref=f3e168] [cursor=pointer]
+            - generic [aria-hidden] [ref=f3e104]: description
+            - button "Wages Menus" [ref=f3e169] [cursor=pointer]
+      - main [ref=f3e28]:
+        - generic [ref=f3e29]:
+          - heading "Wages / Salary Process" [level=1] [ref=f3e170]
+          - generic [ref=f3e31]:
+            - generic [ref=f3e32]:
+              - generic [ref=f3e33]: Processing
+              - generic [ref=f3e34]:
+                - combobox "Processing Wages" [ref=f3e171] [cursor=pointer]: Wages
+                - textbox [aria-hidden]: W
+                - group [aria-hidden]:
+                  - generic: Processing
+            - generic [ref=f3e36]:
+              - generic [ref=f3e135]: Period
+              - generic [ref=f3e37]:
+                - combobox "Period P20260901 — 2026-09-01 to 2026-09-15" [ref=f3e172] [cursor=pointer]: P20260901 — 2026-09-01 to 2026-09-15
+                - textbox [aria-hidden]: "21"
+                - group [aria-hidden]:
+                  - generic: Period
+            - button "Submit" [ref=f3e173]
+          - generic [ref=f3e193]:
+            - 'heading "P20260901: 2026-09-01 to 2026-09-15" [level=6] [ref=f3e194]'
+            - paragraph [ref=f3e195]: 178 attendance records processed
+            - paragraph [ref=f3e196]: "Wages register (paywages): 180 employees — 1,429 work hrs, 178 work days"
+            - paragraph [ref=f3e197]: "Wages: gross 1,09,392.04, deductions 12,030.00, net payable 97,371"
+            - paragraph [ref=f3e198]: "OT (paywagesot): 0 employees — 0 hrs, payable 0.00"
+            - table [ref=f3e199]:
+              - rowgroup [ref=f3e200]:
+                - row [ref=f3e201]:
+                  - cell "Basic" [ref=f3e202]
+                  - cell "17,583.62" [ref=f3e203]
+                - row [ref=f3e204]:
+                  - cell "DA" [ref=f3e205]
+                  - cell "91,771.50" [ref=f3e206]
+                - row [ref=f3e207]:
+                  - cell "Night Shift" [ref=f3e208]
+                  - cell "0.00" [ref=f3e209]
+                - row [ref=f3e210]:
+                  - cell "Overtime" [ref=f3e211]
+                  - cell "0.00" [ref=f3e212]
+                - row [ref=f3e213]:
+                  - cell "Beam Change" [ref=f3e214]
+                  - cell "0.00" [ref=f3e215]
+                - row [ref=f3e216]:
+                  - cell "Misc. Earning" [ref=f3e217]
+                  - cell "1.92" [ref=f3e218]
+                - row [ref=f3e219]:
+                  - cell "Oil" [ref=f3e220]
+                  - cell "0.00" [ref=f3e221]
+          - alert [ref=f3e222]:
+            - generic [ref=f3e226]: Processed 178 attendance records
+            - button "Close" [ref=f3e228] [cursor=pointer]
+    - button "Raise a support ticket" [ref=f3e174] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list
+  - button "Open Next.js Dev Tools" [ref=f3e52] [cursor=pointer]
+  - alert [ref=f3e106]

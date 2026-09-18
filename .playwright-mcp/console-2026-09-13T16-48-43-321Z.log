@@ -1,0 +1,14 @@
+[   18935ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   19287ms] [LOG] [HMR] connected @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   20397ms] [LOG] [Fast Refresh] rebuilding @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   31669ms] [LOG] [Fast Refresh] done in 11374ms @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   33402ms] [LOG] [Fast Refresh] rebuilding @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   35166ms] [LOG] [Fast Refresh] done in 1870ms @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   36788ms] [LOG] [Fast Refresh] rebuilding @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[   37064ms] [LOG] [Fast Refresh] done in 378ms @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  104971ms] [LOG] [Fast Refresh] rebuilding @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  106032ms] [LOG] [Fast Refresh] done in 1169ms @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  107167ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://nbcl.localhost:3001/api/authRoutes/login:0
+[  107169ms] [LOG] Login API Response: {data: Object, status: 500, statusText: Internal Server Error, headers: AxiosHeaders, config: Object} @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  170406ms] [LOG] [Fast Refresh] rebuilding @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
+[  170551ms] [LOG] [Fast Refresh] done in 250ms @ http://nbcl.localhost:3001/_next/static/chunks/5ce7f_next_dist_b6c93851._.js:2297
