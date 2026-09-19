@@ -1,0 +1,2 @@
+[   20418ms] [LOG] Login API Response: {data: Object, status: 200, statusText: OK, headers: eC, config: Object} @ http://nbjcl.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   21941ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://nbjcl.punrasargroup.com/api/admin/PortalData/portal_menu_permissions:0

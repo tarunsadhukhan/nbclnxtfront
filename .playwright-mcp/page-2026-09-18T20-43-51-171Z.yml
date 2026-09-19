@@ -1,0 +1,63 @@
+- generic [active] [ref=f8e1]:
+  - generic [ref=f8e2]:
+    - generic [ref=f8e3]:
+      - button "Masters" [ref=f8e4] [cursor=pointer]
+      - button "HRMS" [ref=f8e5] [cursor=pointer]
+      - button "HRMS Master" [ref=f8e6] [cursor=pointer]
+      - button "Production Masters" [ref=f8e7] [cursor=pointer]
+      - button "Productions" [ref=f8e8] [cursor=pointer]
+      - button "Other Menus" [ref=f8e9] [cursor=pointer]
+      - button "Wages Menus" [ref=f8e10] [cursor=pointer]
+      - generic [ref=f8e11]:
+        - generic [ref=f8e12]: NORTHBROOK JUTE COMPANY LIMITED · MILL
+        - button "User Settings" [ref=f8e13] [cursor=pointer]
+    - generic [ref=f8e19]:
+      - navigation "Portal menu" [ref=f8e20]:
+        - generic [ref=f8e21]:
+          - img "InfoSky Global" [ref=f8e22]:
+            - generic [ref=f8e27]: S
+          - generic [ref=f8e29]:
+            - generic "NORTHBROOK JUTE COMPANY LIMITED" [ref=f8e30]
+            - generic [ref=f8e31]: MILL
+          - button "Hide menu" [expanded] [ref=f8e32] [cursor=pointer]
+        - generic [ref=f8e34]:
+          - generic [ref=f8e35]:
+            - button "Expand Masters" [ref=f8e36] [cursor=pointer]
+            - generic [aria-hidden] [ref=f8e39]: category
+            - button "Masters" [ref=f8e40] [cursor=pointer]
+          - generic [ref=f8e41]:
+            - button "Expand HRMS" [ref=f8e42] [cursor=pointer]
+            - generic [aria-hidden] [ref=f8e45]: groups
+            - button "HRMS" [ref=f8e46] [cursor=pointer]
+          - generic [ref=f8e47]:
+            - button "Expand HRMS Master" [ref=f8e48] [cursor=pointer]
+            - generic [aria-hidden] [ref=f8e51]: badge
+            - button "HRMS Master" [ref=f8e52] [cursor=pointer]
+          - generic [ref=f8e53]:
+            - button "Expand Production Masters" [ref=f8e54] [cursor=pointer]
+            - generic [aria-hidden] [ref=f8e57]: list_alt
+            - button "Production Masters" [ref=f8e58] [cursor=pointer]
+          - generic [ref=f8e59]:
+            - button "Expand Productions" [ref=f8e60] [cursor=pointer]
+            - generic [aria-hidden] [ref=f8e63]: description
+            - button "Productions" [ref=f8e64] [cursor=pointer]
+          - generic [ref=f8e65]:
+            - button "Expand Other Menus" [ref=f8e66] [cursor=pointer]
+            - generic [aria-hidden] [ref=f8e69]: description
+            - button "Other Menus" [ref=f8e70] [cursor=pointer]
+          - generic [ref=f8e71]:
+            - button "Expand Wages Menus" [ref=f8e72] [cursor=pointer]
+            - generic [aria-hidden] [ref=f8e75]: description
+            - button "Wages Menus" [ref=f8e76] [cursor=pointer]
+      - main [ref=f8e77]:
+        - generic [ref=f8e79]:
+          - img "InfoSky Global" [ref=f8e83]:
+            - generic [ref=f8e88]: S
+          - heading "IS ERP SOFTWARE" [level=1] [ref=f8e90]
+          - paragraph [ref=f8e92]: INFOSKY GLOBAL
+          - paragraph [ref=f8e93]: IT SOLUTIONS
+          - paragraph [ref=f8e94]: © 2026 InfoSky Global IT Solutions. All rights reserved.
+    - button "Raise a support ticket" [ref=f8e95] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list
+  - alert [ref=f8e103]

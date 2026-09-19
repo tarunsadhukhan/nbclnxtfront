@@ -1,0 +1,61 @@
+- generic [active] [ref=f9e1]:
+  - generic [ref=f9e2]:
+    - button "User Settings" [ref=f9e6] [cursor=pointer]
+    - generic [ref=f9e12]:
+      - navigation "Portal menu" [ref=f9e13]:
+        - generic [ref=f9e14]:
+          - img "InfoSky Global" [ref=f9e15]:
+            - generic [ref=f9e20]: S
+          - button "Hide menu" [expanded] [ref=f9e25] [cursor=pointer]
+      - main [ref=f9e28]:
+        - generic [ref=f9e29]:
+          - generic [ref=f9e30]:
+            - img "InfoSky Global" [ref=f9e31]:
+              - generic [ref=f9e36]: S
+            - generic [ref=f9e38]: InfoSky Global - [Item Master]
+            - generic [aria-hidden] [ref=f9e39]:
+              - generic [ref=f9e40]: –
+              - generic [ref=f9e41]: ▫
+              - generic [ref=f9e42]: ✕
+          - generic [ref=f9e43]:
+            - generic [ref=f9e44]: Dashboard
+            - generic [ref=f9e45]: Item Master ✕
+          - generic [ref=f9e46]:
+            - button "New" [disabled] [ref=f9e47]
+            - button "Edit" [disabled] [ref=f9e50]
+            - button "View" [disabled] [ref=f9e55]
+            - button "Refresh" [ref=f9e61] [cursor=pointer]
+            - button "Export Excel" [disabled] [ref=f9e68]
+            - button "Print" [ref=f9e73] [cursor=pointer]
+            - button "Columns" [ref=f9e80] [cursor=pointer]
+            - button "Filter" [ref=f9e84] [cursor=pointer]
+            - button "Close" [ref=f9e89] [cursor=pointer]
+          - generic [ref=f9e94]:
+            - button "Bulk Create" [ref=f9e95]
+            - generic [ref=f9e96]:
+              - generic [ref=f9e97]: Search
+              - generic [ref=f9e99]:
+                - textbox "Search items" [ref=f9e100]
+                - group [aria-hidden]
+              - button "Search" [ref=f9e101] [cursor=pointer]
+              - button "Clear" [ref=f9e105] [cursor=pointer]
+          - generic [ref=f9e111]:
+            - button "«" [disabled] [ref=f9e112]
+            - button "‹" [disabled] [ref=f9e113]
+            - button "›" [disabled] [ref=f9e114]
+            - button "»" [disabled] [ref=f9e115]
+            - generic [ref=f9e116]: "Page Size:"
+            - combobox [ref=f9e117]:
+              - option "10" [selected]
+              - option "20"
+              - option "50"
+              - option "100"
+            - generic [ref=f9e118]: Page 1 of 1 (0 Records)
+          - generic [ref=f9e119]:
+            - generic [ref=f9e120]: "User: —"
+            - generic [ref=f9e121]: "Company: —"
+            - generic [ref=f9e122]: "Branch: —"
+            - generic [ref=f9e126]: "Tenant: —"
+    - button "Raise a support ticket" [ref=f9e127] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list
