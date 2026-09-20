@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 }); */
 
 export const metadata: Metadata = {
-  title: "InfoSky Global IT Solutions",
+  title: "InfoSky Global IT Solutions LLP",
   description: "ERP",
   // Tab icon comes from src/app/icon.svg (Next file convention) — the InfoSky mark
   // used on the login page.

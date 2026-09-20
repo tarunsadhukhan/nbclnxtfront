@@ -6,9 +6,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { ChevronDown, ChevronRight, Menu } from "lucide-react";
 import { normalisePortalPath } from "@/utils/portalPermissions";
 import { useSidebarContext, type MenuItem } from "@/components/dashboard/sidebarContext";
-import useCompanyLogo from "@/hooks/useCompanyLogo";
 import { resolveMenuIcon } from "@/components/dashboard/menuIcon";
-import InfoSkyMark from "@/components/ui/InfoSkyMark";
+import CompanyMark from "@/components/ui/CompanyMark";
 import { brand } from "@/styles/brand";
 
 /** Navigation rail surface colours, drawn from the InfoSky brand palette. */
@@ -172,7 +171,7 @@ function TreeNode({ menu, depth, childrenOf, expanded, onToggle, activePath }: T
  *
  * Render-only for menu data: `ClassicTopBar` owns the menu/permission fetch and
  * expand state lives in `SidebarContext` (already persisted to localStorage).
- * The company logo comes from the existing `useCompanyLogo` hook.
+ * The company logo (with its InfoSky fallback) comes from `CompanyMark`.
  */
 export default function ClassicSidebar() {
   const pathname = usePathname();
@@ -207,8 +206,6 @@ export default function ClassicSidebar() {
       return next;
     });
   }, []);
-
-  const logo = useCompanyLogo(selectedCompany?.co_id);
 
   const childrenOf = useCallback(
     (parentId: number) => (availableMenus ?? []).filter((m) => m.menu_parent_id === parentId),
@@ -293,18 +290,7 @@ export default function ClassicSidebar() {
           borderBottom: `1px solid ${rail.divider}`,
         }}
       >
-        {/* A company that has uploaded a co_logo (base64 data URI) shows it;
-            everyone else gets the InfoSky mark rather than a blank box. */}
-        {logo ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={logo}
-            alt=""
-            style={{ width: 30, height: 30, objectFit: "contain", flex: "0 0 30px", borderRadius: 3, background: "#fff" }}
-          />
-        ) : (
-          <InfoSkyMark size={30} navy={rail.textStrong} green={brand.greenLight} />
-        )}
+        <CompanyMark size={30} navy={rail.textStrong} green={brand.greenLight} />
 
         <Box sx={{ minWidth: 0, flex: 1 }}>
           <Box
