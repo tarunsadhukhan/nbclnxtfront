@@ -631,11 +631,14 @@ export async function fetchEmployeeFace(p: {
   coId: number;
   branchId?: number | null;
   active?: string;
+  /** EB no — restricts the register to one employee. */
+  empCode?: string;
 }): Promise<EmployeeFaceRow[]> {
   const qs = new URLSearchParams();
   qs.set("co_id", String(p.coId));
   if (p.branchId != null) qs.set("branch_id", String(p.branchId));
   if (p.active) qs.set("active", p.active);
+  if (p.empCode) qs.set("emp_code", p.empCode);
   const url = `${apiRoutesPortalMasters.EMPLOYEE_FACE_REPORT}?${qs.toString()}`;
   const result = await fetchWithCookie<{ data: EmployeeFaceRow[] }>(url);
   if (result.error || !result.data) {
@@ -647,4 +650,11 @@ export async function fetchEmployeeFace(p: {
 /** Image URL for one face register row's captured photo (streamed by the backend). */
 export function employeeFacePhotoUrl(coId: number, empFaceId: number): string {
   return `${apiRoutesPortalMasters.EMPLOYEE_FACE_PHOTO}/${empFaceId}?co_id=${coId}`;
+}
+
+/** Delete one face registration (backend soft-deletes so phones drop the face). */
+export async function deleteEmployeeFace(coId: number, empFaceId: number): Promise<void> {
+  const url = `${apiRoutesPortalMasters.EMPLOYEE_FACE_REPORT}/${empFaceId}?co_id=${coId}`;
+  const result = await fetchWithCookie<{ message: string }>(url, "DELETE");
+  if (result.error) throw new Error(result.error);
 }
