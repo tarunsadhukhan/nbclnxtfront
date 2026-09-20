@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Button,
@@ -10,7 +10,6 @@ import {
   DialogTitle,
   IconButton,
   Snackbar,
-  Tooltip,
 } from "@mui/material";
 import { GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { Trash2 } from "lucide-react";
@@ -25,9 +24,10 @@ import {
 
 /**
  * Delete Registration — remove an employee's face registration
- * (employee_face_mst) so they can be enrolled again. Enter an EB no, the
- * active registrations for that employee are listed, and each row can be
- * deleted after a Yes/No confirmation. No create or edit here by design.
+ * (employee_face_mst) so they can be enrolled again. The active registrations
+ * of the selected company/branch are listed, the search box narrows them to
+ * one EB no, and each row can be deleted after a Yes/No confirmation.
+ * No create or edit here by design.
  */
 export default function DeleteRegistrationPage() {
   const { selectedCompany, selectedBranches, hasMenuAccess } = useSidebarContext();
@@ -38,7 +38,8 @@ export default function DeleteRegistrationPage() {
 
   const [empCode, setEmpCode] = useState("");
   const [rows, setRows] = useState<EmployeeFaceRow[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [reloadKey, setReloadKey] = useState(0);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     pageSize: 10,
     page: 0,
@@ -53,38 +54,37 @@ export default function DeleteRegistrationPage() {
 
   const search = empCode.trim();
 
-  const loadRows = useCallback(async () => {
-    // No EB no, no fetch — the register holds every employee of the company.
-    if (coId == null || !search) {
+  useEffect(() => {
+    if (coId == null) {
       setRows([]);
+      setLoading(false);
       return;
     }
+    // `cancelled` so a superseded search (or an unmount) can't land its rows.
+    let cancelled = false;
     setLoading(true);
-    try {
-      const data = await fetchEmployeeFace({
-        coId,
-        branchId,
-        active: "1",
-        empCode: search,
+    fetchEmployeeFace({ coId, branchId, active: "1", empCode: search || undefined })
+      .then((data) => {
+        if (!cancelled) setRows(data);
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return;
+        setRows([]);
+        setSnackbar({
+          open: true,
+          message: err instanceof Error ? err.message : "Error fetching registrations",
+          severity: "error",
+        });
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
       });
-      setRows(data);
-    } catch (err: unknown) {
-      setRows([]);
-      setSnackbar({
-        open: true,
-        message: err instanceof Error ? err.message : "Error fetching registrations",
-        severity: "error",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [coId, branchId, search]);
+    return () => {
+      cancelled = true;
+    };
+  }, [coId, branchId, search, reloadKey]);
 
-  useEffect(() => {
-    void loadRows();
-  }, [loadRows]);
-
-  const handleDelete = useCallback(async () => {
+  const handleDelete = async () => {
     if (!confirmRow || coId == null) return;
     setDeleting(true);
     try {
@@ -95,7 +95,7 @@ export default function DeleteRegistrationPage() {
         severity: "success",
       });
       setConfirmRow(null);
-      await loadRows();
+      setReloadKey((k) => k + 1);
     } catch (err: unknown) {
       setSnackbar({
         open: true,
@@ -105,7 +105,7 @@ export default function DeleteRegistrationPage() {
     } finally {
       setDeleting(false);
     }
-  }, [confirmRow, coId, loadRows]);
+  };
 
   const columns = useMemo<GridColDef<EmployeeFaceRow>[]>(
     () => [
@@ -124,40 +124,43 @@ export default function DeleteRegistrationPage() {
         align: "center",
         headerAlign: "center",
         renderCell: (params) => (
-          <Tooltip title={canDelete ? "Delete registration" : "No delete permission"}>
-            <span>
-              <IconButton
-                size="small"
-                color="error"
-                disabled={!canDelete}
-                onClick={() => setConfirmRow(params.row)}
-              >
-                <Trash2 size={16} />
-              </IconButton>
-            </span>
-          </Tooltip>
+          <IconButton
+            size="small"
+            color="error"
+            disabled={!canDelete}
+            // ponytail: native title — a MUI Tooltip per grid cell buys nothing here.
+            title={canDelete ? "Delete registration" : "No delete permission"}
+            onClick={() => setConfirmRow(params.row)}
+          >
+            <Trash2 size={16} />
+          </IconButton>
         ),
       },
     ],
     [canDelete],
   );
 
+  const subtitle = loading
+    ? "Loading registrations…"
+    : rows.length === 0
+      ? search
+        ? "No face registration found for this EB no"
+        : "No face registrations for the selected company/branch"
+      : search
+        ? `${rows[0].emp_name ?? ""} — ${rows.length} registration(s)`
+        : `${rows.length} registration(s)`;
+
   return (
     <IndexWrapper
       title="Delete Registration"
-      subtitle={
-        search
-          ? rows.length > 0
-            ? `${rows[0].emp_name ?? ""} — ${rows.length} registration(s)`
-            : "No face registration found for this EB no"
-          : "Enter an EB no to list face registrations"
-      }
+      subtitle={subtitle}
       rows={rows}
       columns={columns}
       rowCount={rows.length}
       paginationModel={paginationModel}
       onPaginationModelChange={setPaginationModel}
       loading={loading}
+      showLoadingUntilLoaded
       search={{
         value: empCode,
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
