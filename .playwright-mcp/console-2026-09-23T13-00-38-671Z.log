@@ -1,0 +1,15 @@
+[   17279ms] [LOG] Subdomain: winsome @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   17281ms] [LOG] API_URL for all /api @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   17281ms] [LOG] API Request Data: {username: sls@vowerp.com, password: deliberately-wrong-pw, logintype: admin, rememberMe: false} path /api/authRoutes/loginconsole @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   17595ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://winsome.punrasargroup.com/api/authRoutes/loginconsole:0
+[   17597ms] [LOG] API Response: {data: Object, status: 401, statusText: , headers: eC, config: Object} @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   17598ms] [LOG] Cookies after login:  @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   17598ms] [LOG] Login unsuccessful @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   39588ms] [LOG] Subdomain: winsome @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   39588ms] [LOG] API_URL for all /api @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   39588ms] [LOG] API Request Data: {username: sls@vowerp.com, password: vowjute@1234, logintype: admin, rememberMe: false} path /api/authRoutes/loginconsole @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   39880ms] [LOG] API Response: {data: Object, status: 200, statusText: , headers: eC, config: Object} @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   39881ms] [LOG] Cookies after login:  @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   39881ms] [LOG] Login successful @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   40141ms] [LOG] [] @ https://winsome.punrasargroup.com/_next/static/chunks/022d1be9f321d9ea.js:2
+[   40245ms] [LOG] [] @ https://winsome.punrasargroup.com/_next/static/chunks/022d1be9f321d9ea.js:2

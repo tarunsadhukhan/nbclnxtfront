@@ -1,0 +1,47 @@
+- generic [ref=e1]:
+  - main [aria-hidden] [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - img [ref=e43]:
+          - generic [ref=e10]: S
+        - generic [ref=e12]:
+          - generic [ref=e13]: INFOSKY GLOBAL
+          - generic [ref=e14]: IT SOLUTIONS
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - heading [level=2] [ref=e44]: Sign in
+          - paragraph [ref=e18]: Enter your credentials to continue
+        - generic [ref=e19]:
+          - generic [ref=e20]:
+            - text: User Name
+            - textbox [ref=e45]:
+              - /placeholder: User Name
+              - text: sls@vowerp.com
+          - generic [ref=e22]:
+            - text: Password
+            - generic [ref=e23]:
+              - textbox [ref=e46]:
+                - /placeholder: ••••••••
+                - text: deliberately-wrong-pw
+              - button [ref=e47]
+          - generic [ref=e29]:
+            - generic [ref=e30]:
+              - radio [checked] [ref=e48]
+              - generic [ref=e32]: Admin Login
+            - generic [ref=e33]:
+              - radio [ref=e49]
+              - generic [ref=e35]: Portal Login
+          - generic [ref=e36]:
+            - generic [ref=e37]:
+              - checkbox [ref=e50]
+              - checkbox [aria-hidden]
+              - generic [ref=e39]: Keep me signed in
+            - button [ref=e51]: Forgot Password?
+          - button [ref=e52]: Login
+  - list
+  - alert [ref=e42]
+  - dialog [ref=e54]:
+    - heading "Login Failed" [level=2] [ref=e59]
+    - generic [ref=e60]: Wrong password entered
+    - text: "!"
+    - button "OK" [active] [ref=e62] [cursor=pointer]

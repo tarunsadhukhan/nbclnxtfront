@@ -1,0 +1,8 @@
+[   13260ms] [LOG] Subdomain: winsome @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   13260ms] [LOG] API_URL for all /api @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   13260ms] [LOG] API Request Data: {username: sls@vowerp.com, password: vowjute@1234, logintype: admin, rememberMe: false} path /api/authRoutes/loginconsole @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   13490ms] [LOG] API Response: {data: Object, status: 200, statusText: , headers: eC, config: Object} @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   13491ms] [LOG] Cookies after login:  @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   13491ms] [LOG] Login successful @ https://winsome.punrasargroup.com/_next/static/chunks/5f77da0fd607a581.js:0
+[   13758ms] [LOG] [] @ https://winsome.punrasargroup.com/_next/static/chunks/022d1be9f321d9ea.js:2
+[   13890ms] [LOG] [Object, Object, Object, Object, Object, Object, Object, Object] @ https://winsome.punrasargroup.com/_next/static/chunks/022d1be9f321d9ea.js:2

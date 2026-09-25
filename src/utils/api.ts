@@ -39,6 +39,8 @@ const apiRoutes ={
     PORTAL_CO_BRANCH_SUBMENU: `${API_URL}/admin/PortalData/co_branch_submenu`,
     PORTAL_APPROVAL_LEVELS_DATA: `${API_URL}/admin/PortalData/approval_level_data_setup`,
     PORTAL_APPROVAL_LEVELS_DATA_SUBMIT: `${API_URL}/admin/PortalData/approval_level_data_setup_submit`,
+    PORTAL_MOBILE_MENU_PERMISSIONS: `${API_URL}/admin/PortalData/mobile_menu_permissions`,
+    PORTAL_MOBILE_MENU_PERMISSIONS_SUBMIT: `${API_URL}/admin/PortalData/mobile_menu_permissions_submit`,
     PORTAL_MENU_ITEMS: `${API_URL}/admin/PortalData/portal_menu_items`,
     PORTAL_MENU_PERMISSIONS: `${API_URL}/admin/PortalData/portal_menu_permissions`,
     PORTAL_MENU_PERMISSION_CHECK: `${API_URL}/admin/PortalData/portal_menu_permissions/check`,
