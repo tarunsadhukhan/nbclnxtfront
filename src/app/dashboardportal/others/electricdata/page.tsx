@@ -96,9 +96,11 @@ export default function ElectricDataPage() {
 
   const columns = useMemo<GridColDef<ElectricRow>[]>(
     () => [
-      { field: "tran_date", headerName: "DATE", width: 110 },
       { field: "emp_code", headerName: "EB NO.", width: 100 },
       { field: "emp_name", headerName: "NAME", flex: 1, minWidth: 200 },
+      { field: "period_desc", headerName: "PAY PERIOD", width: 200 },
+      { field: "no_of_units", headerName: "UNITS", type: "number", width: 90 },
+      { field: "unit_rate", headerName: "UNIT RATE", type: "number", width: 110 },
       { field: "amount", headerName: "ELECTRIC AMOUNT", type: "number", width: 150 },
     ],
     [],

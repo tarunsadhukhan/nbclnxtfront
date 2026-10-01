@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState, type KeyboardEvent } from "react";
 import {
   Alert,
   Autocomplete,
@@ -24,18 +24,24 @@ import {
   Typography,
 } from "@mui/material";
 import { Save as SaveIcon, Trash2 as DeleteIcon, X } from "lucide-react";
+import { entryGridCellColorsSx, fullScreenBesideSidebar, handleGridEnterKey } from "@/components/ui/entryGrid";
 import { fetchWithCookie } from "@/utils/apiClient2";
+import { todayIso } from "@/components/reports/reportDates";
 import { apiRoutesPortalMasters } from "@/utils/api";
 import { useSidebarContext } from "@/components/dashboard/sidebarContext";
-import { todayIso } from "@/components/reports/reportDates";
 import type {
   ElectricGridRow,
   ElectricRecord,
   ElectricSetup,
   Option,
+  PeriodOption,
 } from "./types";
 
+/** Default electric tariff per unit for new entries (editable). */
+const DEFAULT_UNIT_RATE = "8.25";
+
 const EMPTY_OPTIONS: Option[] = Object.freeze([]) as unknown as Option[];
+const EMPTY_PERIODS: PeriodOption[] = Object.freeze([]) as unknown as PeriodOption[];
 
 interface Props {
   open: boolean;
@@ -46,7 +52,7 @@ interface Props {
 
 const blankGridRow = (): ElectricGridRow => ({
   eb_id: "",
-  amount: "",
+  no_of_units: "",
   saved_id: null,
   dirty: false,
   remarks: null,
@@ -57,20 +63,25 @@ function isRowSavedClean(row: ElectricGridRow): boolean {
   return row.saved_id != null && !row.dirty;
 }
 
-/** A row is "complete" when it can become a saved line: worker chosen, amount > 0. */
+/** A row is "complete" when it can become a saved line: worker chosen, whole units > 0. */
 function isRowComplete(row: ElectricGridRow): boolean {
-  const amount = Number(row.amount);
-  return (
-    row.eb_id !== "" &&
-    row.amount.trim() !== "" &&
-    Number.isFinite(amount) &&
-    amount > 0
-  );
+  const units = Number(row.no_of_units);
+  return row.eb_id !== "" && row.no_of_units.trim() !== "" && Number.isInteger(units) && units > 0;
 }
 
 /** A wholly-blank row (e.g. the trailing auto-added row) is ignored on save. */
 function isRowBlank(row: ElectricGridRow): boolean {
-  return row.eb_id === "" && row.amount.trim() === "";
+  return row.eb_id === "" && row.no_of_units.trim() === "";
+}
+
+/** units x rate rounded to paise (same rounding as the backend); "" when not computable. */
+function computeAmount(units: string, rate: string): string {
+  const u = Number(units);
+  const r = Number(rate);
+  if (units.trim() === "" || rate.trim() === "" || !Number.isFinite(u) || !Number.isFinite(r)) {
+    return "";
+  }
+  return (Math.round(u * r * 100) / 100).toFixed(2);
 }
 
 /** Name part of an employee option label ("code - name" -> "name"). */
@@ -87,13 +98,13 @@ const headCellSx = { ...cellSx, fontWeight: 600, backgroundColor: "action.hover"
 
 /**
  * Create / edit dialog for Electric Data entries — one spreadsheet-style
- * grid for both modes. Date is entered once at the top; below is an
- * Excel-like bordered grid of worker/amount rows saved ROW BY ROW (each row
+ * grid for both modes. The pay period is picked once (its to-date is saved as the entry date) at the top; below is an
+ * Excel-like bordered grid of worker/units rows (rate from the header, amount = units x rate, both read-only) saved ROW BY ROW (each row
  * POSTs on first save, PUTs thereafter). The worker's name shows read-only
  * from the selected employee.
  *
  * CREATE: once the last row is complete a fresh blank row is auto-added. A
- * saved, unedited row shows a green "Saved" chip; any edit (or a header date
+ * saved, unedited row shows a green "Saved" chip; any edit (or a pay period
  * change) makes it pending again. "Save All" loops the pending rows,
  * skipping blanks and saved-clean rows. EDIT: the record loads as a single
  * grid row with its saved id.
@@ -112,8 +123,11 @@ export default function CreateElectricDataPage({
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [employees, setEmployees] = useState<Option[]>(EMPTY_OPTIONS);
+  const [periods, setPeriods] = useState<PeriodOption[]>(EMPTY_PERIODS);
 
-  const [tranDate, setTranDate] = useState("");
+  const [periodId, setPeriodId] = useState("");
+  // One tariff for every row in the grid.
+  const [unitRate, setUnitRate] = useState(DEFAULT_UNIT_RATE);
   const [rows, setRows] = useState<ElectricGridRow[]>(() => [blankGridRow()]);
 
   const [snackbar, setSnackbar] = useState<{
@@ -126,6 +140,28 @@ export default function CreateElectricDataPage({
     (message: string) => setSnackbar({ open: true, message, severity: "error" }),
     [],
   );
+
+  /**
+   * Enter-to-next-cell, except an empty EB No. holds the cursor. An option
+   * highlighted in the open dropdown (aria-activedescendant) counts — MUI
+   * commits it on this same Enter, before the rows state catches up.
+   */
+  const handleEntryKeyDown = (e: KeyboardEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+    const ebRow = target.dataset.ebRow;
+    if (
+      e.key === "Enter" &&
+      !e.shiftKey &&
+      ebRow !== undefined &&
+      rows[Number(ebRow)]?.eb_id === "" &&
+      !target.getAttribute("aria-activedescendant")
+    ) {
+      e.preventDefault();
+      notifyError(`Row ${Number(ebRow) + 1}: select an EB No. before entering units`);
+      return;
+    }
+    handleGridEnterKey(e);
+  };
 
   // Employee options, refreshed whenever the dialog opens for a new branch.
   useEffect(() => {
@@ -143,12 +179,21 @@ export default function CreateElectricDataPage({
         notifyError(error || "Failed to load employee options");
         return;
       }
+      const periodOptions = data.data?.periods ?? EMPTY_PERIODS;
       setEmployees(data.data?.employees ?? EMPTY_OPTIONS);
+      setPeriods(periodOptions);
+      // Create: default to the last completed period — newest TO_DATE before
+      // today (list is newest first), e.g. 23-09 -> the one ending 15-09.
+      if (!isEdit) {
+        const today = todayIso();
+        const last = periodOptions.find((p) => p.to_date != null && p.to_date < today);
+        if (last) setPeriodId((prev) => prev || last.value);
+      }
     })();
     return () => {
       cancelled = true;
     };
-  }, [open, coId, branchId, notifyError]);
+  }, [open, coId, branchId, isEdit, notifyError]);
 
   const loadRecord = useCallback(async () => {
     if (editId === undefined) return;
@@ -160,11 +205,12 @@ export default function CreateElectricDataPage({
       );
       if (error || !data) throw new Error(error || "Failed to load electric entry");
       const rec = data.data;
-      setTranDate((rec.tran_date ?? "").slice(0, 10));
+      setPeriodId(rec.period_id != null ? String(rec.period_id) : "");
+      setUnitRate(rec.unit_rate != null ? String(rec.unit_rate) : DEFAULT_UNIT_RATE);
       setRows([
         {
           eb_id: rec.eb_id ?? "",
-          amount: rec.amount != null ? String(rec.amount) : "",
+          no_of_units: rec.no_of_units != null ? String(rec.no_of_units) : "",
           saved_id: rec.tran_id,
           dirty: false,
           remarks: rec.remarks ?? null,
@@ -182,7 +228,8 @@ export default function CreateElectricDataPage({
     if (editId !== undefined) {
       void loadRecord();
     } else {
-      setTranDate(todayIso());
+      setPeriodId("");
+      setUnitRate(DEFAULT_UNIT_RATE);
       setRows([blankGridRow()]);
     }
   }, [open, editId, loadRecord]);
@@ -209,7 +256,7 @@ export default function CreateElectricDataPage({
     [isEdit],
   );
 
-  // Date applies to every row — changing it makes saved rows pending again.
+  // Pay period / unit rate apply to every row — changing either makes saved rows pending again.
   const markSavedRowsDirty = useCallback(() => {
     setRows((prev) =>
       prev.some((r) => r.saved_id != null && !r.dirty)
@@ -225,7 +272,10 @@ export default function CreateElectricDataPage({
   const nonBlankRows = useMemo(() => rows.filter((r) => !isRowBlank(r)), [rows]);
   const pendingRows = useMemo(() => nonBlankRows.filter((r) => !isRowSavedClean(r)), [nonBlankRows]);
 
-  const headerValid = tranDate.trim() !== "";
+  const rateNum = Number(unitRate);
+  const rateValid =
+    unitRate.trim() !== "" && Number.isFinite(rateNum) && rateNum > 0 && rateNum <= 9999.99;
+  const headerValid = periodId !== "" && rateValid;
   const rowSaveable = (r: ElectricGridRow) => headerValid && isRowComplete(r);
 
   // Save All only sends pending rows (unsaved or edited); "Saved" rows are skipped.
@@ -238,9 +288,10 @@ export default function CreateElectricDataPage({
   ): Promise<{ id: number | null; error: string | null }> => {
     const body = {
       branch_id: branchId ?? null,
-      tran_date: tranDate,
+      period_id: Number(periodId),
       eb_id: r.eb_id,
-      amount: Number(r.amount),
+      no_of_units: Number(r.no_of_units),
+      unit_rate: rateNum,
       remarks: r.remarks,
     };
     if (r.saved_id != null) {
@@ -311,9 +362,7 @@ export default function CreateElectricDataPage({
       <Dialog
         open={open}
         onClose={onClose}
-        fullWidth
-        maxWidth="md"
-        PaperProps={{ sx: { borderRadius: 2 } }}
+        {...fullScreenBesideSidebar}
       >
         <DialogTitle
           sx={{
@@ -344,24 +393,43 @@ export default function CreateElectricDataPage({
               <CircularProgress />
             </Box>
           ) : (
-            <Box sx={{ pt: 1, display: "flex", flexDirection: "column", gap: 2 }}>
+            <Box
+              sx={{ pt: 1, display: "flex", flexDirection: "column", gap: 2, ...entryGridCellColorsSx }}
+              onKeyDown={handleEntryKeyDown}
+            >
               <Box
                 sx={{
                   display: "grid",
-                  gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)" },
+                  gridTemplateColumns: { xs: "1fr", sm: "2fr 1fr" },
                   gap: 2,
                 }}
               >
-                <TextField
-                  type="date"
-                  size="small"
-                  label="Date"
-                  value={tranDate}
-                  onChange={(e) => {
-                    setTranDate(e.target.value);
+                <Autocomplete
+                  autoHighlight
+                  options={periods}
+                  getOptionLabel={(opt) => opt.label}
+                  value={periods.find((p) => p.value === periodId) ?? null}
+                  onChange={(_, newVal) => {
+                    setPeriodId(newVal?.value ?? "");
                     markSavedRowsDirty();
                   }}
-                  slotProps={{ inputLabel: { shrink: true } }}
+                  isOptionEqualToValue={(opt, val) => opt.value === val.value}
+                  size="small"
+                  renderInput={(params) => (
+                    <TextField {...params} label="Pay Period" required />
+                  )}
+                />
+                <TextField
+                  type="number"
+                  size="small"
+                  label="Unit Rate"
+                  value={unitRate}
+                  onChange={(e) => {
+                    setUnitRate(e.target.value);
+                    markSavedRowsDirty();
+                  }}
+                  error={unitRate.trim() !== "" && !rateValid}
+                  inputProps={{ step: 0.01, min: 0, max: 9999.99 }}
                   required
                 />
               </Box>
@@ -370,7 +438,7 @@ export default function CreateElectricDataPage({
                 <Table
                   size="small"
                   sx={{
-                    minWidth: 620,
+                    minWidth: 820,
                     border: "1px solid",
                     borderColor: "divider",
                     borderCollapse: "collapse",
@@ -382,6 +450,12 @@ export default function CreateElectricDataPage({
                       <TableCell sx={{ ...headCellSx, width: 36 }}>#</TableCell>
                       <TableCell sx={{ ...headCellSx, minWidth: 170 }}>EB No.</TableCell>
                       <TableCell sx={{ ...headCellSx, minWidth: 190 }}>Name</TableCell>
+                      <TableCell align="right" sx={{ ...headCellSx, minWidth: 90 }}>
+                        Units
+                      </TableCell>
+                      <TableCell align="right" sx={{ ...headCellSx, minWidth: 100 }}>
+                        Unit Rate
+                      </TableCell>
                       <TableCell align="right" sx={{ ...headCellSx, minWidth: 130 }}>
                         Electric Amount
                       </TableCell>
@@ -399,6 +473,7 @@ export default function CreateElectricDataPage({
                           <TableCell sx={cellSx}>{i + 1}</TableCell>
                           <TableCell sx={cellSx}>
                             <Autocomplete
+                              autoHighlight
                               options={employees}
                               getOptionLabel={(opt) => opt.label}
                               value={employee ?? null}
@@ -413,6 +488,7 @@ export default function CreateElectricDataPage({
                                   variant="standard"
                                   placeholder="EB No."
                                   InputProps={{ ...params.InputProps, disableUnderline: true }}
+                                  inputProps={{ ...params.inputProps, "data-eb-row": i }}
                                 />
                               )}
                             />
@@ -427,17 +503,27 @@ export default function CreateElectricDataPage({
                               type="number"
                               size="small"
                               variant="standard"
-                              value={r.amount}
-                              onChange={(e) => setRowField(i, "amount", e.target.value)}
+                              value={r.no_of_units}
+                              onChange={(e) => setRowField(i, "no_of_units", e.target.value)}
                               InputProps={{ disableUnderline: true }}
                               inputProps={{
-                                step: "any",
+                                step: 1,
                                 min: 0,
-                                "aria-label": `Row ${i + 1} electric amount`,
+                                "aria-label": `Row ${i + 1} number of units`,
                                 style: { textAlign: "right" },
                               }}
-                              sx={{ width: 100 }}
+                              sx={{ width: 80 }}
                             />
+                          </TableCell>
+                          <TableCell align="right" sx={cellSx}>
+                            <Typography variant="body2" color="text.secondary" sx={{ fontSize: "0.875rem" }}>
+                              {unitRate || "—"}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="right" sx={cellSx}>
+                            <Typography variant="body2" sx={{ fontSize: "0.875rem", fontWeight: 500 }}>
+                              {computeAmount(r.no_of_units, unitRate) || "—"}
+                            </Typography>
                           </TableCell>
                           <TableCell align="center" sx={{ ...cellSx, whiteSpace: "nowrap" }}>
                             {isRowSavedClean(r) ? (

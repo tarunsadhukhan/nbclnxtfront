@@ -31,23 +31,48 @@ function Content() {
         dateTo: f.dateTo,
       });
       const names = [...new Set(rows.map((r) => r.spell ?? NONE))].sort();
-      const map = new Map<string, PivotRow>();
-      for (const r of rows) {
+      const round = (n: number) => Math.round(n * 100) / 100;
+      const blank = (id: string, department: string, designation: string) => {
+        const row: PivotRow = { id, department, designation, total: 0 };
+        for (const s of names) row[s] = 0;
+        return row;
+      };
+      const add = (row: PivotRow, spell: string, hands: number) => {
+        row[spell] = round((row[spell] as number) + hands);
+        row.total = round((row.total as number) + hands);
+      };
+      // Order by dept_mst.dept_code (numeric-aware), then department, designation.
+      const sorted = [...rows].sort(
+        (a, b) =>
+          (a.dept_code ?? "").localeCompare(b.dept_code ?? "", undefined, { numeric: true }) ||
+          (a.department ?? "").localeCompare(b.department ?? "") ||
+          (a.designation ?? "").localeCompare(b.designation ?? ""),
+      );
+      // Detail rows with a "Total" row after each department, then Grand Total.
+      const out: PivotRow[] = [];
+      const grand = blank("grand", "Grand Total", "");
+      let deptTotal: PivotRow | null = null;
+      let detail: PivotRow | null = null;
+      for (const r of sorted) {
         const dept = r.department ?? "";
         const desig = r.designation ?? "";
-        const key = `${dept}|${desig}`;
-        let row = map.get(key);
-        if (!row) {
-          row = { id: key, department: dept, designation: desig, total: 0 };
-          for (const s of names) row[s] = 0;
-          map.set(key, row);
-        }
         const spell = r.spell ?? NONE;
-        row[spell] = Math.round(((row[spell] as number) + r.hands) * 100) / 100;
-        row.total = Math.round(((row.total as number) + r.hands) * 100) / 100;
+        if (!deptTotal || deptTotal.department !== dept) {
+          if (deptTotal) out.push(deptTotal);
+          deptTotal = blank(`total|${r.dept_code ?? ""}|${dept}`, dept, "Total");
+          detail = null;
+        }
+        if (!detail || detail.designation !== desig) {
+          detail = blank(`${r.dept_code ?? ""}|${dept}|${desig}`, dept, desig);
+          out.push(detail);
+        }
+        add(detail, spell, r.hands);
+        add(deptTotal, spell, r.hands);
+        add(grand, spell, r.hands);
       }
+      if (deptTotal) out.push(deptTotal, grand);
       setSpells(names);
-      return [...map.values()];
+      return out;
     },
     [coId],
   );
@@ -73,8 +98,8 @@ function Content() {
       fetcher={fetcher}
       columns={columns}
       getRowId={(r) => r.id}
-      sortField="department"
       exportName="spell-wise"
+      scroll
     />
   );
 }

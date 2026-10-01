@@ -437,6 +437,7 @@ export function aggregateHeadcount(
 /** Row from GET /hrmsReports/spell-wise (long format — pivoted on the page). */
 export interface SpellWiseRow {
   id: number;
+  dept_code: string | null;
   department: string | null;
   designation: string | null;
   spell: string | null;
@@ -450,6 +451,35 @@ export function fetchSpellWise(p: RangeParams): Promise<SpellWiseRow[]> {
     p,
     "spell-wise report",
   );
+}
+
+/** Row from GET /hrmsReports/period-attendance-register (long format — pivoted on the page). */
+export interface PeriodAttendanceRow {
+  id: number;
+  dept_code: string | null;
+  department: string | null;
+  emp_code: string | null;
+  emp_name: string | null;
+  attendance_date: string;
+  hours: number;
+}
+
+/** Net worked hours per department + employee + date. `attType` = R/O/C; omit for all. */
+export async function fetchPeriodAttendance(
+  p: RangeParams & { attType?: string },
+): Promise<PeriodAttendanceRow[]> {
+  const qs = new URLSearchParams();
+  qs.set("co_id", String(p.coId));
+  qs.set("date_from", p.dateFrom);
+  qs.set("date_to", p.dateTo);
+  if (p.branchId != null) qs.set("branch_id", String(p.branchId));
+  if (p.attType) qs.set("att_type", p.attType);
+  const url = `${apiRoutesPortalMasters.PERIOD_ATTENDANCE_REGISTER_REPORT}?${qs.toString()}`;
+  const result = await fetchWithCookie<{ data: PeriodAttendanceRow[] }>(url);
+  if (result.error || !result.data) {
+    throw new Error(result.error ?? "Failed to fetch period attendance register");
+  }
+  return result.data.data;
 }
 
 /** Row from GET /hrmsReports/bank-statement. */

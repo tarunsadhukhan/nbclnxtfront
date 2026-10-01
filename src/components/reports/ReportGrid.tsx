@@ -1,6 +1,17 @@
 "use client";
 import React from "react";
-import { Box, Alert, CircularProgress, Typography } from "@mui/material";
+import {
+  Box,
+  Alert,
+  CircularProgress,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -34,6 +45,10 @@ interface ReportGridProps<T extends GridValidRowModel> {
   /** Row drill-down. Never fired for total rows — they have no detail behind
    * them. When set, data rows get a pointer cursor to advertise it. */
   onRowDoubleClick?: (row: T) => void;
+  /** Render every row in one scrolling table (sticky header) instead of the
+   * paged DataGrid — the MIT DataGrid caps pages at 100 rows. Rows are shown
+   * in the given order (no column sort). */
+  scroll?: boolean;
 }
 
 const TOTAL_ROW_RE = /^(grand\s+total|total|opening\s+balance|closing)$/i;
@@ -85,6 +100,7 @@ export default function ReportGrid<T extends GridValidRowModel>({
   sortDir = "asc",
   isTotalRow = isReportTotalRow,
   onRowDoubleClick,
+  scroll = false,
 }: ReportGridProps<T>) {
   // Same content-width + hover-tooltip treatment the list grids get. While no branch
   // is selected the previous branch's rows may still be held, so don't size from them.
@@ -127,6 +143,9 @@ export default function ReportGrid<T extends GridValidRowModel>({
         </Box>
       )}
 
+      {scroll ? (
+        <ScrollTable rows={rows} columns={columns} getRowId={getRowId} height={height} />
+      ) : (
       <Box onMouseOver={showCellTooltip} sx={{ height, width: "100%" }}>
         <DataGrid
           rows={rows}
@@ -223,7 +242,101 @@ export default function ReportGrid<T extends GridValidRowModel>({
           }}
         />
       </Box>
+      )}
     </Box>
+  );
+}
+
+/** Total-row shading per level — the same shades the DataGrid uses above. */
+const SCROLL_TOTAL_SX = {
+  grand: { bgcolor: "hsl(var(--table-header))", color: "white" },
+  group: { bgcolor: "#aac464", color: "white" },
+  sub: { bgcolor: "#e7eed3", color: "#29351d" },
+} as const;
+
+/** Unpaged sticky-header table used by `ReportGrid` when `scroll` is set. */
+function ScrollTable<T extends GridValidRowModel>({
+  rows,
+  columns,
+  getRowId,
+  height,
+}: {
+  rows: T[];
+  columns: GridColDef<T>[];
+  getRowId: (row: T) => string | number;
+  height: number;
+}) {
+  const leadField = String(columns[0]?.field ?? "");
+  const cellSx = {
+    borderRight: "1px solid",
+    borderRightColor: "divider",
+    py: 0.75,
+    "&:last-of-type": { borderRight: "none" },
+  };
+  return (
+    <TableContainer
+      sx={{ maxHeight: height, border: "1px solid", borderColor: "divider" }}
+    >
+      <Table stickyHeader size="small">
+        <TableHead>
+          <TableRow>
+            {columns.map((c) => (
+              <TableCell
+                key={c.field}
+                align={c.type === "number" ? "right" : "left"}
+                sx={{
+                  ...cellSx,
+                  backgroundColor: "hsl(var(--table-header))",
+                  color: "white",
+                  fontWeight: 700,
+                  borderRightColor: "rgba(255,255,255,0.4)",
+                  minWidth: c.minWidth ?? c.width,
+                }}
+              >
+                {c.headerName ?? c.field}
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={columns.length} align="center">
+                No rows
+              </TableCell>
+            </TableRow>
+          ) : (
+            rows.map((row) => {
+              const level = reportTotalLevel(row, leadField);
+              return (
+                <TableRow
+                  key={getRowId(row)}
+                  hover={!level}
+                  sx={level ? SCROLL_TOTAL_SX[level] : undefined}
+                >
+                  {columns.map((c) => {
+                    const v = (row as Record<string, unknown>)[c.field];
+                    return (
+                      <TableCell
+                        key={c.field}
+                        align={c.type === "number" ? "right" : "left"}
+                        sx={{
+                          ...cellSx,
+                          color: "inherit",
+                          fontWeight: level ? 700 : undefined,
+                        }}
+                      >
+                        {c.type === "number" ? fmtNum(v) : String(v ?? "")}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })
+          )}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
 

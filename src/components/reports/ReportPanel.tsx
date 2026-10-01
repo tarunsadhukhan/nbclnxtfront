@@ -18,6 +18,7 @@ import { useSidebarContext } from "@/components/dashboard/sidebarContext";
 import { resolveReportMenuId } from "@/utils/reportMenuService";
 import ReportGrid from "./ReportGrid";
 import { exportRowsToExcel } from "./exportExcel";
+import { exportRowsToPdf } from "./exportPdf";
 import type { BranchOption } from "./types";
 
 /** The filter values handed to the fetcher when the user submits (branch is
@@ -58,6 +59,8 @@ interface ReportPanelProps<TRow extends GridValidRowModel> {
   exportName: string;
   /** Optional row drill-down (see ReportGrid); not fired for total rows. */
   onRowDoubleClick?: (row: TRow) => void;
+  /** Show all rows in one scrolling table instead of pages (see ReportGrid). */
+  scroll?: boolean;
 }
 
 /**
@@ -85,6 +88,7 @@ export default function ReportPanel<TRow extends GridValidRowModel>({
   sortDir,
   exportName,
   onRowDoubleClick,
+  scroll,
 }: ReportPanelProps<TRow>) {
   // Draft filters — bound to the inputs.
   // The branch is adopted after mount rather than seeded into useState:
@@ -134,24 +138,36 @@ export default function ReportPanel<TRow extends GridValidRowModel>({
 
   // Company / branch / report / period block written above the column headers
   // in the exported sheet.
-  const handleExport = useCallback(async () => {
-    const reportFor =
+  const handleExport = useCallback(async (format: "xlsx" | "pdf") => {
+    const period =
       dates === "range"
         ? [dateFrom, dateTo].filter(Boolean).join(" To ")
         : dates === "single"
           ? dateTo
           : "";
-    await exportRowsToExcel(columns, rows, exportName, {
+    // Selected dropdown filter (e.g. "Work Type: Duty") goes on the period line.
+    const extraLabel = extra?.options?.find((o) => o.value === extraValue)?.label;
+    const reportFor = [period, extraLabel && `${extra?.label}: ${extraLabel}`]
+      .filter(Boolean)
+      .join(", ");
+    const header = {
       companyName: selectedCompany?.co_name,
       branchName: branch?.branch_name,
       reportName: title,
       reportNo: await resolveReportMenuId(pathname),
       reportFor,
-    });
+    };
+    if (format === "pdf") {
+      await exportRowsToPdf(columns, rows, exportName, header);
+    } else {
+      await exportRowsToExcel(columns, rows, exportName, header);
+    }
   }, [
     dates,
     dateFrom,
     dateTo,
+    extra,
+    extraValue,
     columns,
     rows,
     exportName,
@@ -278,11 +294,22 @@ export default function ReportPanel<TRow extends GridValidRowModel>({
             variant="outlined"
             disabled={rows.length === 0}
             onClick={() => {
-              void handleExport();
+              void handleExport("xlsx");
             }}
             sx={{ textTransform: "none" }}
           >
             Export to Excel
+          </Button>
+
+          <Button
+            variant="outlined"
+            disabled={rows.length === 0}
+            onClick={() => {
+              void handleExport("pdf");
+            }}
+            sx={{ textTransform: "none" }}
+          >
+            Export to PDF
           </Button>
         </Box>
       </Paper>
@@ -297,6 +324,7 @@ export default function ReportPanel<TRow extends GridValidRowModel>({
         sortField={sortField}
         sortDir={sortDir}
         onRowDoubleClick={onRowDoubleClick}
+        scroll={scroll}
       />
     </Box>
   );
