@@ -563,6 +563,8 @@ const apiRoutesPortalMasters = {
     ISO_MAP_SAVE: `${API_URL}/isoMenuMap/iso_map_save`,
     ISO_MAP_DELETE: `${API_URL}/isoMenuMap/iso_map_delete`,
     // HRMS / Production (labour) report endpoints
+    // NBJCL Reports > Attendance Register (base; /setup and /<report key> are appended)
+    NBJCL_ATTENDANCE_REGISTER: `${API_URL}/hrmsReports/nbjcl/attendance-register`,
     ATTENDANCE_SUMMARY_REPORT: `${API_URL}/hrmsReports/attendance-summary`,
     WORKER_MASTER_REPORT: `${API_URL}/hrmsReports/worker-master`,
     MAN_MACHINE_REPORT: `${API_URL}/hrmsReports/man-machine`,
@@ -790,6 +792,15 @@ const apiRoutesPortalMasters = {
     LOAN_STOP_ALL_CREATE: `${API_URL}/hrms/loan_stop_all_create`,
     LOAN_REPAY_LIST: `${API_URL}/hrms/loan_repay_list`,
     LOAN_REPAY_SAVE: `${API_URL}/hrms/loan_repay_save`,
+
+    // Wages Process (legacy SP_WagesProcessing chain -> paywages)
+    WAGES_PROCESS_SETUP: `${API_URL}/hrms/wages_process_setup`,
+    WAGES_PROCESS_RUN: `${API_URL}/hrms/wages_process_run`,
+    WAGES_PROCESS_RESULT: `${API_URL}/hrms/wages_process_result`,
+    WAGES_PROCESS_STATUS: `${API_URL}/hrms/wages_process_status`,
+    WAGES_PROCESS_EXPORT: `${API_URL}/hrms/wages_process_export`,
+    WAGES_DATA_COLLECTION_RUN: `${API_URL}/hrms/wages_data_collection_run`,
+    WAGES_PAYSLIP_TEXT: `${API_URL}/hrms/wages_payslip_text`,
 
     DESIGNATION_TABLE: `${API_URL}/hrmsMasters/get_designation_table`,
     DESIGNATION_BY_ID: `${API_URL}/hrmsMasters/get_designation_by_id`,
