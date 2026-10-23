@@ -377,7 +377,9 @@ export default function WagesSalaryProcessPage() {
             onChange={(e) => setLwfAmt(e.target.value)} inputProps={{ min: 0, step: "0.01" }} />
         </Box>
         <Box sx={{ display: "flex", gap: 1 }}>
-          <Button variant="contained" disabled={!periodId || running || collecting || blocked || branchId == null}
+          {/* ponytail: "Process" switched off — wages run through Process (1) (wages_data_collection.sql);
+              restore `disabled={!periodId || running || collecting || blocked || branchId == null}` to bring it back */}
+          <Button variant="contained" disabled
             onClick={() => setConfirmOpen(true)}>
             {running ? "Processing... (takes a few minutes)" : "Process"}
           </Button>
