@@ -11,6 +11,7 @@ import MuiDataGrid from "./muiDataGrid";
 import { Button } from "./button";
 import ClassicWindow, { ClassicButton, ClassicPager, classic, classicGridSx } from "./classic/ClassicWindow";
 import { useSidebarContextSafe } from "@/components/dashboard/sidebarContext";
+import { exportRowsToExcel } from "@/components/reports/exportExcel";
 
 /**
  * Route prefixes that render the classic desktop-ERP chrome instead of the
@@ -261,24 +262,22 @@ function IndexWrapper<RowType extends GridValidRowModel & { id?: string | number
     else if (onView && canView) onView(row);
   }, [canEdit, canView, isRowEditable, onEdit, onView]);
 
-  /** Exports the rows currently on screen, using the grid's own column set.
+  /** Exports the rows currently on screen as a styled .xlsx with the
+   *  company / branch / title header block.
    *  ponytail: page-scoped — needs a backend export endpoint for full data. */
-  const exportCsv = useCallback(() => {
-    const esc = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-    const exportable = columns.filter((c) => !c.field.startsWith("__"));
-    const csv = [
-      exportable.map((c) => esc(c.headerName ?? c.field)).join(","),
-      ...rows.map((row) =>
-        exportable.map((c) => esc((row as Record<string, unknown>)[c.field])).join(","),
-      ),
-    ].join("\r\n");
-    const url = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" }));
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${(title ?? "export").replace(/\s+/g, "-").toLowerCase()}.csv`;
-    link.click();
-    URL.revokeObjectURL(url);
-  }, [columns, rows, title]);
+  const exportExcel = useCallback(() => {
+    const company = sidebarContext?.selectedCompany;
+    const branchName = company?.branches
+      .filter((b) => sidebarContext?.selectedBranches.includes(b.branch_id))
+      .map((b) => b.branch_name)
+      .join(", ");
+    void exportRowsToExcel(
+      columns.filter((c) => !c.field.startsWith("__")),
+      rows,
+      (title ?? "export").replace(/\s+/g, "-").toLowerCase(),
+      { companyName: company?.co_name, branchName, reportName: title },
+    );
+  }, [columns, rows, title, sidebarContext]);
 
   const classicActions = useMemo(() => {
     const rowEditable = selectedRow ? (isRowEditable ? isRowEditable(selectedRow) : true) : false;
@@ -300,13 +299,13 @@ function IndexWrapper<RowType extends GridValidRowModel & { id?: string | number
       },
       // Pages own their fetch, so a full reload is the only refresh available here.
       { label: "Refresh", icon: <RefreshCw size={ICON} color={classic.ok} />, onClick: () => window.location.reload(), separatorBefore: true },
-      { label: "Export Excel", icon: <FileSpreadsheet size={ICON} color={classic.ok} />, onClick: exportCsv, disabled: rows.length === 0 },
+      { label: "Export Excel", icon: <FileSpreadsheet size={ICON} color={classic.ok} />, onClick: exportExcel, disabled: rows.length === 0 },
       { label: "Print", icon: <Printer size={ICON} color={classic.text} />, onClick: () => window.print() },
       { label: "Columns", icon: <Columns3 size={ICON} color={classic.accent} />, onClick: () => setShowGridToolbar((v) => !v), active: showGridToolbar, separatorBefore: true },
       { label: "Filter", icon: <Filter size={ICON} color={classic.accent} />, onClick: () => setShowFilterBar((v) => !v), active: showFilterBar },
       { label: "Close", icon: <X size={ICON} color={classic.danger} />, onClick: () => router.push("/dashboardportal"), separatorBefore: true },
     ];
-  }, [createAction, createAllowed, selectedRow, isRowEditable, onEdit, onView, canEdit, canView, exportCsv, rows.length, showGridToolbar, showFilterBar, router]);
+  }, [createAction, createAllowed, selectedRow, isRowEditable, onEdit, onView, canEdit, canView, exportExcel, rows.length, showGridToolbar, showFilterBar, router]);
 
   if (isClassic) {
     const classicFilterBar = showFilterBar ? (

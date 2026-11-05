@@ -12,6 +12,7 @@ interface EmployeeFilterDialogProps {
   value: EmployeeFilters;
   subDeptOptions: readonly Option[];
   categoryOptions: readonly Option[];
+  gradeOptions: readonly Option[];
   onApply: (filters: EmployeeFilters) => void;
   onClose: () => void;
 }
@@ -27,7 +28,7 @@ const renderOption = (
  * toolbar's Filter button. Edits a local draft; nothing is applied until Search.
  */
 export default function EmployeeFilterDialog({
-  open, value, subDeptOptions, categoryOptions, onApply, onClose,
+  open, value, subDeptOptions, categoryOptions, gradeOptions, onApply, onClose,
 }: EmployeeFilterDialogProps) {
   const [draft, setDraft] = useState<EmployeeFilters>(value);
 
@@ -47,7 +48,7 @@ export default function EmployeeFilterDialog({
     </Field>
   );
 
-  const picker = (key: "cata_id" | "sub_dept_id", label: string, options: readonly Option[]) => (
+  const picker = (key: "cata_id" | "grade_id" | "sub_dept_id", label: string, options: readonly Option[]) => (
     <Field label={label}>
       <Autocomplete
         size="small" fullWidth
@@ -106,6 +107,7 @@ export default function EmployeeFilterDialog({
         {text("designation", "Designation")}
         {text("esi_no", "ESI No.")}
         {text("uan_no", "UAN No.")}
+        {picker("grade_id", "Grade", gradeOptions)}
         <Field label="Active">
           <TextField
             select size="small" fullWidth

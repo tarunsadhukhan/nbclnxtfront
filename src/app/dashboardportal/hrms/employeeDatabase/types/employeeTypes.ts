@@ -55,6 +55,7 @@ export interface EmployeeListRow {
   designation_name: string | null;
   branch_name: string | null;
   category_name: string | null;
+  grade_name: string | null;
   esi_no: string | null;
   pf_uan_no: string | null;
   mobile_no: string | null;
@@ -65,6 +66,7 @@ export interface EmployeeFilters {
   emp_code: string;
   full_name: string;
   cata_id: string;
+  grade_id: string;
   sub_dept_id: string;
   designation: string;
   esi_no: string;
@@ -74,8 +76,8 @@ export interface EmployeeFilters {
 }
 
 export const EMPTY_EMPLOYEE_FILTERS: EmployeeFilters = Object.freeze({
-  emp_code: "", full_name: "", cata_id: "", sub_dept_id: "",
-  designation: "", esi_no: "", uan_no: "", status: "active",
+  emp_code: "", full_name: "", cata_id: "", grade_id: "", sub_dept_id: "",
+  designation: "", esi_no: "", uan_no: "", status: "all",
 });
 
 // ─── Employee Detail (all sections) ────────────────────────────────
@@ -211,6 +213,7 @@ export interface EmployeeSetupData {
   sub_departments: Option[];
   branches: Option[];
   categories: Option[];
+  grades: Option[];
   contractors: Option[];
   reporting_employees: Option[];
 }

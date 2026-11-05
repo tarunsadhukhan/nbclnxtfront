@@ -17,6 +17,7 @@ interface UseEmployeeSetupReturn {
   subDeptOptions: readonly Option[];
   branchOptions: readonly Option[];
   categoryOptions: readonly Option[];
+  gradeOptions: readonly Option[];
   contractorOptions: readonly Option[];
   reportingEmployeeOptions: readonly Option[];
 }
@@ -52,6 +53,7 @@ export function useEmployeeSetup(coId: string, branchId?: string): UseEmployeeSe
   const subDeptOptions = useMemo(() => setupData?.sub_departments ?? EMPTY_OPTIONS, [setupData]);
   const branchOptions = useMemo(() => setupData?.branches ?? EMPTY_OPTIONS, [setupData]);
   const categoryOptions = useMemo(() => setupData?.categories ?? EMPTY_OPTIONS, [setupData]);
+  const gradeOptions = useMemo(() => setupData?.grades ?? EMPTY_OPTIONS, [setupData]);
   const contractorOptions = useMemo(() => setupData?.contractors ?? EMPTY_OPTIONS, [setupData]);
   const reportingEmployeeOptions = useMemo(() => setupData?.reporting_employees ?? EMPTY_OPTIONS, [setupData]);
 
@@ -63,6 +65,7 @@ export function useEmployeeSetup(coId: string, branchId?: string): UseEmployeeSe
     subDeptOptions,
     branchOptions,
     categoryOptions,
+    gradeOptions,
     contractorOptions,
     reportingEmployeeOptions,
   };

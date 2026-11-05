@@ -565,6 +565,7 @@ const apiRoutesPortalMasters = {
     // HRMS / Production (labour) report endpoints
     // NBJCL Reports > Attendance Register (base; /setup and /<report key> are appended)
     NBJCL_ATTENDANCE_REGISTER: `${API_URL}/hrmsReports/nbjcl/attendance-register`,
+    NBJCL_REPORTS: `${API_URL}/hrmsReports/nbjcl/reports`,
     ATTENDANCE_SUMMARY_REPORT: `${API_URL}/hrmsReports/attendance-summary`,
     WORKER_MASTER_REPORT: `${API_URL}/hrmsReports/worker-master`,
     MAN_MACHINE_REPORT: `${API_URL}/hrmsReports/man-machine`,
@@ -778,6 +779,28 @@ const apiRoutesPortalMasters = {
     ELECTRIC_EDIT: `${API_URL}/hrms/electric_edit`,
     ELECTRIC_DELETE: `${API_URL}/hrms/electric_delete`,
 
+    // Pay adjustments (PayM_AdjHR / PayM_AdjPF / PayM_AdjNPF) — Other Menus -> Adjustment Hour / PF / NPF.
+    // LIST / DOC / SAVE / DELETE take the kind as a path suffix: /hour, /pf, /npf.
+    // Holiday Master (holiday_master) — HRMS Master -> Holiday Masters
+    HOLIDAY_YEARS: `${API_URL}/hrms/holiday_years`,
+    HOLIDAY_YEAR: `${API_URL}/hrms/holiday_year`,
+    HOLIDAY_YEAR_SAVE: `${API_URL}/hrms/holiday_year_save`,
+
+    // Holiday Process / Entry (hrms_holiday_transactions) — legacy FrmHolidayProcess
+    HOLIDAY_PROCESS_SETUP: `${API_URL}/hrms/holiday_process_setup`,
+    HOLIDAY_PROCESS_HOLIDAYS: `${API_URL}/hrms/holiday_process_holidays`,
+    HOLIDAY_PROCESS: `${API_URL}/hrms/holiday_process`,
+    HOLIDAY_TRAN_BY_HOLIDAY: `${API_URL}/hrms/holiday_tran_by_holiday`,
+    HOLIDAY_TRAN_SAVE: `${API_URL}/hrms/holiday_tran_save`,
+    HOLIDAY_TRAN_DELETE: `${API_URL}/hrms/holiday_tran_delete`,
+
+    PAY_ADJ_SETUP: `${API_URL}/hrms/pay_adj_setup`,
+    PAY_ADJ_RATES: `${API_URL}/hrms/pay_adj_rates`,
+    PAY_ADJ_LIST: `${API_URL}/hrms/pay_adj_list`,
+    PAY_ADJ_DOC: `${API_URL}/hrms/pay_adj_doc`,
+    PAY_ADJ_SAVE: `${API_URL}/hrms/pay_adj_save`,
+    PAY_ADJ_DELETE: `${API_URL}/hrms/pay_adj_delete`,
+
     // Loan Transactions (legacy payoloan / payloanchange / payloanstopall / payloanadjust)
     LOAN_SETUP: `${API_URL}/hrms/loan_setup`,
     LOAN_EMPLOYEE: `${API_URL}/hrms/loan_employee`,
@@ -801,6 +824,11 @@ const apiRoutesPortalMasters = {
     WAGES_PROCESS_EXPORT: `${API_URL}/hrms/wages_process_export`,
     WAGES_DATA_COLLECTION_RUN: `${API_URL}/hrms/wages_data_collection_run`,
     WAGES_PAYSLIP_TEXT: `${API_URL}/hrms/wages_payslip_text`,
+
+    // Staff Salary Process (legacy SP_SalaryProcessing -> PaySalary + paywages)
+    SALARY_PROCESS_SETUP: `${API_URL}/hrms/salary_process_setup`,
+    SALARY_PROCESS_RUN: `${API_URL}/hrms/salary_process_run`,
+    SALARY_PROCESS_RESULT: `${API_URL}/hrms/salary_process_result`,
 
     DESIGNATION_TABLE: `${API_URL}/hrmsMasters/get_designation_table`,
     DESIGNATION_BY_ID: `${API_URL}/hrmsMasters/get_designation_by_id`,

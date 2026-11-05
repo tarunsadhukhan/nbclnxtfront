@@ -11,6 +11,7 @@ import {
 import { useSelectedCompanyCoId } from "@/hooks/use-selected-company-coid";
 import { useSidebarContext, useSidebarContextSafe } from "@/components/dashboard/sidebarContext";
 import { fetchEmployeeList } from "@/utils/hrmsService";
+import { exportRowsToExcel } from "@/components/reports/exportExcel";
 import ClassicWindow, { ClassicButton, classic, classicGridSx } from "@/components/ui/classic/ClassicWindow";
 import { useEmployeeSetup } from "./hooks/useEmployeeSetup";
 import EmployeeFilterDialog from "./_components/EmployeeFilterDialog";
@@ -67,7 +68,7 @@ const CSV_COLUMNS: { header: string; key: keyof EmployeeListRow }[] = [
   { header: "Department", key: "sub_dept_name" },
   { header: "Designation", key: "designation_name" },
   { header: "Category", key: "category_name" },
-  { header: "Mobile No.", key: "mobile_no" },
+  { header: "Grade", key: "grade_name" },
   { header: "ESI No.", key: "esi_no" },
   { header: "Date of Join", key: "date_of_join" },
   { header: "Status", key: "status_name" },
@@ -77,7 +78,7 @@ export default function EmployeeDatabasePage() {
   const router = useRouter();
   const pathname = usePathname();
   const { coId } = useSelectedCompanyCoId();
-  const { selectedBranches } = useSidebarContext();
+  const { selectedBranches, selectedCompany } = useSidebarContext();
   const branchId = selectedBranches.length > 0 ? selectedBranches.join(",") : "";
 
   const hasMenuAccess = useSidebarContextSafe()?.hasMenuAccess ?? (() => true);
@@ -85,7 +86,7 @@ export default function EmployeeDatabasePage() {
   const canEdit = hasMenuAccess(pathname, "edit");
   const canView = hasMenuAccess(pathname, "view");
 
-  const { subDeptOptions, categoryOptions } = useEmployeeSetup(coId, branchId);
+  const { subDeptOptions, categoryOptions, gradeOptions } = useEmployeeSetup(coId, branchId);
 
   const [rows, setRows] = useState<EmployeeRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -123,7 +124,9 @@ export default function EmployeeDatabasePage() {
         branch_id: branchId,
         sub_dept_id: filters.sub_dept_id || undefined,
         cata_id: filters.cata_id || undefined,
-        is_active: STATUS_FILTER[filters.status],
+        grade_id: filters.grade_id || undefined,
+        // Toolbar search looks across active and inactive employees alike.
+        is_active: appliedSearch ? null : STATUS_FILTER[filters.status],
         columnFilters: Object.keys(likeFilters).length > 0 ? likeFilters : undefined,
       });
       if (error || !data) throw new Error(error || "Failed to fetch employees");
@@ -194,18 +197,17 @@ export default function EmployeeDatabasePage() {
   /** Exports the rows currently on screen. ponytail: page-scoped export —
    *  switch to a backend export endpoint if full-dataset export is needed. */
   const exportCsv = useCallback(() => {
-    const escape = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-    const csv = [
-      CSV_COLUMNS.map((c) => escape(c.header)).join(","),
-      ...rows.map((row) => CSV_COLUMNS.map((c) => escape(row[c.key])).join(",")),
-    ].join("\r\n");
-    const url = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" }));
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "employee-master.csv";
-    link.click();
-    URL.revokeObjectURL(url);
-  }, [rows]);
+    const branchName = selectedCompany?.branches
+      .filter((b) => selectedBranches.includes(b.branch_id))
+      .map((b) => b.branch_name)
+      .join(", ");
+    void exportRowsToExcel(
+      CSV_COLUMNS.map((c) => ({ field: c.key, headerName: c.header })),
+      rows,
+      "employee-master",
+      { companyName: selectedCompany?.co_name, branchName, reportName: "Employee Master" },
+    );
+  }, [rows, selectedCompany, selectedBranches]);
 
   const columns = useMemo<GridColDef<EmployeeRow>[]>(
     () => [
@@ -218,14 +220,13 @@ export default function EmployeeDatabasePage() {
         disableColumnMenu: true,
         renderCell: (params) => (params.row.eb_id === selectedId ? <span style={{ color: classic.accent }}>▶</span> : null),
       },
-      { field: "sl", headerName: "ID", width: 50, sortable: false, filterable: false, align: "right", headerAlign: "right" },
       { field: "emp_code", headerName: "Emp. Code", width: 110 },
       { field: "full_name", headerName: "Employee Name", flex: 1.2, minWidth: 160 },
       { field: "sub_dept_name", headerName: "Department", flex: 1, minWidth: 130 },
       { field: "designation_name", headerName: "Designation", flex: 1, minWidth: 130 },
       { field: "category_name", headerName: "Category", width: 120, filterable: false },
+      { field: "grade_name", headerName: "Grade", width: 120, filterable: false },
       { field: "date_of_join", headerName: "Date of Join", width: 110 },
-      { field: "mobile_no", headerName: "Mobile No.", width: 120 },
       { field: "esi_no", headerName: "ESI No.", flex: 1, minWidth: 130 },
       {
         field: "status_name",
@@ -391,6 +392,7 @@ export default function EmployeeDatabasePage() {
         value={filters}
         subDeptOptions={subDeptOptions}
         categoryOptions={categoryOptions}
+        gradeOptions={gradeOptions}
         onApply={applyFilters}
         onClose={() => setFilterOpen(false)}
       />

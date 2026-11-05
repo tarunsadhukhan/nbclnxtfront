@@ -17,6 +17,7 @@ export const fetchEmployeeList = async (
     branch_id?: string;
     sub_dept_id?: string;
     cata_id?: string;
+    grade_id?: string;
     is_active?: number | null;
     columnFilters?: Record<string, string>;
   },
@@ -29,6 +30,7 @@ export const fetchEmployeeList = async (
   if (params?.branch_id) qs.set("branch_id", params.branch_id);
   if (params?.sub_dept_id) qs.set("sub_dept_id", params.sub_dept_id);
   if (params?.cata_id) qs.set("cata_id", params.cata_id);
+  if (params?.grade_id) qs.set("grade_id", params.grade_id);
   if (params?.is_active !== undefined && params?.is_active !== null) qs.set("is_active", String(params.is_active));
   if (params?.columnFilters) {
     for (const [key, val] of Object.entries(params.columnFilters)) {

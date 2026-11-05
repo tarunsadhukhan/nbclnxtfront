@@ -367,4 +367,5 @@ backend router source before relying on it. Regenerate (when fixed) from the bac
 ## Version Info
 - Next.js: 15 | React: 19 | TypeScript: 5.x (strict) | Node: 18+ | pnpm
 
-**Last Updated:** 2026-06-12
+**Last Updated:** 2026-10-12
+
