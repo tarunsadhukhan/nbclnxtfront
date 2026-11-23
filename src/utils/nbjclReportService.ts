@@ -77,30 +77,34 @@ export async function fetchAttendanceRegisterReport(p: {
  * Every other NBJCL report group (wages, salary, loans, outsider, PF, ...), keyed "<group>/<report>" = the
  * menu path after hrms/nbjclreports/. Backend: GET /api/hrmsReports/nbjcl/reports/* (src/hrms/nbjclreports/).
  */
-export async function fetchNbjclReportsSetup(branchId: number): Promise<Record<string, NbjclReportMeta>> {
-  const result = await fetchWithCookie<{ data: Record<string, NbjclReportMeta> }>(
-    `${apiRoutesPortalMasters.NBJCL_REPORTS}/setup?branch_id=${branchId}`,
-  );
+export const fetchNbjclReportsSetup = (branchId: number) => fetchReportsSetup(apiRoutesPortalMasters.NBJCL_REPORTS, branchId);
+
+/** Rows, columns and optional download of one NBJCL report ("<group>/<report>"). */
+export const fetchNbjclReport = (p: ReportParams) => fetchReport(apiRoutesPortalMasters.NBJCL_REPORTS, p);
+
+/** Winsome Reports, same contract. Backend: GET /api/hrmsReports/winsome/reports/* (src/hrms/winsomereports/). */
+export const fetchWinsomeReportsSetup = (branchId: number) => fetchReportsSetup(apiRoutesPortalMasters.WINSOME_REPORTS, branchId);
+
+/** Rows, columns and optional download of one Winsome report ("<group>/<report>"). */
+export const fetchWinsomeReport = (p: ReportParams) => fetchReport(apiRoutesPortalMasters.WINSOME_REPORTS, p);
+
+type ReportParams = { report: string; branchId: number; dateFrom: string; dateTo: string; extra: string };
+
+async function fetchReportsSetup(base: string, branchId: number): Promise<Record<string, NbjclReportMeta>> {
+  const result = await fetchWithCookie<{ data: Record<string, NbjclReportMeta> }>(`${base}/setup?branch_id=${branchId}`);
   if (result.error || !result.data) {
     throw new Error(result.error ?? "Failed to load the report list");
   }
   return result.data.data;
 }
 
-/** Rows, columns and optional download of one report ("<group>/<report>"). */
-export async function fetchNbjclReport(p: {
-  report: string;
-  branchId: number;
-  dateFrom: string;
-  dateTo: string;
-  extra: string;
-}): Promise<NbjclReportResult> {
+async function fetchReport(base: string, p: ReportParams): Promise<NbjclReportResult> {
   const qs = new URLSearchParams({ branch_id: String(p.branchId) });
   if (p.dateTo) qs.set("date_to", p.dateTo);
   if (p.dateFrom) qs.set("date_from", p.dateFrom);
   if (p.extra) qs.set("extra", p.extra);
   const path = p.report.split("/").map(encodeURIComponent).join("/");
-  const result = await fetchWithCookie<NbjclReportResult>(`${apiRoutesPortalMasters.NBJCL_REPORTS}/${path}?${qs.toString()}`);
+  const result = await fetchWithCookie<NbjclReportResult>(`${base}/${path}?${qs.toString()}`);
   if (result.error || !result.data) {
     throw new Error(result.error ?? "Failed to load the report");
   }

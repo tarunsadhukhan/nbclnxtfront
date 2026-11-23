@@ -191,8 +191,13 @@ export default function ClassicTopBar() {
           items.map(({ menu, depth }) => (
             <MenuItem
               key={menu.menu_id}
-              sx={{ fontSize: 12, pl: `${12 + depth * 14}px`, minHeight: 24 }}
-              onClick={() => { setOpenMenu(null); router.push(`/dashboardportal/${menu.menu_path}`); }}
+              sx={{ fontSize: 12, pl: `${12 + depth * 14}px`, minHeight: 24, fontWeight: menu.menu_path ? undefined : 600 }}
+              onClick={() => {
+                // group rows (no path) are headings for the indented items below them
+                if (!menu.menu_path) return;
+                setOpenMenu(null);
+                router.push(`/dashboardportal/${menu.menu_path}`);
+              }}
             >
               {menu.menu_name}
             </MenuItem>

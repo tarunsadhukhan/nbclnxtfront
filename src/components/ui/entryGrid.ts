@@ -33,8 +33,8 @@ export function handleGridEnterKey(e: KeyboardEvent<HTMLElement>): void {
   next.select();
 }
 
-const pickCellBg = (t: Theme) => alpha(t.palette.warning.main, 0.28);
-const keyedCellBg = (t: Theme) => alpha(t.palette.success.main, 0.28);
+export const pickCellBg = (t: Theme) => alpha(t.palette.warning.main, 0.28);
+export const keyedCellBg = (t: Theme) => alpha(t.palette.success.main, 0.28);
 
 /**
  * Legacy Smart-Eye colour coding, spread into the `sx` of the box wrapping a
@@ -50,7 +50,8 @@ export const entryGridCellColorsSx = {
   // Gridlines in the foreground colour, not `divider` — the legacy screens draw
   // hard black rules and the light default reads as no grid at all.
   "& table, & td, & th": { borderColor: (t: Theme) => t.palette.text.primary },
-  "& td:has(.MuiAutocomplete-root)": { backgroundColor: pickCellBg },
+  // [data-pick-cell]: a pick cell shown as a plain input until focused (lazy Autocomplete).
+  "& td:has(.MuiAutocomplete-root), & td:has([data-pick-cell])": { backgroundColor: pickCellBg },
   "& td:has(input[type='number'])": { backgroundColor: keyedCellBg },
   "& .MuiInputBase-root:has(.MuiSelect-select)": { backgroundColor: pickCellBg },
   "& .MuiInputBase-root:has(input[type='date'])": { backgroundColor: keyedCellBg },

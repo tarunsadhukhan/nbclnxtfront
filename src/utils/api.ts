@@ -566,6 +566,7 @@ const apiRoutesPortalMasters = {
     // NBJCL Reports > Attendance Register (base; /setup and /<report key> are appended)
     NBJCL_ATTENDANCE_REGISTER: `${API_URL}/hrmsReports/nbjcl/attendance-register`,
     NBJCL_REPORTS: `${API_URL}/hrmsReports/nbjcl/reports`,
+    WINSOME_REPORTS: `${API_URL}/hrmsReports/winsome/reports`,
     ATTENDANCE_SUMMARY_REPORT: `${API_URL}/hrmsReports/attendance-summary`,
     WORKER_MASTER_REPORT: `${API_URL}/hrmsReports/worker-master`,
     MAN_MACHINE_REPORT: `${API_URL}/hrmsReports/man-machine`,
@@ -824,6 +825,14 @@ const apiRoutesPortalMasters = {
     WAGES_PROCESS_EXPORT: `${API_URL}/hrms/wages_process_export`,
     WAGES_DATA_COLLECTION_RUN: `${API_URL}/hrms/wages_data_collection_run`,
     WAGES_PAYSLIP_TEXT: `${API_URL}/hrms/wages_payslip_text`,
+    WINSOME_WAGES_SETUP: `${API_URL}/hrms/winsome_wages_setup`,
+    WINSOME_WAGES_RUN: `${API_URL}/hrms/winsome_wages_run`,
+    WINSOME_WAGES_RESULT: `${API_URL}/hrms/winsome_wages_result`,
+    WINSOME_WAGES_EXPORT: `${API_URL}/hrms/winsome_wages_export`,
+    // Winsome HRMS > Process Reports: legacy Attn_Process / ATTEN_PROCESS_BULK on mirrored ATTENDANCE -> ATTEN
+    WINSOME_ATTEN_SHIFTS: `${API_URL}/hrms/winsome_atten_shifts`,
+    WINSOME_ATTEN_PROCESS: `${API_URL}/hrms/winsome_atten_process`,
+    WINSOME_ATTEN_PROCESS_BULK: `${API_URL}/hrms/winsome_atten_process_bulk`,
 
     // Staff Salary Process (legacy SP_SalaryProcessing -> PaySalary + paywages)
     SALARY_PROCESS_SETUP: `${API_URL}/hrms/salary_process_setup`,
@@ -990,6 +999,19 @@ const apiRoutesPortalMasters = {
     FINISHING_PROD_CREATE: `${API_URL}/production/finishing_prod_create`,
     FINISHING_PROD_EDIT: `${API_URL}/production/finishing_prod_edit`,
     FINISHING_PROD_DELETE: `${API_URL}/production/finishing_prod_delete`,
+
+    // Winsome "Production" menu — legacy WIL forms on mirrored PayOProd*/PayProd* tables.
+    // Each takes a form kind suffix: /{kind} (winding, beaming, weaving, sackSewing, productionEntry, dailyProduction)
+    WINSOME_PROD_SETUP: `${API_URL}/winsomeProduction/setup`,
+    WINSOME_PROD_LIST: `${API_URL}/winsomeProduction/list`,
+    WINSOME_PROD_DOC: `${API_URL}/winsomeProduction/doc`,
+    WINSOME_PROD_SAVE: `${API_URL}/winsomeProduction/save`,
+    WINSOME_PROD_MACHINE_FILL: `${API_URL}/winsomeProduction/machine_fill`,
+    WINSOME_PROD_FILL: `${API_URL}/winsomeProduction/fill`,
+
+    // Winsome "Gratuity" menu — legacy WIL gratuity forms on mirrored PayGrat*/PayOTSW tables.
+    // Doc routes take a kind prefix: /{stl|calc}/list, /{kind}/doc/{docEntry}, /{kind}/new/{ecode}, ...
+    WINSOME_GRAT: `${API_URL}/winsomeGratuity`,
 
     // HRMS Bio Attendance (employee↔device mapping + bio data process)
     BIO_EMP_LINK_SETUP: `${API_URL}/hrmsMasters/bio_emp_link_setup`,

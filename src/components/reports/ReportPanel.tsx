@@ -61,6 +61,8 @@ interface ReportPanelProps<TRow extends GridValidRowModel> {
   onRowDoubleClick?: (row: TRow) => void;
   /** Show all rows in one scrolling table instead of pages (see ReportGrid). */
   scroll?: boolean;
+  /** Replaces the generic grid PDF on "Export to PDF" (e.g. pay slips drawn in their legacy layout). */
+  onExportPdf?: () => Promise<void>;
 }
 
 /**
@@ -89,6 +91,7 @@ export default function ReportPanel<TRow extends GridValidRowModel>({
   exportName,
   onRowDoubleClick,
   scroll,
+  onExportPdf,
 }: ReportPanelProps<TRow>) {
   // Draft filters — bound to the inputs.
   // The branch is adopted after mount rather than seeded into useState:
@@ -157,7 +160,9 @@ export default function ReportPanel<TRow extends GridValidRowModel>({
       reportNo: await resolveReportMenuId(pathname),
       reportFor,
     };
-    if (format === "pdf") {
+    if (format === "pdf" && onExportPdf) {
+      await onExportPdf();
+    } else if (format === "pdf") {
       await exportRowsToPdf(columns, rows, exportName, header);
     } else {
       await exportRowsToExcel(columns, rows, exportName, header);
@@ -175,6 +180,7 @@ export default function ReportPanel<TRow extends GridValidRowModel>({
     branch?.branch_name,
     title,
     pathname,
+    onExportPdf,
   ]);
 
   return (

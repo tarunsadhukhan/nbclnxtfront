@@ -7,6 +7,8 @@ import ReportsHubLanding from "@/components/reports/ReportsHubLanding";
 import { numCol } from "@/components/reports/ReportGrid";
 import { useReportBranches } from "@/components/reports/useReportBranches";
 import { yesterdayIso } from "@/components/reports/reportDates";
+import { useSidebarContext } from "@/components/dashboard/sidebarContext";
+import type { PayslipLayout } from "./winsomePayslipPdf";
 import type {
   NbjclReportColumn,
   NbjclReportDownload,
@@ -49,6 +51,10 @@ interface NbjclReportViewProps {
   reportKey: string;
   loadSetup: (branchId: number) => Promise<Record<string, NbjclReportMeta>>;
   loadReport: (p: { report: string; branchId: number; dateFrom: string; dateTo: string; extra: string }) => Promise<NbjclReportResult>;
+  /** Heading of the hub landing shown for an unknown key. */
+  hubTitle?: string;
+  /** Report key -> legacy pay slip layout: "Export to PDF" draws the slips instead of the grid. */
+  slipLayouts?: Record<string, PayslipLayout>;
 }
 
 /**
@@ -56,13 +62,24 @@ interface NbjclReportViewProps {
  * rows already laid out with group headers and totals (and, for pay slips, a text file to download).
  * An unknown key shows the reports hub.
  */
-export default function NbjclReportView({ reportKey, loadSetup, loadReport }: NbjclReportViewProps) {
+export default function NbjclReportView({
+  reportKey,
+  loadSetup,
+  loadReport,
+  hubTitle = "NBJCL Reports",
+  slipLayouts,
+}: NbjclReportViewProps) {
   const { branches, initialBranchId } = useReportBranches();
+  const { selectedCompany } = useSidebarContext();
+  // last loaded filters + rows, for the pay slip PDF
+  const [loaded, setLoaded] = useState<{ f: ReportFilters; rows: NbjclReportRow[] } | null>(null);
   const [setup, setSetup] = useState<Record<string, NbjclReportMeta> | null>(null);
   const [setupError, setSetupError] = useState<string | null>(null);
   const [columns, setColumns] = useState<GridColDef<NbjclReportRow>[]>([]);
   const [rowCount, setRowCount] = useState(0);
   const [download, setDownload] = useState<NbjclReportDownload | null>(null);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     if (initialBranchId == null) return;
@@ -78,6 +95,7 @@ export default function NbjclReportView({ reportKey, loadSetup, loadReport }: Nb
       setColumns(toGridColumns(res.columns));
       setRowCount(res.data.length);
       setDownload(res.download ?? null);
+      setLoaded({ f, rows: res.data });
       return res.data;
     },
     [reportKey, loadReport],
@@ -93,7 +111,33 @@ export default function NbjclReportView({ reportKey, loadSetup, loadReport }: Nb
     URL.revokeObjectURL(url);
   };
 
+  // Winsome pay slips: "Export to PDF" draws the loaded rows in the legacy Crystal slip layout
+  // (jspdf loaded on demand). Legacy prints the From / To typed on its form, so do we.
+  const slipLayout = slipLayouts?.[reportKey];
+  const exportSlipsPdf = async () => {
+    if (!slipLayout || !loaded) return;
+    const { saveWinsomePayslipPdf } = await import("./winsomePayslipPdf");
+    const { f, rows } = loaded;
+    await saveWinsomePayslipPdf({
+      layout: slipLayout,
+      filename: `${slipLayout === "ot" ? "WagesPaySlip_OT_WIL" : "WagesPaySlip_WIL"}_${f.dateTo}.pdf`,
+      slips: rows,
+      fromDate: f.dateFrom,
+      toDate: f.dateTo,
+      company: selectedCompany?.co_name ?? "",
+    });
+  };
+
   if (setupError) return <Alert severity="error" sx={{ m: 3 }}>{setupError}</Alert>;
+  // The sidebar branch is restored from localStorage only in the browser, so show the spinner until
+  // after hydration; otherwise the server (no branch) and the first client render (branch) differ.
+  if (!mounted) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
   if (initialBranchId == null) return <Alert severity="info" sx={{ m: 3 }}>Select a company and branch in the sidebar.</Alert>;
   if (!setup) {
     return (
@@ -103,7 +147,7 @@ export default function NbjclReportView({ reportKey, loadSetup, loadReport }: Nb
     );
   }
   const meta = setup[reportKey];
-  if (!meta) return <ReportsHubLanding title="NBJCL Reports" />;
+  if (!meta) return <ReportsHubLanding title={hubTitle} />;
 
   const period = defaultPeriod(meta.span);
   return (
@@ -128,6 +172,7 @@ export default function NbjclReportView({ reportKey, loadSetup, loadReport }: Nb
         getRowId={(r) => r.id}
         exportName={reportKey.replace("/", "-")}
         scroll={rowCount <= SCROLL_ROW_LIMIT}
+        onExportPdf={slipLayout ? exportSlipsPdf : undefined}
       />
     </>
   );
